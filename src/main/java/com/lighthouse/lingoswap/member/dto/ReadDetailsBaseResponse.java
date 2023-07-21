@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.user.dto;
+package com.lighthouse.lingoswap.member.dto;
 
 
 import com.lighthouse.lingoswap.common.dto.BaseResponse;

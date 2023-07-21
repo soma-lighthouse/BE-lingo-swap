@@ -1,18 +1,18 @@
-package com.lighthouse.lingoswap.user.service;
+package com.lighthouse.lingoswap.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserCRUDService {
+public class MemberCRUDService {
 
     private final MemberService memberService;
 
 //    public SignUpResponse signUp(final SignUpRequest signUpRequest) {
-//        final User savedUser = memberService.save(signUpRequest.email());
+//        final Member savedMember = memberService.save(signUpRequest.email());
 //        return SignUpResponse.builder()
-//                .email(savedUser.getEmail())
+//                .email(savedMember.getEmail())
 //                .build();
 //    }
 

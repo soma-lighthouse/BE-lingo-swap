@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.user.dto;
+package com.lighthouse.lingoswap.member.dto;
 
 
 import jakarta.validation.constraints.NotNull;

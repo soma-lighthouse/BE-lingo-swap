@@ -8,6 +8,7 @@ class LingoSwapApplicationTests {
 
     @Test
     void contextLoads() {
+
     }
 
 }
