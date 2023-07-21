@@ -8,27 +8,19 @@ import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Member {
+
+public class Country {
 
     @Id
     @GeneratedValue
-    private Long id;
+    private int id;
 
-    private String email;
-
-    public Member(String email) {
-        this.email = email;
-    }
-
-    @Column(length = 1)
-    private String gender;
-
-    private String description;
-
-    private String profileImage;
+    @Column(length = 2)
+    private String code;
 
     private LocalDateTime createdAt;
 
