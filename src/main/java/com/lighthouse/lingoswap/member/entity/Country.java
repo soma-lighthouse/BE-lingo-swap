@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.entity;
 
+import com.lighthouse.lingoswap.common.entity.DateBasicEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 
-public class Country {
+public class Country extends DateBasicEntity {
 
     @Id
     @GeneratedValue
@@ -21,8 +22,4 @@ public class Country {
 
     @Column(length = 2)
     private String code;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 }
