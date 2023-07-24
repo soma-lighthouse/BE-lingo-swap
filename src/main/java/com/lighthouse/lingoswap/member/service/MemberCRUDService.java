@@ -1,5 +1,8 @@
 package com.lighthouse.lingoswap.member.service;
 
+import com.lighthouse.lingoswap.member.dto.MemberReadRequest;
+import com.lighthouse.lingoswap.member.dto.MemberResponse;
+import com.lighthouse.lingoswap.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,16 +12,8 @@ public class MemberCRUDService {
 
     private final MemberService memberService;
 
-//    public SignUpResponse signUp(final SignUpRequest signUpRequest) {
-//        final Member savedMember = memberService.save(signUpRequest.email());
-//        return SignUpResponse.builder()
-//                .email(savedMember.getEmail())
-//                .build();
-//    }
-
-//    public ReadDetailsResponse showDetails(final ReadDetailsRequest readDetailsRequest) {
-//        final Member foundMember = memberService.find(readDetailsRequest.id());
-//        ReadDetailsResponse a = new ReadDetailsResponse()
-//    }
-
+    public MemberResponse read(final MemberReadRequest memberReadRequest) {
+        final Member foundMember = memberService.findById(memberReadRequest.id());
+        return new MemberResponse(foundMember.getEmail());
+    }
 }
