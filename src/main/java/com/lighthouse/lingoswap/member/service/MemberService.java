@@ -12,7 +12,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public Member findById(final Long id) {
+    Member save(final Member member) {
+        return memberRepository.save(member);
+    }
+
+    Member findById(final Long id) {
         return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
     }
 }

@@ -20,10 +20,10 @@ spring:
 
 server:
   port: 8080
-#  error:
-#    include-stacktrace: never
-#    include-message: never
-#    include-binding-errors: never
+  error:
+    include-stacktrace: never
+    include-binding-errors: never
+    include-message: never
 
 logging.level:
   org.hibernate.SQL: debug

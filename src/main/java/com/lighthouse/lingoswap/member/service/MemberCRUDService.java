@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.member.service;
 
-import com.lighthouse.lingoswap.member.dto.MemberReadRequest;
+import com.lighthouse.lingoswap.member.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.member.dto.MemberResponse;
 import com.lighthouse.lingoswap.member.entity.Member;
 import lombok.RequiredArgsConstructor;
@@ -12,8 +12,9 @@ public class MemberCRUDService {
 
     private final MemberService memberService;
 
-    public MemberResponse read(final MemberReadRequest memberReadRequest) {
-        final Member foundMember = memberService.findById(memberReadRequest.id());
-        return new MemberResponse(foundMember.getEmail());
+    public MemberResponse create(final MemberCreateRequest memberCreateRequest) {
+        Member member = new Member(memberCreateRequest.email());
+        Member savedMember = memberService.save(member);
+        return new MemberResponse(savedMember.getId());
     }
 }
