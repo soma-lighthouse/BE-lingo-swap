@@ -1,6 +1,7 @@
-package com.lighthouse.lingoswap.member.entity;
+package com.lighthouse.lingoswap.question.entity;
 
 import com.lighthouse.lingoswap.common.entity.DateBasicEntity;
+import com.lighthouse.lingoswap.member.entity.Member;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class PreferredCountry extends DateBasicEntity {
+public class LikeUser extends DateBasicEntity {
 
     @Id
     @GeneratedValue
@@ -23,7 +24,7 @@ public class PreferredCountry extends DateBasicEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Country country;
+    private Question question;
 
     private Boolean isValid;
 }

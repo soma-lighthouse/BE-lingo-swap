@@ -25,6 +25,5 @@ public class UsedLanguage extends DateBasicEntity {
         private Language language;
 
         private int level;
-
-        private boolean isValid;
+        private Boolean isValid;
 }

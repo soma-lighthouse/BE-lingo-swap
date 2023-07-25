@@ -24,4 +24,6 @@ public class MatchedUser extends DateBasicEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Member toMember;
+
+    private Boolean isValid;
 }

@@ -23,10 +23,9 @@ public class Device extends DateBasicEntity {
     private Member member;
 
     private String deviceId;
-
     private int region;
-
     private String timezone;
-
     private String os;
+    private String version;
+    private Boolean isValid;
 }

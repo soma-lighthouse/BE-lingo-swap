@@ -5,7 +5,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,16 +18,17 @@ public class Member extends DateBasicEntity {
     @GeneratedValue
     private Long id;
 
+    @Column(length = 1)
+    private String gender;
+
+    private boolean isValid;
+    private LocalDate birthday;
+    private String name;
+    private String description;
+    private String profileImage;
     private String email;
 
     public Member(String email) {
         this.email = email;
     }
-
-    @Column(length = 1)
-    private String gender;
-
-    private String description;
-
-    private String profileImage;
 }
