@@ -12,8 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Member {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
     private String email;
