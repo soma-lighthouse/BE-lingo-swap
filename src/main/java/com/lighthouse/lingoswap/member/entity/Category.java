@@ -1,7 +1,6 @@
 package com.lighthouse.lingoswap.member.entity;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
-import com.lighthouse.lingoswap.common.entity.DateBasicEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
