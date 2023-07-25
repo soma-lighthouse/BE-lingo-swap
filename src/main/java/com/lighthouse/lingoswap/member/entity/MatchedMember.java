@@ -1,7 +1,7 @@
-package com.lighthouse.lingoswap.question.entity;
+package com.lighthouse.lingoswap.member.entity;
 
+import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.common.entity.DateBasicEntity;
-import com.lighthouse.lingoswap.member.entity.Member;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -14,17 +14,16 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class LikeUser extends DateBasicEntity {
+public class MatchedMember extends BaseEntity {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    private Member fromMember;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Question question;
+    private Member toMember;
 
     private Boolean isValid;
 }

@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.Setter;
 
+@MappedSuperclass
 @Getter
 @Setter
-@MappedSuperclass
-public class DateBasicEntity {
+public class BaseEntity {
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

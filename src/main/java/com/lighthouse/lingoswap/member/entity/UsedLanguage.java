@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.entity;
 
+import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.common.entity.DateBasicEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -13,9 +14,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UsedLanguage extends DateBasicEntity {
-        @Id
-        @GeneratedValue
+public class UsedLanguage extends BaseEntity {
+
+        @Id @GeneratedValue
         private Long id;
 
         @ManyToOne(fetch = FetchType.LAZY)

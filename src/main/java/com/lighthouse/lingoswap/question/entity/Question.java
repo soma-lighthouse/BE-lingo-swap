@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.question.entity;
 
+import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.common.entity.DateBasicEntity;
 import com.lighthouse.lingoswap.member.entity.Category;
 import com.lighthouse.lingoswap.member.entity.Member;
@@ -15,10 +16,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Question extends DateBasicEntity {
+public class Question extends BaseEntity {
 
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
