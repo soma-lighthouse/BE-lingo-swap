@@ -1,11 +1,11 @@
 package com.lighthouse.lingoswap.member.entity;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import java.time.LocalDate;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,22 +13,16 @@ import lombok.NoArgsConstructor;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Member extends BaseEntity {
+public class PreferredInterests extends BaseEntity {
 
     @Id @GeneratedValue
     private Long id;
 
-    @Column(length = 1)
-    private String gender;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Interests interests;
 
     private boolean isValid;
-    private LocalDate birthday;
-    private String name;
-    private String description;
-    private String profileImage;
-    private String email;
-
-    public Member(String email) {
-        this.email = email;
-    }
 }
