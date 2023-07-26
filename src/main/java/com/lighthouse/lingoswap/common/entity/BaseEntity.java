@@ -16,6 +16,7 @@ public class BaseEntity {
     @CreatedDate
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
     @LastModifiedDate
     @Column(updatable = false)
     private LocalDateTime updatedAt;
