@@ -1,5 +1,5 @@
 package com.lighthouse.lingoswap.member.dto;
 
-public record SignUpResponse(String email) {
 
+public record MemberResponse(Long id) {
 }

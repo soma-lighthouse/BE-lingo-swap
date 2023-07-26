@@ -12,12 +12,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    public Member find(final Long id) {
-        return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
+    Member save(final Member member) {
+        return memberRepository.save(member);
     }
 
-    public Member save(final String email) {
-        final Member member = new Member(email);
-        return memberRepository.save(member);
+    Member findById(final Long id) {
+        return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
     }
 }
