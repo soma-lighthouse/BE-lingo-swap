@@ -1,3 +1,6 @@
 [submodule "src/main/resources/security"]
 	path = src/main/resources/security
 	url = https://github.com/soma-lighthouse/security.git
+[submodule "security"]
+	path = security
+	url = https://github.com/soma-lighthouse/security.git
