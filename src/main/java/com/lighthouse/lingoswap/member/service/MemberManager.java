@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class MemberCRUDService {
+public class MemberManager {
 
     private final MemberService memberService;
 
