@@ -3,8 +3,10 @@ package com.lighthouse.lingoswap.board.api;
 import com.lighthouse.lingoswap.board.dto.BoardCreateRequest;
 import com.lighthouse.lingoswap.board.dto.BoardSearchDetailResponse;
 import com.lighthouse.lingoswap.board.dto.BoardSearchReponse;
+import com.lighthouse.lingoswap.board.dto.BoardUpdateLikeRequest;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.board.service.BoardCRUDService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,12 +26,11 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.builder()
                 .code("20100")
                 .message("Successfully created")
-                .data("")
                 .build());
     }
 
     @GetMapping("/category/{category_id}") //수정
-    public ResponseEntity<ResponseDto<BoardSearchReponse>> get(@PathVariable int category_id) {
+    public ResponseEntity<ResponseDto<BoardSearchReponse>> read(@PathVariable Integer category_id) {
         BoardSearchReponse boardSearchReponse = boardCRUDService.search(category_id);
         return ResponseEntity.ok(ResponseDto.<BoardSearchReponse>builder()
                 .code("20000")
@@ -39,12 +40,24 @@ public class BoardController {
     }
 
     @GetMapping("/question/{question_id}")
-    public ResponseEntity<ResponseDto<BoardSearchDetailResponse>> getQuestion(@PathVariable Long question_id) {
+    public ResponseEntity<ResponseDto<BoardSearchDetailResponse>> readQuestion(@PathVariable Long question_id) {
         BoardSearchDetailResponse boardSearchDetailResponse = boardCRUDService.searchDetail(question_id);
         return ResponseEntity.ok(ResponseDto.<BoardSearchDetailResponse>builder()
                 .code("20000")
                 .message("OK")
                 .data(boardSearchDetailResponse)
+                .build());
+    }
+
+    @PostMapping("/category/{question_id}")
+    public ResponseEntity<ResponseDto> updateLike(@RequestBody @Valid BoardUpdateLikeRequest boardUpdateLikeRequest
+            , @PathVariable Long question_id) {
+        Integer like;
+        like = boardCRUDService.updateLike(boardUpdateLikeRequest);
+        return ResponseEntity.ok(ResponseDto.builder()
+                .code("20100")
+                .message("Successfully created")
+                .data(like)
                 .build());
     }
 }
