@@ -1,12 +1,8 @@
 package com.lighthouse.lingoswap.board.dto;
 
-import lombok.Data;
-
 import java.time.LocalDateTime;
 
-@Data
-public class BoardCreateRequest {
-
+public class BoardSearchResponse {
     private Long memberId;
     private Long categoryId;
     private String content;

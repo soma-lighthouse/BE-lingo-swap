@@ -4,6 +4,7 @@ import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class LikeMember extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -22,4 +23,11 @@ public class LikeMember extends BaseEntity {
     private Question question;
 
     private Boolean isValid;
+
+    @Builder
+    public LikeMember(Member member, Question question, Boolean isValid) {
+        this.member = member;
+        this.question = question;
+        this.isValid = Boolean.FALSE;
+    }
 }

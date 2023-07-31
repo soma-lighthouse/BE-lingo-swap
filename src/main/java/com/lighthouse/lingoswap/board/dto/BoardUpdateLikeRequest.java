@@ -5,11 +5,10 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class BoardCreateRequest {
+public class BoardUpdateLikeRequest {
 
-    private Long memberId;
-    private Long categoryId;
+    private Long member_id;
+    private Long question_id;
     private String content;
     private LocalDateTime created_date;
-
 }

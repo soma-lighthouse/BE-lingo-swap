@@ -11,15 +11,15 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UsedLanguage extends BaseEntity {
 
-        @Id @GeneratedValue(strategy = GenerationType.AUTO)
-        private Long id;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        private Member member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Member member;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        private Language language;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Language language;
 
-        private Integer level;
-        private Boolean isValid;
+    private int level;
+    private Boolean isValid;
 }

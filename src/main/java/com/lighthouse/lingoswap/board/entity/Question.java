@@ -5,6 +5,7 @@ import com.lighthouse.lingoswap.member.entity.Category;
 import com.lighthouse.lingoswap.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Question extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -26,4 +27,15 @@ public class Question extends BaseEntity {
     private String contents;
     private Boolean isValid;
     private Boolean isRecommended;
+
+
+    @Builder
+    public Question(Member createdMember, Category category, Integer likes, String contents) {
+        this.createdMember = createdMember;
+        this.category = category;
+        this.likes = likes;
+        this.contents = contents;
+        this.isValid = Boolean.FALSE;
+        this.isRecommended = Boolean.FALSE;
+    }
 }

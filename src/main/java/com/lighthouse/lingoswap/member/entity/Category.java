@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Category extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class PreferredInterests extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)

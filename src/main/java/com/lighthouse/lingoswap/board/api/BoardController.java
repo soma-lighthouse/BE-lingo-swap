@@ -1,12 +1,10 @@
 package com.lighthouse.lingoswap.board.api;
 
 import com.lighthouse.lingoswap.board.dto.BoardCreateRequest;
-import com.lighthouse.lingoswap.board.dto.BoardSearchDetailResponse;
-import com.lighthouse.lingoswap.board.dto.BoardSearchReponse;
+import com.lighthouse.lingoswap.board.dto.BoardReadDetailResponse;
 import com.lighthouse.lingoswap.board.dto.BoardUpdateLikeRequest;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.board.service.BoardCRUDService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,7 +27,7 @@ public class BoardController {
                 .build());
     }
 
-    @GetMapping("/category/{category_id}") //수정
+/*    @GetMapping("/category/{category_id}") //수정
     public ResponseEntity<ResponseDto<BoardSearchReponse>> read(@PathVariable Integer category_id) {
         BoardSearchReponse boardSearchReponse = boardCRUDService.search(category_id);
         return ResponseEntity.ok(ResponseDto.<BoardSearchReponse>builder()
@@ -37,12 +35,12 @@ public class BoardController {
                 .message("OK")
                 .data(boardSearchReponse)
                 .build());
-    }
+    }*/
 
     @GetMapping("/question/{question_id}")
-    public ResponseEntity<ResponseDto<BoardSearchDetailResponse>> readQuestion(@PathVariable Long question_id) {
-        BoardSearchDetailResponse boardSearchDetailResponse = boardCRUDService.searchDetail(question_id);
-        return ResponseEntity.ok(ResponseDto.<BoardSearchDetailResponse>builder()
+    public ResponseEntity<ResponseDto<BoardReadDetailResponse>> readQuestion(@PathVariable Long question_id) {
+        BoardReadDetailResponse boardSearchDetailResponse = boardCRUDService.readDetail(question_id);
+        return ResponseEntity.ok(ResponseDto.<BoardReadDetailResponse>builder()
                 .code("20000")
                 .message("OK")
                 .data(boardSearchDetailResponse)

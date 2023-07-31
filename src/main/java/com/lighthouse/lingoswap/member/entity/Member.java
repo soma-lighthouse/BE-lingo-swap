@@ -2,7 +2,6 @@ package com.lighthouse.lingoswap.member.entity;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Member extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 1)

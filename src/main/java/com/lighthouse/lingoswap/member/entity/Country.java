@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Getter
 public class Country extends BaseEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column(length = 2)
