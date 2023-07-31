@@ -6,8 +6,8 @@ import com.lighthouse.lingoswap.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class MemberManager {
 
     private final MemberService memberService;

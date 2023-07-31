@@ -6,9 +6,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Entity
 public class PreferredInterests extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
