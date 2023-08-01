@@ -3,7 +3,6 @@ package com.lighthouse.lingoswap.member.dto;
 import com.lighthouse.lingoswap.member.entity.Member;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 public record MemberProfileResponse(String profileImage,
                                     String name,
@@ -16,7 +15,7 @@ public record MemberProfileResponse(String profileImage,
                 member.getName(),
                 member.getDescription(),
                 member.getRegion(),
-                member.getUsedLanguages().stream().map(MemberLanguageResponse::from).collect(Collectors.toList())
+                member.getUsedLanguages().stream().map(MemberLanguageResponse::from).toList()
         );
     }
 }
