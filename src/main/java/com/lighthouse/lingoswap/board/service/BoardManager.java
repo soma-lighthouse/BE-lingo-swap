@@ -26,7 +26,7 @@ public class BoardManager {
     private final BoardService boardService;
     private final LikeMemberService likeMemberService; // 이걸 주입안하면 아예 서비스 쓸 수가 없음/ 왜인지 알아보자
 
-    public void create(BoardCreateRequest boardCreateRequest) {
+    public Long create(BoardCreateRequest boardCreateRequest) {
 
     Member member = memberService.findById(boardCreateRequest.getMemberId());
     Category category = categoryService.findById(boardCreateRequest.getCategoryId());
@@ -36,6 +36,7 @@ public class BoardManager {
             .contents(boardCreateRequest.getContent())
             .build();
     boardService.save(question);
+    return question.getId();
     }
 
 
@@ -54,6 +55,9 @@ public class BoardManager {
 
         Member member = memberService.findById(boardUpdateLikeRequest.getMember_id());
         Question question = boardService.findById(questionId);
+
+        question.addLikes(question.getLikes());
+
         BoardLikeResponse boardLikeResponse = new BoardLikeResponse();
         boardLikeResponse.setQuestionId(question.getId());
         boardLikeResponse.setMemberId(question.getCreatedMember().getId());

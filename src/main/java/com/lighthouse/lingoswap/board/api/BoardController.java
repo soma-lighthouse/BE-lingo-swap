@@ -25,12 +25,13 @@ public class BoardController {
     private final BoardManager boardManager;
 
     @PostMapping("/board")
-    public ResponseEntity<ResponseDto> create(@RequestBody @Valid BoardCreateRequest boardCreateRequest) {
+    public ResponseEntity<ResponseDto<Long>> create(@RequestBody @Valid BoardCreateRequest boardCreateRequest) {
 
-        boardManager.create(boardCreateRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.builder()
+        Long questionId = boardManager.create(boardCreateRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.<Long>builder()
                 .code("20100")
                 .message("Successfully created")
+                .data(questionId)
                 .build()); //보드 정보 내려줌
     }
 
