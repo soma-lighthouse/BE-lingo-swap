@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.service;
 
+import com.lighthouse.lingoswap.match.repository.MatchQueryRepository;
 import com.lighthouse.lingoswap.member.entity.Member;
 import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
 import com.lighthouse.lingoswap.member.repository.MemberRepository;
@@ -11,8 +12,10 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
     private final MemberRepository memberRepository;
+    private final MatchQueryRepository matchQueryRepository;
 
-    Member save(final Member member) {
+    Member save(final String email) {
+        Member member = Member.builder().email(email).build();
         return memberRepository.save(member);
     }
 

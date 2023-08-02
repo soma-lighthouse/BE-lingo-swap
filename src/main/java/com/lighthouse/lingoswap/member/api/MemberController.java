@@ -21,11 +21,6 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<ResponseDto<MemberResponse>> create(@RequestBody @Valid final MemberCreateRequest memberCreateRequest) {
-        final MemberResponse memberResponse = memberManager.create(memberCreateRequest);
-        return ResponseEntity.ok(ResponseDto.<MemberResponse>builder()
-                .code("200")
-                .message("Successfully user created")
-                .data(memberResponse)
-                .build());
+        return ResponseEntity.ok(memberManager.create(memberCreateRequest));
     }
 }
