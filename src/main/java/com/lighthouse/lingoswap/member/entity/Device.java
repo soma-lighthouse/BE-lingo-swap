@@ -13,10 +13,11 @@ public class Device extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     private String deviceId;
-    private int region;
+    private String region;
     private String timezone;
     private String os;
     private String version;

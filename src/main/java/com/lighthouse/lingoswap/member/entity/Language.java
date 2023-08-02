@@ -3,7 +3,8 @@ package com.lighthouse.lingoswap.member.entity;
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -17,4 +18,9 @@ public class Language extends BaseEntity {
     private String code;
 
     private String description;
+
+    public Language(final String code, final String description) {
+        this.code = code;
+        this.description = description;
+    }
 }

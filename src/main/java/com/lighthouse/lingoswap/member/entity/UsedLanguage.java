@@ -1,9 +1,10 @@
 package com.lighthouse.lingoswap.member.entity;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
-import com.lighthouse.lingoswap.member.dto.MemberLanguageResponse;import jakarta.persistence.*;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -14,11 +15,19 @@ public class UsedLanguage extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "language_id")
     private Language language;
 
-    private int level;
+    private Integer level;
     private Boolean isValid;
+
+    public UsedLanguage(final Member member, final Language language, final Integer level) {
+        this.member = member;
+        this.language = language;
+        this.level = level;
+    }
 }
