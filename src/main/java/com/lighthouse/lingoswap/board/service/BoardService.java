@@ -7,6 +7,9 @@ import com.lighthouse.lingoswap.board.repository.LikeMemberRepository;
 import com.lighthouse.lingoswap.member.entity.Category;
 import com.lighthouse.lingoswap.member.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final LikeMemberRepository likeMemberRepository;
 
     public Question findById(Long id) {
         Question question = boardRepository.findById(id).get();
@@ -23,10 +25,11 @@ public class BoardService {
 
     public void save(Question question) {
         boardRepository.save(question);
-    }
+    } //맥스아이디가 필요할 때가 있음
 
-    public void saveLikeMember(LikeMember likeMember) {
-
+    public Slice<Question> findQuestionsByCategory(Category category, Pageable pageable) {
+        Slice<Question> slice = boardRepository.findQuestionsByCategory(category, pageable);
+        return slice;
     }
 }
 

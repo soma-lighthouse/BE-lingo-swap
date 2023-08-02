@@ -1,6 +1,8 @@
 package com.lighthouse.lingoswap.board.dto;
 
+import com.lighthouse.lingoswap.board.entity.Question;
 import lombok.Data;
+import org.aspectj.weaver.patterns.TypePatternQuestions;
 
 import java.time.LocalDateTime;
 
@@ -8,7 +10,4 @@ import java.time.LocalDateTime;
 public class BoardUpdateLikeRequest {
 
     private Long member_id;
-    private Long question_id;
-    private String content;
-    private LocalDateTime created_date;
 }

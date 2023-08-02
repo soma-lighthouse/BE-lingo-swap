@@ -3,9 +3,9 @@ package com.lighthouse.lingoswap.board.dto;
 import lombok.Data;
 
 @Data
-public class BoardCreateRequest {
+public class BoardLikeResponse {
 
+    private Long questionId;
     private Long memberId;
-    private Long categoryId;
-    private String content;
+    private Integer likes;
 }
