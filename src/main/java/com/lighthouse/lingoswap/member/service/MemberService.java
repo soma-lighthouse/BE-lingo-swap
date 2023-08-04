@@ -12,7 +12,7 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    Member save(final Member member) {
+    public Member save(final Member member) {
         return memberRepository.save(member);
     }
 

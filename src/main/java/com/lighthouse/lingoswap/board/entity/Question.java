@@ -30,7 +30,7 @@ public class Question extends BaseEntity {
 
 
     @Builder
-    public Question(Long id, Member createdMember, Category category, Integer likes, String contents) {
+    public Question(Long id, Member createdMember, Category category, String contents) {
         this.id = id;
         this.createdMember = createdMember;
         this.category = category;
@@ -41,6 +41,6 @@ public class Question extends BaseEntity {
     }
 
     public void addLikes(Integer likes) {
-        this.likes = likes+1;
+        this.likes = likes + 1;
     }
 }
