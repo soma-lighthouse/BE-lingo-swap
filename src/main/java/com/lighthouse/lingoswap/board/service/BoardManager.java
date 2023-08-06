@@ -1,7 +1,7 @@
 package com.lighthouse.lingoswap.board.service;
 
 import com.lighthouse.lingoswap.board.dto.BoardCreateRequest;
-import com.lighthouse.lingoswap.board.dto.BoardLikeResponse;
+import com.lighthouse.lingoswap.board.dto.BoardCreateResponse;
 import com.lighthouse.lingoswap.board.dto.BoardResponse;
 import com.lighthouse.lingoswap.board.dto.BoardUpdateLikeRequest;
 import com.lighthouse.lingoswap.board.entity.LikeMember;
@@ -9,16 +9,12 @@ import com.lighthouse.lingoswap.board.entity.Question;
 import com.lighthouse.lingoswap.member.entity.Category;
 import com.lighthouse.lingoswap.member.entity.Member;
 import com.lighthouse.lingoswap.member.service.CategoryService;
-import com.lighthouse.lingoswap.member.service.CountryService;
 import com.lighthouse.lingoswap.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +24,6 @@ public class BoardManager {
     private final MemberService memberService;
     private final CategoryService categoryService;
     private final BoardService boardService;
-    private final CountryService countryService;
     private final LikeMemberService likeMemberService; // 이걸 주입안하면 아예 서비스 쓸 수가 없음/ 왜인지 알아보자
 
     public void create(BoardCreateRequest boardCreateRequest) {
@@ -57,30 +52,31 @@ public class BoardManager {
         return  boardResponse;
     }*/
 
-    public BoardLikeResponse updateLike(BoardUpdateLikeRequest boardUpdateLikeRequest, Long questionId) {
+    public void updateLike(BoardUpdateLikeRequest boardUpdateLikeRequest, Long questionId) {
 
         Member member = memberService.findById(boardUpdateLikeRequest.getMember_id());
         Question question = boardService.findById(questionId);
 
         question.addLikes(question.getLikes()); //수정 필요
-
+        boardService.save(question);
+/*
         BoardLikeResponse boardLikeResponse = new BoardLikeResponse(); //한줄로 수저
         boardLikeResponse.setQuestionId(question.getId());
         boardLikeResponse.setMemberId(question.getCreatedMember().getId());
         boardLikeResponse.setLikes(question.getLikes());
+*/
 
         LikeMember likeMember = LikeMember.builder()
                 .member(member)
                 .question(question)
                 .build();
         likeMemberService.save(likeMember);
-        return boardLikeResponse;
     }
 
-    public List<BoardResponse> read(Integer categoryId, Pageable pageable) {
-        Category category = categoryService.findById(Long.valueOf(categoryId)); // 데이터가 없을 때 예외처리
+    public BoardCreateResponse read(Long categoryId, Pageable pageable) {
+        Category category = categoryService.findById(categoryId); // 데이터가 없을 때 예외처리 ////여기 valueof 바꾸자
         Slice<Question> slice = boardService.findQuestionsByCategory(category, pageable);// 데이터 없을 때 예외처리
-        List<BoardResponse> results = new ArrayList<>();
+        BoardCreateResponse results = new BoardCreateResponse();
         for (Question question : slice.getContent()) {
             Member member = memberService.findById(question.getCreatedMember().getId());
             String profileImage = member.getProfileImage();
