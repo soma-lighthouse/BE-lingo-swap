@@ -5,8 +5,8 @@ import com.lighthouse.lingoswap.member.entity.Category;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
 public interface BoardRepository extends JpaRepository<Question, Long> {
+
     Slice<Question> findQuestionsByCategory(Category category, Pageable pageable);
 }

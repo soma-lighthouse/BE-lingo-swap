@@ -5,12 +5,11 @@ import com.lighthouse.lingoswap.member.entity.Category;
 import com.lighthouse.lingoswap.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 @Getter
 public class Question extends BaseEntity {
 
@@ -28,19 +27,20 @@ public class Question extends BaseEntity {
     private Boolean isValid;
     private Boolean isRecommended;
 
-
-    @Builder
-    public Question(Long id, Member createdMember, Category category, String contents) {
-        this.id = id;
+    public Question(Member createdMember, Category category, Integer likes, String contents, Boolean isValid, Boolean isRecommended) {
         this.createdMember = createdMember;
         this.category = category;
-        this.likes = 0;
+        this.likes = likes;
         this.contents = contents;
-        this.isValid = Boolean.FALSE;
-        this.isRecommended = Boolean.FALSE;
+        this.isValid = isValid;
+        this.isRecommended = isRecommended;
     }
 
-    public void addLikes(Integer likes) {
-        this.likes = likes + 1;
+    public static Question of(Member createdMember, Category category, String contents) {
+        return new Question(createdMember, category, 0, contents, Boolean.TRUE, Boolean.FALSE);
+    }
+
+    public void addLikes(Question question) {
+        this.likes = question.getLikes() + 1;
     }
 }

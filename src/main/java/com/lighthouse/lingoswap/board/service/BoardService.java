@@ -8,20 +8,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class BoardService {
 
     private final BoardRepository boardRepository;
 
     public Question findById(Long id) {
-        Question question = boardRepository.findById(id).get();
-        return question;
+        return boardRepository.findById(id).orElseThrow(() -> new RuntimeException("멤버가 없습니다"));
     }
 
     public void save(Question question) {
         boardRepository.save(question);
-    } //맥스아이디가 필요할 때가 있음
+    }
 
     public Slice<Question> findQuestionsByCategory(Category category, Pageable pageable) {
         Slice<Question> slice = boardRepository.findQuestionsByCategory(category, pageable);

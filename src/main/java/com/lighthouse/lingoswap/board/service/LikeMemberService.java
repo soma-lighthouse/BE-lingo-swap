@@ -11,5 +11,5 @@ public class LikeMemberService {
 
     private final LikeMemberRepository likeMemberRepository;
 
-    public void save(LikeMember likeMember) { likeMemberRepository.save(likeMember); }
+    public void save(LikeMember likeMember) {likeMemberRepository.save(likeMember);}
 }

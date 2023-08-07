@@ -4,7 +4,6 @@ import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,10 +23,14 @@ public class LikeMember extends BaseEntity {
 
     private Boolean isValid;
 
-    @Builder
-    public LikeMember(Member member, Question question, Boolean isValid) {
+    private LikeMember(Member member, Question question) {
         this.member = member;
         this.question = question;
         this.isValid = Boolean.FALSE;
     }
+
+    public static LikeMember of(Member member, Question question) {
+        return new LikeMember(member, question);
+    }
+
 }

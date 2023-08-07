@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,29 +34,15 @@ public class BoardController {
                 .build()); //보드 정보 내려줌
     }
 
-    @GetMapping("/question/{categoryId}")
-    public ResponseEntity<ResponseDto<BoardCreateResponse>> read(@PathVariable Long categoryId, Pageable pageable) {
+    @GetMapping("/question/{categoryId}") /////////// 기본 디폴트 값 넣어주기
+    public ResponseEntity<ResponseDto<BoardCreateResponse>> read(@PathVariable Long categoryId, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         BoardCreateResponse question = boardManager.read(categoryId, pageable);
-//        Slice<BoardResponse> sliceDto = slice.map(BoardResponse::new);
-//        List<BoardResponse> results = sliceDto.toList();
         return ResponseEntity.ok(ResponseDto.<BoardCreateResponse>builder()
                 .code("20000")
                 .message("OK")
                 .data(question)
                 .build());
     }
-
-/*
-    @GetMapping("/board/detail/{question_id}")
-    public ResponseEntity<ResponseDto<BoardResponse>> readQuestion(@PathVariable Long question_id) {
-        BoardResponse boardSearchDetailResponse = boardManager.readDetail(question_id);
-        return ResponseEntity.ok(ResponseDto.<BoardResponse>builder()
-                .code("20000")
-                .message("OK")
-                .data(boardSearchDetailResponse)
-                .build());
-    }
-*/
 
     @PostMapping("/question/{question_id}/addLike")
     public ResponseEntity<ResponseDto> likeQuestion(@RequestBody @Valid BoardUpdateLikeRequest boardUpdateLikeRequest
