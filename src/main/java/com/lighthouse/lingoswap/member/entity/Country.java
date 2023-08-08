@@ -3,10 +3,12 @@ package com.lighthouse.lingoswap.member.entity;
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 public class Country extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

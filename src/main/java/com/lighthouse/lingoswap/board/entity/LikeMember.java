@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.question.entity;
+package com.lighthouse.lingoswap.board.entity;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.member.entity.Member;
@@ -22,4 +22,14 @@ public class LikeMember extends BaseEntity {
     private Question question;
 
     private Boolean isValid;
+
+    private LikeMember(Member member, Question question) {
+        this.member = member;
+        this.question = question;
+        this.isValid = Boolean.FALSE;
+    }
+
+    public static LikeMember of(Member member, Question question) {
+        return new LikeMember(member, question);
+    }
 }

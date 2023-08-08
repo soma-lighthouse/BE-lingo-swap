@@ -11,7 +11,7 @@ import java.time.ZoneOffset;
 public class ResponseDto<T> {
 
     private final LocalDateTime timestamp = LocalDateTime.now(ZoneOffset.UTC);
-    private final Integer code;
+    private final String code;
     private final String message;
     private final T data;
 }

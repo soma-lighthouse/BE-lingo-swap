@@ -2,16 +2,18 @@ package com.lighthouse.lingoswap.member.entity;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
-@Entity
 public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member")
@@ -23,13 +25,16 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
+    private Boolean isValid;
     private LocalDate birthday;
     private String name;
     private String description;
     private String profileImage;
     private String email;
-    private String region;
-    private Boolean isValid;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_id")
+    private Country region;
 
     @Builder
     public Member(final Gender gender,
@@ -38,7 +43,7 @@ public class Member extends BaseEntity {
                   final String description,
                   final String profileImage,
                   final String email,
-                  final String region) {
+                  final Country region) {
         this.gender = gender;
         this.birthday = birthday;
         this.name = name;

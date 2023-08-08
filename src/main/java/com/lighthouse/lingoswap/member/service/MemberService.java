@@ -22,20 +22,19 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final MemberQueryRepository memberQueryRepository;
 
-    Member save(final String email) {
-        Member member = Member.builder().email(email).build();
-        return memberRepository.save(member);
-    }
-
-    Member findById(final Long id) {
+    public Member findById(final Long id) {
         return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
     }
 
-    public Map<Long, List<UsedLanguage>> findUsedLanguagesByMembers(final List<Member> members) {
-        List<Long> memberIds = extractIds(members);
-        List<UsedLanguage> usedLanguages = memberQueryRepository.findUsedLanguagesWithJoinIn(memberIds);
-        return groupLanguagesById(usedLanguages, memberIds);
+    public List<Member> findAllById(final List<Long> ids) {
+        return memberQueryRepository.findAllById(ids);
     }
+
+//    public Map<Long, List<UsedLanguage>> findUsedLanguagesByMembers(final List<Member> members) {
+//        List<Long> memberIds = extractIds(members);
+//        List<UsedLanguage> usedLanguages = memberQueryRepository.findUsedLanguagesWithJoinIn(memberIds);
+//        return groupLanguagesById(usedLanguages, memberIds);
+//    }
 
     private Map<Long, List<UsedLanguage>> groupLanguagesById(final List<UsedLanguage> usedLanguages, final List<Long> memberIds) {
         Map<Long, List<UsedLanguage>> usedLanguagesMap = generateEmptyListById(memberIds);

@@ -18,9 +18,4 @@ public class Language extends BaseEntity {
     private String code;
 
     private String description;
-
-    public Language(final String code, final String description) {
-        this.code = code;
-        this.description = description;
-    }
 }
