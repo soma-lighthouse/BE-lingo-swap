@@ -5,11 +5,13 @@ import com.lighthouse.lingoswap.board.repository.LikeMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class LikeMemberService {
 
     private final LikeMemberRepository likeMemberRepository;
 
-    public void save(LikeMember likeMember) {likeMemberRepository.save(likeMember);}
+    public void save(LikeMember likeMember) {
+        likeMemberRepository.save(likeMember);
+    }
 }

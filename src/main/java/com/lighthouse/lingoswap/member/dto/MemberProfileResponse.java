@@ -1,6 +1,9 @@
 package com.lighthouse.lingoswap.member.dto;
 
+import com.lighthouse.lingoswap.member.entity.Member;
+import com.lighthouse.lingoswap.member.entity.PreferredCountry;
 import com.lighthouse.lingoswap.member.entity.PreferredInterests;
+import com.lighthouse.lingoswap.member.entity.UsedLanguage;
 
 import java.util.List;
 import java.util.Map;
@@ -17,20 +20,23 @@ public record MemberProfileResponse(Long id,
                                     List<MemberUsedLanguage> languages,
                                     List<MemberPreferredInterests> preferredInterests) {
 
-//    public static MemberProfileResponse from(Member member) {
-//        Map<String, List<String>> interestsMap = groupInterestsByCategory(member.getPreferredInterests());
-//        return new MemberProfileResponse(
-//                member.getId(),
-//                member.getProfileImage(),
-//                member.getName(),
-//                member.calculateAge(),
-//                member.getDescription(),
-//                member.getRegion().getCode(),
-//                member.getPreferredCountries().stream().map(p -> p.getCountry().getCode()).toList(),
-//                member.getUsedLanguages().stream().map(MemberUsedLanguage::from).toList(),
-//                interestsMap.entrySet().stream().map(entry -> MemberPreferredInterests.of(entry.getKey(), entry.getValue())).toList()
-//        );
-//    }
+    public static MemberProfileResponse of(Member member,
+                                           List<UsedLanguage> usedLanguages,
+                                           List<PreferredCountry> preferredCountries,
+                                           List<PreferredInterests> preferredInterests) {
+        Map<String, List<String>> interestsMap = groupInterestsByCategory(preferredInterests);
+        return new MemberProfileResponse(
+                member.getId(),
+                member.getProfileImage(),
+                member.getName(),
+                member.calculateAge(),
+                member.getDescription(),
+                member.getRegion().getCode(),
+                preferredCountries.stream().map(p -> p.getCountry().getCode()).toList(),
+                usedLanguages.stream().map(MemberUsedLanguage::from).toList(),
+                interestsMap.entrySet().stream().map(entry -> MemberPreferredInterests.of(entry.getKey(), entry.getValue())).toList()
+        );
+    }
 
     private static Map<String, List<String>> groupInterestsByCategory(List<PreferredInterests> preferredInterests) {
         return preferredInterests.stream().collect(

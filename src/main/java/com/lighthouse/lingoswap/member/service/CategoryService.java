@@ -5,8 +5,8 @@ import com.lighthouse.lingoswap.member.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
 @RequiredArgsConstructor
+@Service
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;

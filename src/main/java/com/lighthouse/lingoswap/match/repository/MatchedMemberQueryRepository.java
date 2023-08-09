@@ -10,20 +10,21 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.lighthouse.lingoswap.match.entity.QMatchedMember.matchedMember;
+import static com.lighthouse.lingoswap.member.entity.QMember.member;
 
 @Repository
-public class MatchQueryRepository {
+public class MatchedMemberQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public MatchQueryRepository(EntityManager em) {
+    public MatchedMemberQueryRepository(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public SliceDto<MatchedMember> search(final Long fromMemberId, final Long nextId, int pageSize) {
+    public SliceDto<MatchedMember> findAllByFromMemberId(final Long fromMemberId, final Long nextId, int pageSize) {
         List<MatchedMember> matchedMembers = queryFactory
                 .selectFrom(matchedMember)
-                .join(matchedMember.toMember)
+                .join(matchedMember.toMember, member)
                 .fetchJoin()
                 .where(
                         matchedMember.fromMember.id.eq(fromMemberId),
