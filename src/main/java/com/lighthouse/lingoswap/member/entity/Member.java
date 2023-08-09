@@ -29,4 +29,11 @@ public class Member extends BaseEntity {
     public Member(String email) {
         this.email = email;
     }
+
+    public Member(String name, String description, String profileImage) {
+        this.name = name;
+        this.description = description;
+        this.profileImage = profileImage;
+    }
+
 }

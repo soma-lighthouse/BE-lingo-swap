@@ -12,11 +12,11 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    Member save(final Member member) {
+    public Member save(final Member member) {
         return memberRepository.save(member);
     }
 
-    public Member findById(final Long id) {  ///왜 퍼블릭이 아니었나?
+    public Member findById(final Long id) {  ///왜 퍼블릭이 아니었나? + 위에도
         return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
     }
 }
