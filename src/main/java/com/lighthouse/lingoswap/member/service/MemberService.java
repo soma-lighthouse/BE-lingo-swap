@@ -16,7 +16,7 @@ public class MemberService {
         return memberRepository.save(member);
     }
 
-    Member findById(final Long id) {
+    public Member findById(final Long id) {  ///왜 퍼블릭이 아니었나?
         return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
     }
 }
