@@ -8,12 +8,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Entity
 public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member")
@@ -51,5 +52,9 @@ public class Member extends BaseEntity {
         this.profileImage = profileImage;
         this.email = email;
         this.region = region;
+    }
+
+    public int calculateAge() {
+        return Period.between(birthday, LocalDate.now()).getYears();
     }
 }
