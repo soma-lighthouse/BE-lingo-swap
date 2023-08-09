@@ -70,18 +70,14 @@ Temporary Items
 # Avoid ignore Gradle wrappper properties
 !gradle-wrapper.properties
 
+# SQL
+*.sql
+
 ### Gradle Patch ###
 # Java heap dump
 *.hprof
 
 ### Annotation Processor ###
 generated/
-
-application-local.yml
-application-local.yaml
-application-local.properties
-application-prod.yml
-application-prod.yaml
-application-prod.properties
 
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,git,intellij,macos

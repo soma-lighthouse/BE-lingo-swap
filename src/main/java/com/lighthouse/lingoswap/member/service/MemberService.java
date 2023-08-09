@@ -6,17 +6,23 @@ import com.lighthouse.lingoswap.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.util.List;
+
 @RequiredArgsConstructor
+@Service
 public class MemberService {
 
     private final MemberRepository memberRepository;
 
-    Member save(final Member member) {
-        return memberRepository.save(member);
+    public Member findById(final Long id) {
+        return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
     }
 
-    Member findById(final Long id) {
-        return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
+    Member findByIdWithRegionAndUsedLanguage(final Long id) {
+        return memberRepository.findByIdWithRegionAndUsedLanguage(id);
+    }
+
+    public List<Member> findAllByIdsWithRegionAndUsedLanguage(final List<Long> ids) {
+        return memberRepository.findAllByIdsWithRegionAndUsedLanguage(ids);
     }
 }
