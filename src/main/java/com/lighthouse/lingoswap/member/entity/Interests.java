@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.entity;
 
+import com.lighthouse.lingoswap.board.entity.Category;
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

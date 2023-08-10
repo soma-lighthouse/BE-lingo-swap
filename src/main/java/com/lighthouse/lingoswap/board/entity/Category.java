@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.member.entity;
+package com.lighthouse.lingoswap.board.entity;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import jakarta.persistence.Entity;
