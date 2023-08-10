@@ -22,7 +22,7 @@ public class BoardController {
     private final BoardManager boardManager;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> create(@RequestBody @Valid BoardCreateRequest boardCreateRequest) {
+    public ResponseEntity<ResponseDto> post(@RequestBody @Valid BoardCreateRequest boardCreateRequest) {
         boardManager.create(boardCreateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.builder()
                 .code("20100")
@@ -31,9 +31,11 @@ public class BoardController {
                 .build());
     }
 
-    @GetMapping("/{categoryId}")
-    public ResponseEntity<ResponseDto<BoardCreateResponse>> read(@PathVariable Long categoryId, @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        BoardCreateResponse question = boardManager.read(categoryId, pageable);
+    @GetMapping(path = "/{categoryId}", headers = "User-Id")
+    public ResponseEntity<ResponseDto<BoardCreateResponse>> get(@RequestHeader("User-Id") Long userId,
+                                                                @PathVariable Long categoryId,
+                                                                @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        BoardCreateResponse question = boardManager.read(userId, categoryId, pageable);
         return ResponseEntity.ok(ResponseDto.<BoardCreateResponse>builder()
                 .code("20000")
                 .message("OK")
@@ -41,14 +43,15 @@ public class BoardController {
                 .build());
     }
 
-    @PostMapping("/{questionId}/like")
-    public ResponseEntity<ResponseDto> likeQuestion(@PathVariable Long questionId,
+    @PostMapping(value = "/{questionId}/like", headers = "User-Id")
+    public ResponseEntity<ResponseDto> likeQuestion(@RequestHeader("User-Id") String userId,
+                                                    @PathVariable Long questionId,
                                                     @RequestBody @Valid BoardUpdateLikeRequest boardUpdateLikeRequest) {
-        boardManager.updateLike(boardUpdateLikeRequest, questionId);
+        boardManager.updateLike(questionId, boardUpdateLikeRequest);
         return ResponseEntity.ok(ResponseDto.builder()
                 .code("20000")
-                .message("Successfully created")
-                .data("성공")
+                .message("Successfully updated")
+                .data("OK")
                 .build());
     }
 }

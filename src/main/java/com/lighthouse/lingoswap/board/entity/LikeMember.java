@@ -4,9 +4,11 @@ import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Getter
 @Entity
 public class LikeMember extends BaseEntity {
 

@@ -1,11 +1,5 @@
 package com.lighthouse.lingoswap.board.dto;
 
-import lombok.Data;
+public record BoardCreateRequest(Long userId, Long categoryId, String content) {
 
-@Data
-public class BoardCreateRequest {
-
-    private Long memberId;
-    private Long categoryId;
-    private String content;
 }

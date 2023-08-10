@@ -11,7 +11,7 @@ public class CountryService {
 
     private final CountryRepository countryRepository;
 
-    public Country findById(Integer id) {
+    Country findById(Integer id) {
         Country country = countryRepository.findById(id).get();
         return country;
     }
