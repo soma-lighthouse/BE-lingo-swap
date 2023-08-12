@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.board.entity;
+package com.lighthouse.lingoswap.question.entity;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.member.entity.Member;
@@ -43,5 +43,9 @@ public class Question extends BaseEntity {
 
     public void addOneLike() {
         this.likes++;
+    }
+
+    public void subtractOneLike() {
+        this.likes--;
     }
 }
