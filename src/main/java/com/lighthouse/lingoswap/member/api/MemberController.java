@@ -1,6 +1,7 @@
 package com.lighthouse.lingoswap.member.api;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
+import com.lighthouse.lingoswap.member.dto.MemberPreSignedUrlResponse;
 import com.lighthouse.lingoswap.member.dto.MemberProfileResponse;
 import com.lighthouse.lingoswap.member.service.MemberManager;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,10 @@ public class MemberController {
     @GetMapping("/{userId}/profile")
     public ResponseEntity<ResponseDto<MemberProfileResponse>> get(@PathVariable final Long userId) {
         return ResponseEntity.ok(memberManager.read(userId));
+    }
+
+    @GetMapping("/upload/profile")
+    public ResponseEntity<ResponseDto<MemberPreSignedUrlResponse>> getPreSignedUrl(final Long userId) {
+        return ResponseEntity.ok(memberManager.createPreSignedUrl(userId));
     }
 }
