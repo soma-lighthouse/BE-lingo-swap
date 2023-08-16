@@ -1,6 +1,7 @@
-package com.lighthouse.lingoswap.member.entity;
+package com.lighthouse.lingoswap.question.entity;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
+import com.lighthouse.lingoswap.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class PreferredInterests extends BaseEntity {
+public class LikeMember extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,13 +20,18 @@ public class PreferredInterests extends BaseEntity {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "interests_id")
-    private Interests interests;
+    @JoinColumn(name = "question_id")
+    private Question question;
 
     private Boolean isValid;
 
-    public PreferredInterests(Member member, Interests interests) {
+    private LikeMember(Member member, Question question) {
         this.member = member;
-        this.interests = interests;
+        this.question = question;
+        this.isValid = Boolean.FALSE;
+    }
+
+    public static LikeMember of(Member member, Question question) {
+        return new LikeMember(member, question);
     }
 }

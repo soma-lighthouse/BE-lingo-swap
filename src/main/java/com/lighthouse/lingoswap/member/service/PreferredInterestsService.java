@@ -13,6 +13,10 @@ public class PreferredInterestsService {
 
     private final PreferredInterestsRepository preferredInterestsRepository;
 
+    public void save(PreferredInterests preferredInterests) {
+        preferredInterestsRepository.save(preferredInterests);
+    }
+
     List<PreferredInterests> findAllByMemberIdWithInterestsAndCategory(Long id) {
         return preferredInterestsRepository.findAllByMemberIdWithInterestsAndCategory(id);
     }

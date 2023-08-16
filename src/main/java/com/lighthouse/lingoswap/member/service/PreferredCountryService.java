@@ -16,4 +16,9 @@ public class PreferredCountryService {
     List<PreferredCountry> findAllByMemberIdWithCountry(Long id) {
         return preferredCountryRepository.findAllByMemberIdWithCountry(id);
     }
+
+
+    public void save(PreferredCountry preferredCountry) {
+        preferredCountryRepository.save(preferredCountry);
+    }
 }

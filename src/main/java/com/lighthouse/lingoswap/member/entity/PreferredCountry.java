@@ -22,5 +22,10 @@ public class PreferredCountry extends BaseEntity {
     @JoinColumn(name = "country_id")
     private Country country;
 
+    public PreferredCountry(Member member, Country country) {
+        this.member = member;
+        this.country = country;
+    }
+
     private Boolean isValid;
 }

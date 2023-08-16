@@ -14,6 +14,10 @@ public class MemberService {
 
     private final MemberRepository memberRepository;
 
+    public void save(Member member) {
+        memberRepository.save(member);
+    }
+
     public Member findById(final Long id) {
         return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
     }
