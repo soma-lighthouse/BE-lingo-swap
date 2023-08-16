@@ -16,4 +16,6 @@ public class Country extends BaseEntity {
 
     @Column(length = 2)
     private String code;
+
+    private String name;
 }

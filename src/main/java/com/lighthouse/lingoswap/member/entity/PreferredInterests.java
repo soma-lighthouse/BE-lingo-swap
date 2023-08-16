@@ -23,4 +23,9 @@ public class PreferredInterests extends BaseEntity {
     private Interests interests;
 
     private Boolean isValid;
+
+    public PreferredInterests(Member member, Interests interests) {
+        this.member = member;
+        this.interests = interests;
+    }
 }

@@ -14,4 +14,8 @@ public class CategoryService {
     Category findById(Long id) {
         return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("카테고리가 없습니다"));
     }
+
+    public Category findByName(String name) {
+        return categoryRepository.findByName(name);
+    }
 }
