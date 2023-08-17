@@ -1,2 +1,2 @@
 #!/bin/bash
-bash /home/ubuntu/build/deploy.sh > deploy.log 2> error.log < /dev/null &
+bash /home/ubuntu/build/deploy.sh > /dev/null 2> /dev/null < /dev/null &
