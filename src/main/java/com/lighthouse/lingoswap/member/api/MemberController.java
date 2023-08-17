@@ -36,7 +36,6 @@ public class MemberController {
                 .build());
     }
 
-
     @GetMapping("/form/country")
     public ResponseEntity<ResponseDto<CountryFormResponse>> readCountryForm() {
         CountryFormResponse countryFormResponse = memberManager.readCountryForm();
