@@ -61,8 +61,8 @@ public class MemberController {
         return ResponseEntity.ok(memberManager.read(userId));
     }
 
-    @GetMapping("/upload/profile")
-    public ResponseEntity<ResponseDto<MemberPreSignedUrlResponse>> getPreSignedUrl(final Long userId) {
-        return ResponseEntity.ok(memberManager.createPreSignedUrl(userId));
+    @PostMapping("/upload/profile")
+    public ResponseEntity<ResponseDto<MemberPreSignedUrlResponse>> getPreSignedUrl(@RequestBody final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
+        return ResponseEntity.ok(memberManager.createPreSignedUrl(memberPreSignedUrlRequest));
     }
 }

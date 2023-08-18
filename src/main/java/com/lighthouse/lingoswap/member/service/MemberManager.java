@@ -18,6 +18,7 @@ public class MemberManager {
 
     private static final String BUCKET_NAME = "lingoswap";
     private static final String PROFILE_KEY_PREFIX = "profiles/";
+    private static final String PROFILE_KEY_SUFFIX = "profiles/";
 
     private final MemberService memberService;
     private final PreferredCountryService preferredCountryService;
@@ -42,8 +43,8 @@ public class MemberManager {
                 .build();
     }
 
-    public ResponseDto<MemberPreSignedUrlResponse> createPreSignedUrl(Long memberId) {
-        String preSignedUrl = s3Service.generatePreSignedUrl(BUCKET_NAME, PROFILE_KEY_PREFIX + "test.txt");
+    public ResponseDto<MemberPreSignedUrlResponse> createPreSignedUrl(final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
+        String preSignedUrl = s3Service.generatePreSignedUrl(BUCKET_NAME, PROFILE_KEY_PREFIX + memberPreSignedUrlRequest.key());
         return ResponseDto.<MemberPreSignedUrlResponse>builder()
                 .code("20000")
                 .message("Successfully generated")
