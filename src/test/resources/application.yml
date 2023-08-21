@@ -24,3 +24,20 @@ server:
 
 logging.level:
   org.hibernate.SQL: debug
+
+sendbird:
+  api-url:
+  api-token:
+
+aws:
+  credentials:
+    access-key:
+    secret-key:
+  region:
+    static:
+  s3:
+    bucket-name:
+    profile:
+      prefix:
+  distribution:
+    domain:

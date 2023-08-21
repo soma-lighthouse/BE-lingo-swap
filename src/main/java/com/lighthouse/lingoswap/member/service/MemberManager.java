@@ -2,11 +2,13 @@ package com.lighthouse.lingoswap.member.service;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SendbirdCreateUserRequest;
-import com.lighthouse.lingoswap.common.service.SandbirdService;
+import com.lighthouse.lingoswap.common.service.SendbirdService;
+import com.lighthouse.lingoswap.infra.service.DistributionService;
 import com.lighthouse.lingoswap.infra.service.S3Service;
 import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.entity.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,10 +18,6 @@ import java.util.List;
 @Service
 public class MemberManager {
 
-    private static final String BUCKET_NAME = "lingoswap";
-    private static final String PROFILE_KEY_PREFIX = "profiles/";
-    private static final String PROFILE_KEY_SUFFIX = "profiles/";
-
     private final MemberService memberService;
     private final PreferredCountryService preferredCountryService;
     private final PreferredInterestsService preferredInterestsService;
@@ -28,8 +26,15 @@ public class MemberManager {
     private final UsedLanguageService usedLanguageService;
     private final InterestsService interestsService;
     private final InterestsFormService interestsFormService;
-    private final SandbirdService sandbirdService;
+    private final SendbirdService sendbirdService;
     private final S3Service s3Service;
+    private final DistributionService distributionService;
+
+    @Value("${aws.s3.bucket-name}")
+    private String bucketName;
+
+    @Value("${aws.s3.profile.prefix}")
+    private String profileKeyPrefix;
 
     public ResponseDto<MemberProfileResponse> read(final Long memberId) {
         Member member = memberService.findByIdWithRegionAndUsedLanguage(memberId);
@@ -39,12 +44,12 @@ public class MemberManager {
         return ResponseDto.<MemberProfileResponse>builder()
                 .code("20000")
                 .message("Successfully user matched")
-                .data(MemberProfileResponse.of(member, usedLanguages, preferredCountries, preferredInterests))
+                .data(MemberProfileResponse.of(member, distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), usedLanguages, preferredCountries, preferredInterests))
                 .build();
     }
 
     public ResponseDto<MemberPreSignedUrlResponse> createPreSignedUrl(final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
-        String preSignedUrl = s3Service.generatePreSignedUrl(BUCKET_NAME, PROFILE_KEY_PREFIX + memberPreSignedUrlRequest.key());
+        String preSignedUrl = s3Service.generatePreSignedUrl(bucketName, profileKeyPrefix + memberPreSignedUrlRequest.key());
         return ResponseDto.<MemberPreSignedUrlResponse>builder()
                 .code("20000")
                 .message("Successfully generated")
@@ -55,8 +60,15 @@ public class MemberManager {
     @Transactional
     public void create(MemberCreateRequest memberCreateRequest) {
         Country country = countryService.findCountryByCode(memberCreateRequest.getRegion());
-        Member member = Member.of(memberCreateRequest.getGender(), memberCreateRequest.getBirthday(), memberCreateRequest.getName(), memberCreateRequest.getDescription()
-                , memberCreateRequest.getProfileImage(), memberCreateRequest.getEmail(), country);
+        Member member = new Member(
+                memberCreateRequest.getGender(),
+                memberCreateRequest.getBirthday(),
+                memberCreateRequest.getName(),
+                memberCreateRequest.getDescription(),
+                memberCreateRequest.getProfileImageUri(),
+                memberCreateRequest.getEmail(),
+                country,
+                memberCreateRequest.getUuid());
         memberService.save(member);
 
         savePreferredCountries(member, memberCreateRequest);
@@ -68,8 +80,8 @@ public class MemberManager {
         memberService.save(member);
 
         SendbirdCreateUserRequest sendbirdCreateUserRequest =
-                new SendbirdCreateUserRequest(String.valueOf(member.getId()), member.getName(), member.getProfileImage());
-        sandbirdService.createUser(sendbirdCreateUserRequest);
+                new SendbirdCreateUserRequest(String.valueOf(member.getId()), member.getName(), member.getProfileImageUri());
+        sendbirdService.createUser(sendbirdCreateUserRequest);
     }
 
     public InterestsFormResponse readInterestsForm() {

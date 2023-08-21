@@ -11,7 +11,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.*;
 
 public record MemberProfileResponse(Long id,
-                                    String profileImage,
+                                    String profileImageUri,
                                     String name,
                                     int age,
                                     String description,
@@ -21,13 +21,14 @@ public record MemberProfileResponse(Long id,
                                     List<MemberPreferredInterests> preferredInterests) {
 
     public static MemberProfileResponse of(Member member,
+                                           String profileImageUri,
                                            List<UsedLanguage> usedLanguages,
                                            List<PreferredCountry> preferredCountries,
                                            List<PreferredInterests> preferredInterests) {
         Map<String, List<String>> interestsMap = groupInterestsByCategory(preferredInterests);
         return new MemberProfileResponse(
                 member.getId(),
-                member.getProfileImage(),
+                profileImageUri,
                 member.getName(),
                 member.calculateAge(),
                 member.getDescription(),

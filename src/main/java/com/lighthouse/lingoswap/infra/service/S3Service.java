@@ -12,13 +12,13 @@ import java.util.Date;
 @Service
 public class S3Service {
 
-    private static final long FIFTEEN_MIN_IN_MS = 1800000;
+    private static final long ONE_HOUR_IN_MS = 3600000;
 
     private final AmazonS3 s3;
 
     public String generatePreSignedUrl(String bucketName, String key) {
         GeneratePresignedUrlRequest req = new GeneratePresignedUrlRequest(bucketName, key, HttpMethod.PUT);
-        req.setExpiration(new Date(System.currentTimeMillis() + FIFTEEN_MIN_IN_MS));
+        req.setExpiration(new Date(System.currentTimeMillis() + ONE_HOUR_IN_MS));
 
         return s3.generatePresignedUrl(req).toString();
     }

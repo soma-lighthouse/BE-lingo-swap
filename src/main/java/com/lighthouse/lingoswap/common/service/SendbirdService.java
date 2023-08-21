@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @RequiredArgsConstructor
 @Service
-public class SandbirdService {
+public class SendbirdService {
 
     private final WebClient webClient;
 

@@ -29,32 +29,30 @@ public class Member extends BaseEntity {
     private LocalDate birthday;
     private String name;
     private String description;
-    private String profileImage;
+    private String profileImageUri;
     private String email;
+    private String uuid;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id")
     private Country region;
 
-    private Member(final Gender gender,
-                   final LocalDate birthday,
-                   final String name,
-                   final String description,
-                   final String profileImage,
-                   final String email,
-                   final Country region) {
+    public Member(final Gender gender,
+                  final LocalDate birthday,
+                  final String name,
+                  final String description,
+                  final String profileImageUri,
+                  final String email,
+                  final Country region,
+                  final String uuid) {
         this.gender = gender;
         this.birthday = birthday;
         this.name = name;
         this.description = description;
-        this.profileImage = profileImage;
+        this.profileImageUri = profileImageUri;
         this.email = email;
         this.region = region;
-    }
-
-    public static Member of(Gender gender, LocalDate birthday, String name, String description,
-                            String profileImage, String email, Country region) {
-        return new Member(gender, birthday, name, description, profileImage, email, region);
+        this.uuid = uuid;
     }
 
     public int calculateAge() {
