@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class MemberCreateRequest {
 
-    private String uuid;
     private String profileImageUri;
     private LocalDate birthday;
     private String name;

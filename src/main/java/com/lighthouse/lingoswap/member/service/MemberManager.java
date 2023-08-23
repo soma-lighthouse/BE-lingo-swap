@@ -67,8 +67,7 @@ public class MemberManager {
                 memberCreateRequest.getDescription(),
                 memberCreateRequest.getProfileImageUri(),
                 memberCreateRequest.getEmail(),
-                country,
-                memberCreateRequest.getUuid());
+                country);
         memberService.save(member);
 
         savePreferredCountries(member, memberCreateRequest);

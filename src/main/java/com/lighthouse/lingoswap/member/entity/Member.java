@@ -31,7 +31,6 @@ public class Member extends BaseEntity {
     private String description;
     private String profileImageUri;
     private String email;
-    private String uuid;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id")
@@ -43,8 +42,7 @@ public class Member extends BaseEntity {
                   final String description,
                   final String profileImageUri,
                   final String email,
-                  final Country region,
-                  final String uuid) {
+                  final Country region) {
         this.gender = gender;
         this.birthday = birthday;
         this.name = name;
@@ -52,7 +50,6 @@ public class Member extends BaseEntity {
         this.profileImageUri = profileImageUri;
         this.email = email;
         this.region = region;
-        this.uuid = uuid;
     }
 
     public int calculateAge() {
