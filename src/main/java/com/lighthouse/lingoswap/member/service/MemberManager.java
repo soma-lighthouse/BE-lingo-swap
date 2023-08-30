@@ -106,6 +106,7 @@ public class MemberManager {
                 .forEach(preferredCountryService::save);
     }
 
+
     @Transactional
     public void saveUsedLanguages(Member member, MemberCreateRequest memberCreateRequest) {
         List<MemberCreateRequest.UsedLanguage> usedLanguages = memberCreateRequest.getUsedLanguages();
@@ -122,10 +123,21 @@ public class MemberManager {
     public void savePreferredInterests(Member member, MemberCreateRequest memberCreateRequest) {
         List<MemberCreateRequest.PreferredInterests> preferredInterestsByDto = memberCreateRequest.getPreferredInterests();
 
+        List<String> a = List.of("A", "B");
+        List<String> b = List.of("C", "D");
+        List<String> c = List.of("E", "F");
+
         preferredInterestsByDto.stream()
+                .peek(userInterestsByDto -> System.out.println("UserInterestsByDto: " + userInterestsByDto))
                 .flatMap(userInterestsByDto -> userInterestsByDto.getInterests().stream())
+                .peek(interestName -> System.out.println("Interest Name: " + interestName))
                 .map(interestsService::findByName)
+                .peek(interest -> System.out.println("Interest: " + interest))
                 .map(interest -> new PreferredInterests(member, interest))
-                .forEach(preferredInterestsService::save);
+                .peek(preferredInterests -> System.out.println("PreferredInterests: " + preferredInterests))
+                .forEach(preferredInterests -> {
+                    System.out.println("Saving PreferredInterests: " + preferredInterests);
+                    preferredInterestsService.save(preferredInterests);
+                });
     }
 }

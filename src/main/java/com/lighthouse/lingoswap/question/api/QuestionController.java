@@ -2,15 +2,12 @@ package com.lighthouse.lingoswap.question.api;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.question.dto.QuestionCreateRequest;
-import com.lighthouse.lingoswap.question.dto.QuestionCreateResponse;
 import com.lighthouse.lingoswap.question.dto.QuestionDeleteLikeRequest;
+import com.lighthouse.lingoswap.question.dto.QuestionReadResponse;
 import com.lighthouse.lingoswap.question.dto.QuestionUpdateLikeRequest;
 import com.lighthouse.lingoswap.question.service.QuestionManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,11 +30,12 @@ public class QuestionController {
     }
 
     @GetMapping(path = "/category/{categoryId}")
-    public ResponseEntity<ResponseDto<QuestionCreateResponse>> get(@RequestHeader("User-Id") Long userId,
-                                                                   @PathVariable Long categoryId,
-                                                                   @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        QuestionCreateResponse question = questionManager.read(userId, categoryId, pageable);
-        return ResponseEntity.ok(ResponseDto.<QuestionCreateResponse>builder()
+    public ResponseEntity<ResponseDto<QuestionReadResponse>> get(@RequestHeader("User-Id") Long userId,
+                                                                 @PathVariable Long categoryId,
+                                                                 @RequestParam(required = false) Long next,
+                                                                 @RequestParam(defaultValue = "10") final int pageSize) {
+        QuestionReadResponse question = questionManager.read(userId, categoryId, next, pageSize);
+        return ResponseEntity.ok(ResponseDto.<QuestionReadResponse>builder()
                 .code("20000")
                 .message("OK")
                 .data(question)
