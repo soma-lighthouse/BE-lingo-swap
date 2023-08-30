@@ -1,6 +1,5 @@
 package com.lighthouse.lingoswap.member.service;
 
-import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SendbirdCreateUserRequest;
 import com.lighthouse.lingoswap.common.service.SendbirdService;
 import com.lighthouse.lingoswap.infra.service.DistributionService;
@@ -36,25 +35,17 @@ public class MemberManager {
     @Value("${aws.s3.profile.prefix}")
     private String profileKeyPrefix;
 
-    public ResponseDto<MemberProfileResponse> read(final Long memberId) {
+    public MemberProfileResponse read(final Long memberId) {
         Member member = memberService.findByIdWithRegionAndUsedLanguage(memberId);
         List<UsedLanguage> usedLanguages = member.getUsedLanguages();
         List<PreferredCountry> preferredCountries = preferredCountryService.findAllByMemberIdWithCountry(memberId);
         List<PreferredInterests> preferredInterests = preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(memberId);
-        return ResponseDto.<MemberProfileResponse>builder()
-                .code("20000")
-                .message("Successfully user matched")
-                .data(MemberProfileResponse.of(member, distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), usedLanguages, preferredCountries, preferredInterests))
-                .build();
+        return MemberProfileResponse.of(member, distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), usedLanguages, preferredCountries, preferredInterests);
     }
 
-    public ResponseDto<MemberPreSignedUrlResponse> createPreSignedUrl(final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
+    public MemberPreSignedUrlResponse createPreSignedUrl(final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
         String preSignedUrl = s3Service.generatePreSignedUrl(bucketName, profileKeyPrefix + memberPreSignedUrlRequest.key());
-        return ResponseDto.<MemberPreSignedUrlResponse>builder()
-                .code("20000")
-                .message("Successfully generated")
-                .data(MemberPreSignedUrlResponse.from(preSignedUrl))
-                .build();
+        return MemberPreSignedUrlResponse.from(preSignedUrl);
     }
 
     @Transactional

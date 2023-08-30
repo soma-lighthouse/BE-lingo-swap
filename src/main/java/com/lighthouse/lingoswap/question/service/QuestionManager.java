@@ -30,13 +30,13 @@ public class QuestionManager {
         questionService.save(question);
     }
 
-    public QuestionReadResponse read(Long userId, Long categoryId, Long nextId, int pageSize) {
+    public QuestionListResponse read(Long userId, Long categoryId, Long nextId, int pageSize) {
         SliceDto<Question> questions = questionService.search(categoryId, nextId, pageSize);
         List<LikeMember> likeMembers = likeMemberService.findAllByMemberId(userId);
 
         List<Question> likedQuestions = likeMembers.stream().map(LikeMember::getQuestion).toList();
-        List<QuestionResponse> results = questions.content().stream().map(q -> QuestionResponse.of(q, q.getCreatedMember(), likedQuestions.contains(q))).toList();
-        return new QuestionReadResponse(questions.nextId(), results);
+        List<QuestionDetail> results = questions.content().stream().map(q -> QuestionDetail.of(q, q.getCreatedMember(), likedQuestions.contains(q))).toList();
+        return new QuestionListResponse(questions.nextId(), results);
     }
 
     @Transactional

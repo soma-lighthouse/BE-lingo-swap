@@ -15,7 +15,7 @@ public class ChatroomManager {
     private final SendbirdService sendbirdService;
 
     public void create(SendbirdRequestByChatroom sendbirdRequestByChatroom) {
-        sendbirdRequestByChatroom.getMembers().stream()
+        sendbirdRequestByChatroom.members().stream()
                 .map(memberService::findById)
                 .map(member -> new SendbirdCreateUserRequest(String.valueOf(member.getId()), member.getName(), member.getProfileImageUri()))
                 .forEach(sendbirdService::createUser);
@@ -23,7 +23,6 @@ public class ChatroomManager {
 
 
     public void delete(SendbirdRequestByChatroom sendbirdRequestByChatroom) {
-        sendbirdRequestByChatroom.getMembers().stream()
-                .forEach(sendbirdService::deleteUser);
+        sendbirdRequestByChatroom.members().forEach(sendbirdService::deleteUser);
     }
 }

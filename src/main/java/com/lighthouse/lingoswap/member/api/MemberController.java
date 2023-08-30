@@ -1,11 +1,9 @@
 package com.lighthouse.lingoswap.member.api;
 
-import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.service.MemberManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,52 +15,33 @@ public class MemberController {
     private final MemberManager memberManager;
 
     @PostMapping
-    public ResponseEntity<ResponseDto> create(@RequestBody @Valid MemberCreateRequest memberCreateRequest) {
+    public ResponseEntity<Object> create(@RequestBody @Valid final MemberCreateRequest memberCreateRequest) {
         memberManager.create(memberCreateRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ResponseDto.builder()
-                .code("20100")
-                .message("Successfully created")
-                .data("성공")
-                .build());
+        return ResponseEntity.ok().body(null);
     }
 
     @GetMapping("/form/interests")
-    public ResponseEntity<ResponseDto<InterestsFormResponse>> readInterestsForm() {
-        InterestsFormResponse interestsFormResponse = memberManager.readInterestsForm();
-        return ResponseEntity.ok(ResponseDto.<InterestsFormResponse>builder()
-                .code("20000")
-                .message("OK")
-                .data(interestsFormResponse)
-                .build());
+    public ResponseEntity<InterestsFormResponse> readInterestsForm() {
+        return ResponseEntity.ok().body(memberManager.readInterestsForm());
     }
 
     @GetMapping("/form/country")
-    public ResponseEntity<ResponseDto<CountryFormResponse>> readCountryForm() {
-        CountryFormResponse countryFormResponse = memberManager.readCountryForm();
-        return ResponseEntity.ok(ResponseDto.<CountryFormResponse>builder()
-                .code("20000")
-                .message("OK")
-                .data(countryFormResponse)
-                .build());
+    public ResponseEntity<CountryFormResponse> readCountryForm() {
+        return ResponseEntity.ok().body(memberManager.readCountryForm());
     }
 
     @GetMapping("/form/language")
-    public ResponseEntity<ResponseDto<LanguageFormResponse>> readLanguageForm() {
-        LanguageFormResponse languageFormResponse = memberManager.readLanguageForm();
-        return ResponseEntity.ok(ResponseDto.<LanguageFormResponse>builder()
-                .code("20000")
-                .message("OK")
-                .data(languageFormResponse)
-                .build());
+    public ResponseEntity<LanguageFormResponse> readLanguageForm() {
+        return ResponseEntity.ok().body(memberManager.readLanguageForm());
     }
 
     @GetMapping("/{userId}/profile")
-    public ResponseEntity<ResponseDto<MemberProfileResponse>> get(@PathVariable final Long userId) {
-        return ResponseEntity.ok(memberManager.read(userId));
+    public ResponseEntity<MemberProfileResponse> get(@PathVariable final Long userId) {
+        return ResponseEntity.ok().body(memberManager.read(userId));
     }
 
     @PostMapping("/upload/profile")
-    public ResponseEntity<ResponseDto<MemberPreSignedUrlResponse>> getPreSignedUrl(@RequestBody final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
+    public ResponseEntity<MemberPreSignedUrlResponse> getPreSignedUrl(@RequestBody final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
         return ResponseEntity.ok(memberManager.createPreSignedUrl(memberPreSignedUrlRequest));
     }
 }

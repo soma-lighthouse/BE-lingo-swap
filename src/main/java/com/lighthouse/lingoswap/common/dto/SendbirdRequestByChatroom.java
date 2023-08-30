@@ -1,12 +1,8 @@
 package com.lighthouse.lingoswap.common.dto;
 
-import lombok.Data;
-
 import java.util.List;
 
-@Data
-public class SendbirdRequestByChatroom {
+public record SendbirdRequestByChatroom(List<Long> members) {
 
-    private List<Long> members;
 }
 
