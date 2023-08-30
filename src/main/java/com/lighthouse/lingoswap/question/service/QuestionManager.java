@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.question.service;
 
+import com.lighthouse.lingoswap.common.dto.SliceDto;
 import com.lighthouse.lingoswap.member.entity.Member;
 import com.lighthouse.lingoswap.member.service.MemberService;
 import com.lighthouse.lingoswap.question.dto.*;
@@ -7,7 +8,6 @@ import com.lighthouse.lingoswap.question.entity.Category;
 import com.lighthouse.lingoswap.question.entity.LikeMember;
 import com.lighthouse.lingoswap.question.entity.Question;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,13 +30,13 @@ public class QuestionManager {
         questionService.save(question);
     }
 
-    public QuestionCreateResponse read(Long userId, Long categoryId, Pageable pageable) {
-        List<Question> questions = questionService.findQuestionsByCategory(categoryId, pageable).getContent();
+    public QuestionReadResponse read(Long userId, Long categoryId, Long nextId, int pageSize) {
+        SliceDto<Question> questions = questionService.search(categoryId, nextId, pageSize);
         List<LikeMember> likeMembers = likeMemberService.findAllByMemberId(userId);
 
         List<Question> likedQuestions = likeMembers.stream().map(LikeMember::getQuestion).toList();
-        List<QuestionResponse> results = questions.stream().map(q -> QuestionResponse.of(q, q.getCreatedMember(), likedQuestions.contains(q))).toList();
-        return new QuestionCreateResponse(results);
+        List<QuestionResponse> results = questions.content().stream().map(q -> QuestionResponse.of(q, q.getCreatedMember(), likedQuestions.contains(q))).toList();
+        return new QuestionReadResponse(questions.nextId(), results);
     }
 
     @Transactional

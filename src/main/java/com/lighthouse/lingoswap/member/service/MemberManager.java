@@ -105,6 +105,7 @@ public class MemberManager {
                 .forEach(preferredCountryService::save);
     }
 
+
     @Transactional
     public void saveUsedLanguages(Member member, MemberCreateRequest memberCreateRequest) {
         List<MemberCreateRequest.UsedLanguage> usedLanguages = memberCreateRequest.getUsedLanguages();
