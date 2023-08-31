@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.service;
 
+import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SendbirdCreateUserRequest;
 import com.lighthouse.lingoswap.common.service.SendbirdService;
 import com.lighthouse.lingoswap.infra.service.DistributionService;
@@ -35,21 +36,21 @@ public class MemberManager {
     @Value("${aws.s3.profile.prefix}")
     private String profileKeyPrefix;
 
-    public MemberProfileResponse read(final Long memberId) {
+    public ResponseDto<MemberProfileResponse> read(final Long memberId) {
         Member member = memberService.findByIdWithRegionAndUsedLanguage(memberId);
         List<UsedLanguage> usedLanguages = member.getUsedLanguages();
         List<PreferredCountry> preferredCountries = preferredCountryService.findAllByMemberIdWithCountry(memberId);
         List<PreferredInterests> preferredInterests = preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(memberId);
-        return MemberProfileResponse.of(member, distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), usedLanguages, preferredCountries, preferredInterests);
+        return ResponseDto.success(MemberProfileResponse.of(member, distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), usedLanguages, preferredCountries, preferredInterests));
     }
 
-    public MemberPreSignedUrlResponse createPreSignedUrl(final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
+    public ResponseDto<MemberPreSignedUrlResponse> createPreSignedUrl(final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
         String preSignedUrl = s3Service.generatePreSignedUrl(bucketName, profileKeyPrefix + memberPreSignedUrlRequest.key());
-        return MemberPreSignedUrlResponse.from(preSignedUrl);
+        return ResponseDto.success(MemberPreSignedUrlResponse.from(preSignedUrl));
     }
 
     @Transactional
-    public void create(MemberCreateRequest memberCreateRequest) {
+    public ResponseDto<Object> create(MemberCreateRequest memberCreateRequest) {
         Country country = countryService.findCountryByCode(memberCreateRequest.getRegion());
         Member member = new Member(
                 memberCreateRequest.getGender(),
@@ -69,21 +70,21 @@ public class MemberManager {
         member.addUsedLanguage(usedLanguages);
         memberService.save(member);
 
-        SendbirdCreateUserRequest sendbirdCreateUserRequest =
-                new SendbirdCreateUserRequest(String.valueOf(member.getId()), member.getName(), member.getProfileImageUri());
+        SendbirdCreateUserRequest sendbirdCreateUserRequest = new SendbirdCreateUserRequest(String.valueOf(member.getId()), member.getName(), member.getProfileImageUri());
         sendbirdService.createUser(sendbirdCreateUserRequest);
+        return ResponseDto.success(null);
     }
 
-    public InterestsFormResponse readInterestsForm() {
-        return interestsFormService.getAllInterests();
+    public ResponseDto<InterestsFormResponse> readInterestsForm() {
+        return ResponseDto.success(interestsFormService.getAllInterests());
     }
 
-    public CountryFormResponse readCountryForm() {
-        return countryService.getAllCountries();
+    public ResponseDto<CountryFormResponse> readCountryForm() {
+        return ResponseDto.success(countryService.getAllCountries());
     }
 
-    public LanguageFormResponse readLanguageForm() {
-        return languageService.getAllLanguages();
+    public ResponseDto<LanguageFormResponse> readLanguageForm() {
+        return ResponseDto.success(languageService.getAllLanguages());
     }
 
     @Transactional

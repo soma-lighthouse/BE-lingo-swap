@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.match.api;
 
+import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.match.dto.MatchedMemberProfilesResponse;
 import com.lighthouse.lingoswap.match.service.MatchManager;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,9 @@ public class MatchController {
     private final MatchManager matchManager;
 
     @GetMapping("/{user_id}/matches")
-    public ResponseEntity<MatchedMemberProfilesResponse> get(@PathVariable final Long user_id,
-                                                             @RequestParam(required = false) final Long next,
-                                                             @RequestParam(defaultValue = "10") final int pageSize) {
+    public ResponseEntity<ResponseDto<MatchedMemberProfilesResponse>> get(@PathVariable final Long user_id,
+                                                                          @RequestParam(required = false) final Long next,
+                                                                          @RequestParam(defaultValue = "10") final int pageSize) {
         return ResponseEntity.ok(matchManager.read(user_id, next, pageSize));
     }
 }

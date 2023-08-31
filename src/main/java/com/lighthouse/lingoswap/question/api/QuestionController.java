@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.question.api;
 
+import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.question.dto.QuestionCreateRequest;
 import com.lighthouse.lingoswap.question.dto.QuestionDeleteLikeRequest;
 import com.lighthouse.lingoswap.question.dto.QuestionListResponse;
@@ -18,32 +19,29 @@ public class QuestionController {
     private final QuestionManager questionManager;
 
     @PostMapping
-    public ResponseEntity<Object> post(@RequestBody @Valid final QuestionCreateRequest questionCreateRequest) {
-        questionManager.create(questionCreateRequest);
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<ResponseDto<Object>> post(@RequestBody @Valid final QuestionCreateRequest questionCreateRequest) {
+        return ResponseEntity.ok(questionManager.create(questionCreateRequest));
     }
 
     @GetMapping(path = "/category/{categoryId}")
-    public ResponseEntity<QuestionListResponse> get(@RequestHeader("User-Id") Long userId,
-                                                    @PathVariable Long categoryId,
-                                                    @RequestParam(required = false) Long next,
-                                                    @RequestParam(defaultValue = "10") final int pageSize) {
-        return ResponseEntity.ok().body(questionManager.read(userId, categoryId, next, pageSize));
+    public ResponseEntity<ResponseDto<QuestionListResponse>> get(@RequestHeader("User-Id") Long userId,
+                                                                 @PathVariable Long categoryId,
+                                                                 @RequestParam(required = false) Long next,
+                                                                 @RequestParam(defaultValue = "10") final int pageSize) {
+        return ResponseEntity.ok(questionManager.read(userId, categoryId, next, pageSize));
     }
 
     @PostMapping(path = "/{questionId}/like", headers = "User-Id")
-    public ResponseEntity<Object> postLike(@RequestHeader("User-Id") String userId,
-                                           @PathVariable Long questionId,
-                                           @RequestBody QuestionUpdateLikeRequest questionUpdateLikeRequest) {
-        questionManager.updateLike(questionId, questionUpdateLikeRequest);
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<ResponseDto<Object>> postLike(@RequestHeader("User-Id") String userId,
+                                                        @PathVariable Long questionId,
+                                                        @RequestBody QuestionUpdateLikeRequest questionUpdateLikeRequest) {
+        return ResponseEntity.ok().body(questionManager.updateLike(questionId, questionUpdateLikeRequest));
     }
 
     @DeleteMapping(path = "/{questionId}/like", headers = "User-Id")
-    public ResponseEntity<Object> deleteLike(@RequestHeader("User-Id") String userId,
-                                             @PathVariable Long questionId,
-                                             @RequestBody QuestionDeleteLikeRequest questionDeleteLikeRequest) {
-        questionManager.deleteLike(questionId, questionDeleteLikeRequest);
-        return ResponseEntity.ok().body(null);
+    public ResponseEntity<ResponseDto<Object>> deleteLike(@RequestHeader("User-Id") String userId,
+                                                          @PathVariable Long questionId,
+                                                          @RequestBody QuestionDeleteLikeRequest questionDeleteLikeRequest) {
+        return ResponseEntity.ok().body(questionManager.deleteLike(questionId, questionDeleteLikeRequest));
     }
 }
