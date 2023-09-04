@@ -21,7 +21,7 @@ public class MatchedMemberUpdateScheduler {
     @Autowired
     private Job createMatchedMembersJob;
 
-    @Scheduled(cron = "0 28 2 * * *")
+    @Scheduled(cron = "0 24 15 * * *")
     public void runCreateMatchedMembersJob() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
         JobParameters params = new JobParametersBuilder()
                 .addString("JobID", String.valueOf(System.currentTimeMillis()))

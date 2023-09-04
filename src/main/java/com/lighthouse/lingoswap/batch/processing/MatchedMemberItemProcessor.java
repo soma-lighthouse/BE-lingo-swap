@@ -3,7 +3,6 @@ package com.lighthouse.lingoswap.batch.processing;
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
 import com.lighthouse.lingoswap.member.entity.Member;
 import com.lighthouse.lingoswap.member.service.MemberService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
@@ -14,13 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-@NoArgsConstructor(force = true)
 @RequiredArgsConstructor
 @Component
 public class MatchedMemberItemProcessor implements ItemProcessor<Member, List<MatchedMember>> {
 
     private final MemberService memberService;
     private final Random random = new Random();
+
 
     @Override
     public List<MatchedMember> process(Member currentMember) throws Exception {

@@ -4,6 +4,7 @@ import com.lighthouse.lingoswap.batch.processing.MatchedMemberItemProcessor;
 import com.lighthouse.lingoswap.batch.processing.MatchedMemberItemWriter;
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
 import com.lighthouse.lingoswap.member.entity.Member;
+import com.lighthouse.lingoswap.member.service.MemberService;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -28,6 +29,7 @@ import java.util.List;
 @EnableBatchProcessing
 public class MatchedMemberBatchConfig {
 
+    public final MemberService memberService;
     public final EntityManagerFactory entityManagerFactory;
     public final MatchedMemberItemProcessor matchedMemberItemProcessor;
 
@@ -46,7 +48,7 @@ public class MatchedMemberBatchConfig {
                                          ItemProcessor<Member, List<MatchedMember>> processor,
                                          ItemWriter<List<MatchedMember>> writer) {
         return new StepBuilder("createMatchedMembersStep", jobRepository)
-                .<Member, List<MatchedMember>>chunk(1, transactionManager)
+                .<Member, List<MatchedMember>>chunk(100, transactionManager)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
@@ -66,7 +68,7 @@ public class MatchedMemberBatchConfig {
 
     @Bean
     public ItemProcessor<Member, List<MatchedMember>> processor() {
-        return new MatchedMemberItemProcessor();
+        return new MatchedMemberItemProcessor(memberService);
     }
 
     @Bean
