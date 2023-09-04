@@ -1,0 +1,48 @@
+package com.lighthouse.lingoswap.batch.processing;
+
+import com.lighthouse.lingoswap.match.entity.MatchedMember;
+import com.lighthouse.lingoswap.member.entity.Member;
+import com.lighthouse.lingoswap.member.service.MemberService;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.stereotype.Component;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+@NoArgsConstructor(force = true)
+@RequiredArgsConstructor
+@Component
+public class MatchedMemberItemProcessor implements ItemProcessor<Member, List<MatchedMember>> {
+
+    private final MemberService memberService;
+    private final Random random = new Random();
+
+    @Override
+    public List<MatchedMember> process(Member currentMember) throws Exception {
+        List<Member> allMembers = memberService.findAll();
+        List<Member> selectedMembers = selectRandomMembers(allMembers, currentMember);
+        List<MatchedMember> matchedMembers = new ArrayList<>();
+        for (Member selectedMember : selectedMembers) {
+            MatchedMember matchedMember = new MatchedMember(currentMember, selectedMember);
+            matchedMembers.add(matchedMember);
+        }
+        return matchedMembers;
+    }
+
+    private List<Member> selectRandomMembers(List<Member> allMembers, Member currentMember) {
+        List<Member> selectedMembers = new ArrayList<>();
+        while (selectedMembers.size() < 300) {
+            Member selectedMember = allMembers.get(random.nextInt(allMembers.size()));
+            if (!selectedMember.equals(currentMember) &&
+                    Duration.between(selectedMember.getUpdatedAt(), LocalDateTime.now()).toDays() <= 7) {
+                selectedMembers.add(selectedMember);
+            }
+        }
+        return selectedMembers;
+    }
+}
