@@ -25,5 +25,9 @@ public class QuestionService {
     SliceDto<Question> search(Long categoryId, Long nextId, int pageSize) {
         return questionQueryRepository.findQuestionsByCategoryId(categoryId, nextId, pageSize);
     }
+
+    SliceDto<Question> searchRecommendation(Long categoryId, Long nextId, int pageSize) {
+        return questionQueryRepository.findQuestionRecommendationsByCategoryId(categoryId, nextId, pageSize);
+    }
 }
 

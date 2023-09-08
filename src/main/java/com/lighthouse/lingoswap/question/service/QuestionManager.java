@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -59,5 +60,13 @@ public class QuestionManager {
 
         question.subtractOneLike();
         questionService.save(question);
+    }
+
+    public QuestionRecommendationListResponse readRecommendation(Long categoryId, Long nextId, int pageSize) {
+        SliceDto<Question> questionRecommendations = questionService.searchRecommendation(categoryId, nextId, pageSize);
+
+        List<String> results = new ArrayList<>();
+        questionRecommendations.content().stream().forEach(q -> results.add(q.getContents()));
+        return new QuestionRecommendationListResponse(questionRecommendations.nextId(), results);
     }
 }

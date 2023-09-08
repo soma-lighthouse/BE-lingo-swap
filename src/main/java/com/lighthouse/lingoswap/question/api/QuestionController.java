@@ -1,9 +1,6 @@
 package com.lighthouse.lingoswap.question.api;
 
-import com.lighthouse.lingoswap.question.dto.QuestionCreateRequest;
-import com.lighthouse.lingoswap.question.dto.QuestionDeleteLikeRequest;
-import com.lighthouse.lingoswap.question.dto.QuestionListResponse;
-import com.lighthouse.lingoswap.question.dto.QuestionUpdateLikeRequest;
+import com.lighthouse.lingoswap.question.dto.*;
 import com.lighthouse.lingoswap.question.service.QuestionManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -45,5 +42,12 @@ public class QuestionController {
                                              @RequestBody QuestionDeleteLikeRequest questionDeleteLikeRequest) {
         questionManager.deleteLike(questionId, questionDeleteLikeRequest);
         return ResponseEntity.ok().body(null);
+    }
+
+    @GetMapping(path = "/recommendation/{categoryId}")
+    public ResponseEntity<QuestionRecommendationListResponse> getRecommendation(@PathVariable Long categoryId,
+                                                                                @RequestParam(required = false) final Long next,
+                                                                                @RequestParam(defaultValue = "10") final int pageSize) {
+        return ResponseEntity.ok(questionManager.readRecommendation(categoryId, next, pageSize));
     }
 }
