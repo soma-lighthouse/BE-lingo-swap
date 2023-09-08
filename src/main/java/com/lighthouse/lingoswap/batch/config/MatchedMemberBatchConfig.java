@@ -48,7 +48,7 @@ public class MatchedMemberBatchConfig {
                                          ItemProcessor<Member, List<MatchedMember>> processor,
                                          ItemWriter<List<MatchedMember>> writer) {
         return new StepBuilder("createMatchedMembersStep", jobRepository)
-                .<Member, List<MatchedMember>>chunk(100, transactionManager)
+                .<Member, List<MatchedMember>>chunk(1000, transactionManager)
                 .reader(reader)
                 .processor(processor)
                 .writer(writer)
@@ -62,7 +62,7 @@ public class MatchedMemberBatchConfig {
                 .name("reader")
                 .entityManagerFactory(entityManagerFactory)
                 .queryString("SELECT m FROM Member m")
-                .pageSize(1)
+                .pageSize(1000)
                 .build();
     }
 

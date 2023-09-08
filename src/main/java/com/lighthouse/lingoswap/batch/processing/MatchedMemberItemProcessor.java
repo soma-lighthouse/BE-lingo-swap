@@ -35,7 +35,7 @@ public class MatchedMemberItemProcessor implements ItemProcessor<Member, List<Ma
 
     private List<Member> selectRandomMembers(List<Member> allMembers, Member currentMember) {
         List<Member> selectedMembers = new ArrayList<>();
-        while (selectedMembers.size() < 300) {
+        while (selectedMembers.size() < 1000) {
             Member selectedMember = allMembers.get(random.nextInt(allMembers.size()));
             if (!selectedMember.equals(currentMember) &&
                     Duration.between(selectedMember.getUpdatedAt(), LocalDateTime.now()).toDays() <= 7) {
