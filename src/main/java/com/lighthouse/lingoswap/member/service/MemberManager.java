@@ -51,28 +51,53 @@ public class MemberManager {
 
     @Transactional
     public ResponseDto<Object> create(MemberCreateRequest memberCreateRequest) {
-        Country country = countryService.findCountryByCode(memberCreateRequest.getRegion());
+        Country country = countryService.findCountryByCode(memberCreateRequest.region());
         Member member = new Member(
-                memberCreateRequest.getGender(),
-                memberCreateRequest.getBirthday(),
-                memberCreateRequest.getName(),
-                memberCreateRequest.getDescription(),
-                memberCreateRequest.getProfileImageUri(),
-                memberCreateRequest.getEmail(),
-                country);
+                memberCreateRequest.birthday(),
+                memberCreateRequest.name(),
+                memberCreateRequest.description(),
+                memberCreateRequest.profileImageUri(),
+                memberCreateRequest.gender(),
+                null,
+                country
+        );
         memberService.save(member);
 
-        savePreferredCountries(member, memberCreateRequest);
-        saveUsedLanguages(member, memberCreateRequest);
-        savePreferredInterests(member, memberCreateRequest);
-
-        List<UsedLanguage> usedLanguages = usedLanguageService.findByMember(member);
-        member.addUsedLanguage(usedLanguages);
-        memberService.save(member);
+        savePreferredCountries(member, memberCreateRequest.preferredCountries());
+        saveUsedLanguages(member, memberCreateRequest.usedLanguages());
+        savePreferredInterests(member, memberCreateRequest.preferredInterests());
 
         SendbirdCreateUserRequest sendbirdCreateUserRequest = new SendbirdCreateUserRequest(String.valueOf(member.getId()), member.getName(), member.getProfileImageUri());
         sendbirdService.createUser(sendbirdCreateUserRequest);
         return ResponseDto.success(null);
+    }
+
+    @Transactional
+    public void savePreferredCountries(Member member, List<String> preferredCountries) {
+        preferredCountries.stream()
+                .map(countryService::findCountryByCode)
+                .map(preferredCountry -> new PreferredCountry(member, preferredCountry))
+                .forEach(preferredCountryService::save);
+    }
+
+
+    @Transactional
+    public void saveUsedLanguages(Member member, List<UsedLanguageInfo> usedLanguageInfos) {
+        usedLanguageInfos.stream()
+                .map(lang -> {
+                    Language language = languageService.findLanguageByCode(lang.code());
+                    return new UsedLanguage(member, language, lang.level());
+                })
+                .forEach(usedLanguageService::save);
+    }
+
+    @Transactional
+    public void savePreferredInterests(Member member, List<PreferredInterestsInfo> preferredInterestsInfos) {
+        preferredInterestsInfos.stream()
+                .flatMap(userInterestsByDto -> userInterestsByDto.interests().stream())
+                .map(interestsService::findByName)
+                .map(interest -> new PreferredInterests(member, interest))
+                .forEach(preferredInterestsService::save);
     }
 
     public ResponseDto<InterestsFormResponse> readInterestsForm() {
@@ -85,39 +110,5 @@ public class MemberManager {
 
     public ResponseDto<LanguageFormResponse> readLanguageForm() {
         return ResponseDto.success(languageService.getAllLanguages());
-    }
-
-    @Transactional
-    public void savePreferredCountries(Member member, MemberCreateRequest memberCreateRequest) {
-        List<String> preferredCountries = memberCreateRequest.getPreferredCountries();
-
-        preferredCountries.stream()
-                .map(countryService::findCountryByCode)
-                .map(preferredCountry -> new PreferredCountry(member, preferredCountry))
-                .forEach(preferredCountryService::save);
-    }
-
-
-    @Transactional
-    public void saveUsedLanguages(Member member, MemberCreateRequest memberCreateRequest) {
-        List<MemberCreateRequest.UsedLanguage> usedLanguages = memberCreateRequest.getUsedLanguages();
-
-        usedLanguages.stream()
-                .map(lang -> {
-                    Language language = languageService.findLanguageByCode(lang.getCode());
-                    return new UsedLanguage(member, language, lang.getLevel());
-                })
-                .forEach(usedLanguageService::save);
-    }
-
-    @Transactional
-    public void savePreferredInterests(Member member, MemberCreateRequest memberCreateRequest) {
-        List<MemberCreateRequest.PreferredInterests> preferredInterestsByDto = memberCreateRequest.getPreferredInterests();
-
-        preferredInterestsByDto.stream()
-                .flatMap(userInterestsByDto -> userInterestsByDto.getInterests().stream())
-                .map(interestsService::findByName)
-                .map(interest -> new PreferredInterests(member, interest))
-                .forEach(preferredInterestsService::save);
     }
 }

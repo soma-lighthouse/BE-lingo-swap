@@ -17,7 +17,7 @@ public class WebClientConfig { ///센드버드컨피그로 이름을 바꿔야�
     private String apiToken;
 
     @Bean
-    public WebClient webClient() {
+    WebClient webClient() {
         return WebClient.builder()
                 .baseUrl(apiUrl)
                 .defaultHeader("Content-Type", "application/json; charset=utf8")

@@ -26,8 +26,13 @@ public class UsedLanguage extends BaseEntity {
     private Boolean isValid;
 
     public UsedLanguage(final Member member, final Language language, final Integer level) {
-        this.member = member;
+        setMember(member);
         this.language = language;
         this.level = level;
+    }
+
+    private void setMember(final Member member) {
+        this.member = member;
+        member.getUsedLanguages().add(this);
     }
 }

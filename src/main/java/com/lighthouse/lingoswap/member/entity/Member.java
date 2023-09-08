@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.entity;
 
+import com.lighthouse.lingoswap.auth.entity.Auth;
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -16,47 +17,38 @@ import java.util.List;
 @Entity
 public class Member extends BaseEntity {
 
-    @OneToMany(mappedBy = "member")
-    private List<UsedLanguage> usedLanguages = new ArrayList<>();
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private Gender gender;
-
-    private Boolean isValid;
     private LocalDate birthday;
     private String name;
     private String description;
     private String profileImageUri;
-    private String email;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Embedded
+    private Auth auth;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "region_id")
     private Country region;
 
-    public Member(final Gender gender,
-                  final LocalDate birthday,
-                  final String name,
-                  final String description,
-                  final String profileImageUri,
-                  final String email,
-                  final Country region) {
-        this.gender = gender;
+    @OneToMany(mappedBy = "member")
+    private List<UsedLanguage> usedLanguages = new ArrayList<>();
+
+    public Member(final LocalDate birthday, final String name, final String description, final String profileImageUri, final Gender gender, final Auth auth, final Country region) {
         this.birthday = birthday;
         this.name = name;
         this.description = description;
         this.profileImageUri = profileImageUri;
-        this.email = email;
+        this.gender = gender;
+        this.auth = auth;
         this.region = region;
     }
 
     public int calculateAge() {
         return Period.between(birthday, LocalDate.now()).getYears();
-    }
-
-    public void addUsedLanguage(List<UsedLanguage> usedLanguages) {
-        this.usedLanguages = usedLanguages;
     }
 }

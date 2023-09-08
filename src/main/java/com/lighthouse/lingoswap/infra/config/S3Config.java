@@ -23,7 +23,7 @@ public class S3Config {
     private String region;
 
     @Bean
-    public AmazonS3 s3Client() {
+    AmazonS3 s3Client() {
         BasicAWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
         return AmazonS3Client.builder()
                 .withRegion(region)
