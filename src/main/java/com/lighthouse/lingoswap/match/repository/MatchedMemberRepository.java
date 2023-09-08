@@ -60,7 +60,7 @@ public interface MatchedMemberRepository extends JpaRepository<MatchedMember, Lo
             """, nativeQuery = true)
     Slice<Long> findMatchedMembersWithPreferences(
             @Param("memberId") Long memberId,
-            @Param("regionId") int preferredCountryIds,
+            @Param("preferredCountryIds") int preferredCountryIds,
             @Param("languageIds") List<Long> preferredLanguages,
             @Param("categoryIds") List<Long> preferredInterests,
             Pageable pageable);
