@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.service;
 
+import com.lighthouse.lingoswap.member.entity.Member;
 import com.lighthouse.lingoswap.member.entity.PreferredCountry;
 import com.lighthouse.lingoswap.member.repository.PreferredCountryRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,5 +21,9 @@ public class PreferredCountryService {
 
     public void save(PreferredCountry preferredCountry) {
         preferredCountryRepository.save(preferredCountry);
+    }
+
+    public List<PreferredCountry> findByMember(Member fromMember) {
+        return preferredCountryRepository.findByMember(fromMember);
     }
 }

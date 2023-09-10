@@ -6,7 +6,9 @@ import com.lighthouse.lingoswap.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +21,10 @@ public class MatchController {
 
     private final MatchManager matchManager;
 
+    @Transactional
     @GetMapping("/{user_id}/matches")
-    public ResponseEntity<Slice<MemberSimpleProfile>> get(@PathVariable final Long user_id, Pageable pageable) {
+    public ResponseEntity<Slice<MemberSimpleProfile>> get(@PathVariable final Long user_id
+            , @PageableDefault(size = 10, sort = "id") Pageable pageable) {
         Slice<Member> slice = matchManager.read(user_id, pageable);
         Slice<MemberSimpleProfile> sliceDto = slice.map(MemberSimpleProfile::from);
 

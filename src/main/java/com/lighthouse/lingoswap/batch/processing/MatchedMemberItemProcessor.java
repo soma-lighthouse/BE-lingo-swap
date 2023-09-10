@@ -20,12 +20,17 @@ public class MatchedMemberItemProcessor implements ItemProcessor<Member, List<Ma
     private final MemberService memberService;
     private final Random random = new Random();
 
+    private List<Member> allMembers;
+
 
     @Override
     public List<MatchedMember> process(Member currentMember) throws Exception {
-        List<Member> allMembers = memberService.findAll();
+        if (allMembers == null) {
+            allMembers = memberService.findAll();
+        }
         List<Member> selectedMembers = selectRandomMembers(allMembers, currentMember);
         List<MatchedMember> matchedMembers = new ArrayList<>();
+
         for (Member selectedMember : selectedMembers) {
             MatchedMember matchedMember = new MatchedMember(currentMember, selectedMember);
             matchedMembers.add(matchedMember);
@@ -35,12 +40,18 @@ public class MatchedMemberItemProcessor implements ItemProcessor<Member, List<Ma
 
     private List<Member> selectRandomMembers(List<Member> allMembers, Member currentMember) {
         List<Member> selectedMembers = new ArrayList<>();
+        List<Member> tempMembers = new ArrayList<>(allMembers);
+
         while (selectedMembers.size() < 1000) {
-            Member selectedMember = allMembers.get(random.nextInt(allMembers.size()));
+            int index = random.nextInt(tempMembers.size());
+            Member selectedMember = tempMembers.get(index);
+
             if (!selectedMember.equals(currentMember) &&
                     Duration.between(selectedMember.getUpdatedAt(), LocalDateTime.now()).toDays() <= 7) {
                 selectedMembers.add(selectedMember);
             }
+
+            tempMembers.remove(index);
         }
         return selectedMembers;
     }
