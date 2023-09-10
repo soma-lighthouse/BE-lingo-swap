@@ -25,4 +25,8 @@ public class MatchService {
         matchedMemberRepository.saveFilteredMembersWithPreferences(
                 memberId, preferredCountryIds, preferredLanguages, preferredInterests);
     }
+
+    public void delete() {
+        matchedMemberRepository.deleteAll();
+    }
 }
