@@ -1,58 +1,84 @@
 package com.lighthouse.lingoswap.auth.service;
 
-import com.lighthouse.lingoswap.auth.dto.LoginRequest;
-import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
-import com.lighthouse.lingoswap.auth.dto.ReissueResponse;
-import com.lighthouse.lingoswap.auth.entity.Token;
+import com.lighthouse.lingoswap.auth.dto.TokenPairResponse;
+import com.lighthouse.lingoswap.auth.entity.TokenPair;
+import com.lighthouse.lingoswap.auth.util.GoogleOAuthUtil;
 import com.lighthouse.lingoswap.auth.util.JwtUtil;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class AuthManager {
 
     private final AuthService authService;
-    private final TokenService tokenService;
+    private final TokenPairService tokenPairService;
     private final JwtUtil jwtUtil;
+    private final GoogleOAuthUtil googleOAuthUtil;
 
-    public ResponseDto<LoginResponse> login(final LoginRequest loginRequest) {
-        String username = loginRequest.email();
+    @Transactional
+    public ResponseDto<TokenPairResponse> login(final String idTokenValue) {
+        String idToken = jwtUtil.extractToken(idTokenValue);
+        String username = googleOAuthUtil.parseIdToken(idToken);
 
-        Authentication auth = generateAuthentication(username);
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        authService.generateAuthentication(username);
 
-        String accessToken = jwtUtil.generate(username);
-        String refreshToken = jwtUtil.generateRefreshToken(username);
+        expireIfExistsByUsername(username);
 
-        Token token = new Token(username, refreshToken);
-        tokenService.save(token);
-        return ResponseDto.success(LoginResponse.of(username, accessToken, jwtUtil.getAccessExp(), refreshToken, jwtUtil.getRefreshExp()));
+        long now = System.currentTimeMillis();
+        String accessToken = jwtUtil.generateToken(username, now);
+        String refreshToken = jwtUtil.generateRefreshToken(username, now);
+
+        TokenPair tokenPair = new TokenPair(username, accessToken, refreshToken);
+        tokenPairService.save(tokenPair);
+        return ResponseDto.success(TokenPairResponse.of(username, accessToken, now + jwtUtil.getAccessExp(), refreshToken, now + jwtUtil.getRefreshExp()));
     }
 
-    public Authentication generateAuthentication(final String username) {
-        UserDetails userDetails = authService.loadUserByUsername(username);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    private void expireIfExistsByUsername(final String username) {
+        tokenPairService.findNotExpiredByUsername(username)
+                .ifPresent(t -> {
+                    t.expire();
+                    tokenPairService.save(t);
+                });
     }
 
-    public ResponseDto<ReissueResponse> reissue(final ReissueRequest reissueRequest) {
-        Token token = tokenService.findByRefreshToken(reissueRequest.refreshToken());
+    @Transactional
+    public ResponseDto<TokenPairResponse> reissue(final ReissueRequest reissueRequest) {
+        String oldRefreshToken = reissueRequest.refreshToken();
+        String username = jwtUtil.parseToken(oldRefreshToken);
 
-        String username = jwtUtil.parse(token.getRefreshToken());
-        Authentication auth = generateAuthentication(username);
-        SecurityContextHolder.getContext().setAuthentication(auth);
+        authService.generateAuthentication(username);
 
-        String accessToken = jwtUtil.generate(username);
-        if (jwtUtil.isExpiredSoon(token.getRefreshToken())) {
-            String refreshToken = jwtUtil.generateRefreshToken(username);
-            return ResponseDto.success(ReissueResponse.of(username, accessToken, jwtUtil.getAccessExp(), refreshToken, jwtUtil.getRefreshExp()));
+        TokenPair oldTokenPair = tokenPairService.findNotExpiredByRefreshToken(oldRefreshToken);
+        oldTokenPair.expire();
+        tokenPairService.save(oldTokenPair);
+
+        long now = System.currentTimeMillis();
+        String newAccessToken = jwtUtil.generateToken(username, now);
+        if (jwtUtil.isExpiredSoon(oldRefreshToken)) {
+            String newRefreshToken = jwtUtil.generateRefreshToken(username, now);
+            TokenPair newTokenPair = new TokenPair(username, newAccessToken, newRefreshToken);
+            tokenPairService.save(newTokenPair);
+            return ResponseDto.success(TokenPairResponse.of(username, newAccessToken, now + jwtUtil.getAccessExp(), newRefreshToken, now + jwtUtil.getRefreshExp()));
+        } else {
+            TokenPair newTokenPair = new TokenPair(username, newAccessToken, oldRefreshToken);
+            tokenPairService.save(newTokenPair);
+            return ResponseDto.success(TokenPairResponse.of(username, newAccessToken, now + jwtUtil.getAccessExp(), null, null));
         }
-        return ResponseDto.success(ReissueResponse.of(username, accessToken, jwtUtil.getAccessExp(), null, null));
+    }
+
+    @Transactional
+    public ResponseDto<Object> logout(final String accessTokenValue) {
+        String accessToken = jwtUtil.extractToken(accessTokenValue);
+        tokenPairService.findNotExpiredByAccessToken(accessToken).ifPresent(t -> {
+            t.expire();
+            tokenPairService.save(t);
+        });
+        SecurityContextHolder.clearContext();
+        return ResponseDto.success(null);
     }
 }

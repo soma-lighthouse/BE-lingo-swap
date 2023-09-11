@@ -1,8 +1,7 @@
 package com.lighthouse.lingoswap.auth.dto;
 
-import com.lighthouse.lingoswap.auth.entity.OAuthProvider;
-import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 
-public record LoginRequest(OAuthProvider provider, @Email String email) {
+public record LoginRequest(@NotNull String idToken) {
 
 }

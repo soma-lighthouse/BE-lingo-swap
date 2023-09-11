@@ -12,20 +12,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Token extends BaseEntity {
+public class TokenPair extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String username;
+    private String accessToken;
     private String refreshToken;
+    private boolean isExpired;
 
-    public Token(final String username, final String refreshToken) {
+    public TokenPair(final String username, final String accessToken, final String refreshToken) {
         this.username = username;
+        this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
-
-    public void changeRefreshToken(final String refreshToken) {
-        this.refreshToken = refreshToken;
+    
+    public void expire() {
+        isExpired = true;
     }
 }

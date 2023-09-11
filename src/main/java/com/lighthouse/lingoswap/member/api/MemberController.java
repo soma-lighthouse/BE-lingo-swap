@@ -1,5 +1,8 @@
 package com.lighthouse.lingoswap.member.api;
 
+import com.lighthouse.lingoswap.auth.dto.TokenPairResponse;
+import com.lighthouse.lingoswap.auth.service.AuthManager;
+import com.lighthouse.lingoswap.auth.util.JwtUtil;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.service.MemberManager;
@@ -13,11 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/user")
 public class MemberController {
 
+    private final AuthManager authManager;
     private final MemberManager memberManager;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<Object>> create(@RequestBody @Valid final MemberCreateRequest memberCreateRequest) {
-        return ResponseEntity.ok(memberManager.create(memberCreateRequest));
+    public ResponseEntity<ResponseDto<TokenPairResponse>> create(@RequestHeader(JwtUtil.AUTH_HEADER) final String idTokenValue, @RequestBody @Valid final MemberCreateRequest memberCreateRequest) {
+        ResponseDto<TokenPairResponse> responseDto = authManager.login(idTokenValue);
+        memberManager.create(memberCreateRequest);
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/form/interests")

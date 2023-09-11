@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class AuthExceptionHandler {
 
     @ExceptionHandler(AuthNotFoundException.class)
-    public ResponseEntity handleMemberNotFound(final AuthNotFoundException ex) {
+    private ResponseEntity handleMemberNotFound(final AuthNotFoundException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ResponseDto.error("40400", ex.getMessage()));
     }
 
     @ExceptionHandler(AuthenticationException.class)
-    public ResponseEntity handleInvalidAccess(final AuthenticationException ex) {
+    private ResponseEntity handleInvalidAccess(final AuthenticationException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ResponseDto.error("40300", ex.getMessage()));

@@ -2,6 +2,7 @@ package com.lighthouse.lingoswap.auth.util;
 
 import com.lighthouse.lingoswap.auth.exception.ExpiredTokenException;
 import com.lighthouse.lingoswap.auth.exception.InvalidTokenException;
+import com.lighthouse.lingoswap.auth.exception.InvalidTokenFormatException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
@@ -39,37 +40,33 @@ public class JwtUtil {
         jwtParser = Jwts.parser().setSigningKey(secretKey);
     }
 
-    public String generate(final String subject) {
-        return buildToken(new HashMap<>(), subject, accessExp);
+    public String generateToken(final String subject, final long issuedAt) {
+        return buildToken(new HashMap<>(), subject, issuedAt, accessExp);
     }
 
-    public String generate(final Map<String, Object> extraClaims, final String subject) {
-        return buildToken(extraClaims, subject, accessExp);
+    public String generateRefreshToken(final String subject, final long issuedAt) {
+        return buildToken(new HashMap<>(), subject, issuedAt, refreshExp);
     }
 
-    public String generateRefreshToken(final String subject) {
-        return buildToken(new HashMap<>(), subject, refreshExp);
-    }
-
-    private String buildToken(final Map<String, Object> extraClaims, final String subject, long exp) {
+    private String buildToken(final Map<String, Object> extraClaims, final String subject, final long issuedAt, final long expiration) {
         return Jwts
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(subject)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + exp))
+                .setIssuedAt(new Date(issuedAt))
+                .setExpiration(new Date(issuedAt + expiration))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
     }
 
-    public String extract(final String value) {
+    public String extractToken(final String value) {
         if (StringUtils.hasText(value) && value.startsWith(authScheme)) {
             return value.substring(authScheme.length());
         }
-        return null;
+        throw new InvalidTokenFormatException();
     }
 
-    public String parse(final String token) {
+    public String parseToken(final String token) {
         try {
             return jwtParser.parseClaimsJws(token).getBody().getSubject();
         } catch (ExpiredJwtException ex) {

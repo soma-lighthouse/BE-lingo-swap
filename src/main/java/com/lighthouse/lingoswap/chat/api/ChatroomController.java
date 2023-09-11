@@ -21,7 +21,7 @@ public class ChatroomController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Object> delete(@RequestBody @Valid final SendbirdRequestByChatroom sendbirdRequestByChatroom) {
+    public ResponseEntity<ResponseDto<Object>> delete(@RequestBody @Valid final SendbirdRequestByChatroom sendbirdRequestByChatroom) {
         return ResponseEntity.ok(chatroomManager.delete(sendbirdRequestByChatroom));
     }
 }

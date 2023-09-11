@@ -12,19 +12,19 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class ExternalApiConfig {
 
     @Bean
-    public AmazonS3 s3Client() {
+    AmazonS3 s3Client() {
         return AmazonS3Client.builder().withRegion(Regions.AP_NORTHEAST_2).build();
     }
 
     @Bean
-    public WebClient webClient() {
+    WebClient webClient() {
         return WebClient.builder()
                 .defaultHeader("Content-Type", "application/json; charset=utf8")
                 .build();
     }
 
     @Bean
-    public DistributionService distributionService() {
+    DistributionService distributionService() {
         return new DistributionService();
     }
 }

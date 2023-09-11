@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class MemberExceptionHandler {
 
     @ExceptionHandler(MemberNotFoundException.class)
-    public ResponseEntity handleMemberNotFound(final MemberNotFoundException ex) {
+    private ResponseEntity handleMemberNotFound(final MemberNotFoundException ex) {
         log.error("MemberNotFoundException", ex);
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ResponseDto.error("40000", ex.getMessage()));

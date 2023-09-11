@@ -12,6 +12,17 @@ spring:
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MYSQL
 
+  security:
+    jwt:
+      secret-key: abcd
+      exp:
+        access: 10000
+        refresh: 10000
+      auth-scheme: "Bearer "
+    oauth:
+      google:
+        client-id:
+
   output:
     ansi:
       enabled: always
