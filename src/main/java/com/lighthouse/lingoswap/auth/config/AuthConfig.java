@@ -1,6 +1,5 @@
 package com.lighthouse.lingoswap.auth.config;
 
-import com.lighthouse.lingoswap.member.entity.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,10 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Profile({"local", "dev"})
 public class AuthConfig {
 
-    private static final String AUTH_URL_PATTERN = "/api/v1/auth/**";
-    private static final String SIGN_UP_PATTERN = "/api/v1/user";
-    private static final String ADMIN_URL = "/api/v1/admin";
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
@@ -29,15 +24,16 @@ public class AuthConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.POST, AUTH_URL_PATTERN, SIGN_UP_PATTERN).permitAll()
-                .requestMatchers(ADMIN_URL).hasRole(Role.ADMIN.name())
-                .anyRequest()
-                .authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/**", "/api/v1/user").permitAll()
+                .requestMatchers("/api/v1/user/form/**").permitAll()
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
                 .and()
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .anonymous().disable()
                 .logout().disable();
 
         return http.build();

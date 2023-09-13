@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Objects;
 
 @RequiredArgsConstructor
 @Component
@@ -19,10 +20,10 @@ public class GoogleOAuthUtil {
     public String parseIdToken(String idTokenString) {
         try {
             GoogleIdToken idToken = verifier.verify(idTokenString);
-            Payload payload = idToken.getPayload();
-            return payload.getEmail();
+            Payload payload = Objects.requireNonNull(idToken.getPayload());
+            return Objects.requireNonNull(payload.getEmail());
         } catch (GeneralSecurityException | IllegalArgumentException | NullPointerException | IOException ex) {
-            throw new InvalidIdTokenException();
+            throw new InvalidIdTokenException(ex);
         }
     }
 }

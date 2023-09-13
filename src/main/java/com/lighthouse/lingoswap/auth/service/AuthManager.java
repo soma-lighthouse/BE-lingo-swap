@@ -6,6 +6,8 @@ import com.lighthouse.lingoswap.auth.entity.TokenPair;
 import com.lighthouse.lingoswap.auth.util.GoogleOAuthUtil;
 import com.lighthouse.lingoswap.auth.util.JwtUtil;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
+import com.lighthouse.lingoswap.member.dto.MemberCreateRequest;
+import com.lighthouse.lingoswap.member.service.MemberManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Service
 public class AuthManager {
+
+    private final MemberManager memberManager;
 
     private final AuthService authService;
     private final TokenPairService tokenPairService;
@@ -26,16 +30,8 @@ public class AuthManager {
         String username = googleOAuthUtil.parseIdToken(idToken);
 
         authService.generateAuthentication(username);
-
         expireIfExistsByUsername(username);
-
-        long now = System.currentTimeMillis();
-        String accessToken = jwtUtil.generateToken(username, now);
-        String refreshToken = jwtUtil.generateRefreshToken(username, now);
-
-        TokenPair tokenPair = new TokenPair(username, accessToken, refreshToken);
-        tokenPairService.save(tokenPair);
-        return ResponseDto.success(TokenPairResponse.of(username, accessToken, now + jwtUtil.getAccessExp(), refreshToken, now + jwtUtil.getRefreshExp()));
+        return generateTokenResponse(username);
     }
 
     private void expireIfExistsByUsername(final String username) {
@@ -44,6 +40,25 @@ public class AuthManager {
                     t.expire();
                     tokenPairService.save(t);
                 });
+    }
+
+    @Transactional
+    public ResponseDto<TokenPairResponse> signup(final String idTokenValue, final MemberCreateRequest memberCreateRequest) {
+        String idToken = jwtUtil.extractToken(idTokenValue);
+        String username = googleOAuthUtil.parseIdToken(idToken);
+
+        memberManager.create(memberCreateRequest);
+        return generateTokenResponse(username);
+    }
+
+    private ResponseDto<TokenPairResponse> generateTokenResponse(final String username) {
+        long now = System.currentTimeMillis();
+        String accessToken = jwtUtil.generateToken(username, now);
+        String refreshToken = jwtUtil.generateRefreshToken(username, now);
+
+        TokenPair tokenPair = new TokenPair(username, accessToken, refreshToken);
+        tokenPairService.save(tokenPair);
+        return ResponseDto.success(TokenPairResponse.of(username, accessToken, now + jwtUtil.getAccessExp(), refreshToken, now + jwtUtil.getRefreshExp()));
     }
 
     @Transactional

@@ -6,7 +6,7 @@ public class InvalidIdTokenException extends AuthenticationException {
 
     private static final String MESSAGE = "Invalid id token";
 
-    public InvalidIdTokenException() {
-        super(MESSAGE);
+    public InvalidIdTokenException(Throwable cause) {
+        super(MESSAGE, cause);
     }
 }

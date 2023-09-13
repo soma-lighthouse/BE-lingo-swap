@@ -21,9 +21,7 @@ public class MemberController {
 
     @PostMapping
     public ResponseEntity<ResponseDto<TokenPairResponse>> create(@RequestHeader(JwtUtil.AUTH_HEADER) final String idTokenValue, @RequestBody @Valid final MemberCreateRequest memberCreateRequest) {
-        ResponseDto<TokenPairResponse> responseDto = authManager.login(idTokenValue);
-        memberManager.create(memberCreateRequest);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(authManager.signup(idTokenValue, memberCreateRequest));
     }
 
     @GetMapping("/form/interests")

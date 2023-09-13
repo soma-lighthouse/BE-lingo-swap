@@ -10,7 +10,6 @@ import com.lighthouse.lingoswap.member.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -49,8 +48,7 @@ public class MemberManager {
         return ResponseDto.success(MemberPreSignedUrlResponse.from(preSignedUrl));
     }
 
-    @Transactional
-    public ResponseDto<Object> create(MemberCreateRequest memberCreateRequest) {
+    public void create(MemberCreateRequest memberCreateRequest) {
         Country country = countryService.findCountryByCode(memberCreateRequest.region());
         Member member = new Member(
                 memberCreateRequest.birthday(),
@@ -69,11 +67,9 @@ public class MemberManager {
 
         SendbirdCreateUserRequest sendbirdCreateUserRequest = new SendbirdCreateUserRequest(String.valueOf(member.getId()), member.getName(), member.getProfileImageUri());
         sendbirdService.createUser(sendbirdCreateUserRequest);
-        return ResponseDto.success(null);
     }
 
-    @Transactional
-    public void savePreferredCountries(Member member, List<String> preferredCountries) {
+    private void savePreferredCountries(Member member, List<String> preferredCountries) {
         preferredCountries.stream()
                 .map(countryService::findCountryByCode)
                 .map(preferredCountry -> new PreferredCountry(member, preferredCountry))
@@ -81,8 +77,7 @@ public class MemberManager {
     }
 
 
-    @Transactional
-    public void saveUsedLanguages(Member member, List<UsedLanguageInfo> usedLanguageInfos) {
+    private void saveUsedLanguages(Member member, List<UsedLanguageInfo> usedLanguageInfos) {
         usedLanguageInfos.stream()
                 .map(lang -> {
                     Language language = languageService.findLanguageByCode(lang.code());
@@ -91,8 +86,7 @@ public class MemberManager {
                 .forEach(usedLanguageService::save);
     }
 
-    @Transactional
-    public void savePreferredInterests(Member member, List<PreferredInterestsInfo> preferredInterestsInfos) {
+    private void savePreferredInterests(Member member, List<PreferredInterestsInfo> preferredInterestsInfos) {
         preferredInterestsInfos.stream()
                 .flatMap(userInterestsByDto -> userInterestsByDto.interests().stream())
                 .map(interestsService::findByName)
