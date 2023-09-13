@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -39,6 +40,16 @@ public class QuestionManager {
         List<Question> likedQuestions = likeMembers.stream().map(LikeMember::getQuestion).toList();
         List<QuestionDetail> results = questions.content().stream().map(q -> QuestionDetail.of(q, q.getCreatedMember(), likedQuestions.contains(q))).toList();
         return ResponseDto.success(new QuestionListResponse(questions.nextId(), results));
+    }
+
+    public ResponseDto<MyQuestionListResponse> getMyQuestion(Long userId) {
+        Member member = memberService.findById(userId);
+        List<MyQuestionDetailList> myQuestionList = new ArrayList<>();
+        for (Long categoryId = 1L; categoryId < 6; categoryId++) {
+            Category category = categoryService.findById(categoryId);
+            myQuestionList.add(MyQuestionDetailList.of(category, questionService.searchMyQuestion(member, category).stream().map(MyQuestionDetail::of).toList()));
+        }
+        return ResponseDto.success(new MyQuestionListResponse(myQuestionList));
     }
 
     @Transactional
