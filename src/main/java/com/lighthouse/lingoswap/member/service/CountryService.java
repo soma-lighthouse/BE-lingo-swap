@@ -7,6 +7,8 @@ import com.lighthouse.lingoswap.member.repository.CountryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class CountryService {
@@ -27,5 +29,9 @@ public class CountryService {
 
     public CountryFormResponse getAllCountries() {
         return new CountryFormResponse(countryQueryRepository.findAllCountry());
+    }
+
+    public List<String> findAllCode() {
+        return countryRepository.findAllCode();
     }
 }

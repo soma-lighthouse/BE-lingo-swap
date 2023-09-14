@@ -9,10 +9,12 @@ import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.entity.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Locale;
 
 @RequiredArgsConstructor
 @Service
@@ -29,6 +31,7 @@ public class MemberManager {
     private final SendbirdService sendbirdService;
     private final S3Service s3Service;
     private final DistributionService distributionService;
+    private final MessageSource messageSource;
 
     @Value("${aws.s3.bucket-name}")
     private String bucketName;
@@ -50,22 +53,22 @@ public class MemberManager {
     }
 
     @Transactional
-    public ResponseDto<Object> create(MemberCreateRequest memberCreateRequest) {
-        Country country = countryService.findCountryByCode(memberCreateRequest.region());
+    public ResponseDto<Object> create(MemberRequest memberRequest) {
+        Country country = countryService.findCountryByCode(memberRequest.region());
         Member member = new Member(
-                memberCreateRequest.birthday(),
-                memberCreateRequest.name(),
-                memberCreateRequest.description(),
-                memberCreateRequest.profileImageUri(),
-                memberCreateRequest.gender(),
+                memberRequest.birthday(),
+                memberRequest.name(),
+                memberRequest.description(),
+                memberRequest.profileImageUri(),
+                memberRequest.gender(),
                 null,
                 country
         );
         memberService.save(member);
 
-        savePreferredCountries(member, memberCreateRequest.preferredCountries());
-        saveUsedLanguages(member, memberCreateRequest.usedLanguages());
-        savePreferredInterests(member, memberCreateRequest.preferredInterests());
+        savePreferredCountries(member, memberRequest.preferredCountries());
+        saveUsedLanguages(member, memberRequest.usedLanguages());
+        savePreferredInterests(member, memberRequest.preferredInterests());
 
         SendbirdCreateUserRequest sendbirdCreateUserRequest = new SendbirdCreateUserRequest(String.valueOf(member.getId()), member.getName(), member.getProfileImageUri());
         sendbirdService.createUser(sendbirdCreateUserRequest);
@@ -104,11 +107,22 @@ public class MemberManager {
         return ResponseDto.success(interestsFormService.getAllInterests());
     }
 
-    public ResponseDto<CountryFormResponse> readCountryForm() {
-        return ResponseDto.success(countryService.getAllCountries());
+    public ResponseDto<CountryFormResponse> readCountryForm(Locale locale) {
+        List<String> countryCodes = countryService.findAllCode();
+        return ResponseDto.success(new CountryFormResponse(countryCodes.stream().map(code ->
+                new CountryFormResponseUnit(code, messageSource.getMessage(code, null, locale))).toList()));
     }
 
     public ResponseDto<LanguageFormResponse> readLanguageForm() {
         return ResponseDto.success(languageService.getAllLanguages());
+    }
+
+    public ResponseDto<Object> patch(Long userId, MemberRequest memberRequest) {
+        Member member = memberService.findById(userId);
+        member.updateMember(memberRequest.birthday(), memberRequest.name(), memberRequest.description(), memberRequest.profileImageUri(),
+                memberRequest.gender(), countryService.findCountryByCode(memberRequest.region()));
+        memberService.save(member);
+
+        return ResponseDto.success(null);
     }
 }

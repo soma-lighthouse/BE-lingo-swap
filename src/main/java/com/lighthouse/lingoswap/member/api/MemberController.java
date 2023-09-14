@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Locale;
+
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/user")
@@ -20,10 +22,16 @@ public class MemberController {
     private final MemberManager memberManager;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<TokenPairResponse>> create(@RequestHeader(JwtUtil.AUTH_HEADER) final String idTokenValue, @RequestBody @Valid final MemberCreateRequest memberCreateRequest) {
+    public ResponseEntity<ResponseDto<TokenPairResponse>> create(@RequestHeader(JwtUtil.AUTH_HEADER) final String idTokenValue, @RequestBody @Valid final MemberRequest memberRequest) {
         ResponseDto<TokenPairResponse> responseDto = authManager.login(idTokenValue);
-        memberManager.create(memberCreateRequest);
+        memberManager.create(memberRequest);
         return ResponseEntity.ok(responseDto);
+    }
+
+    @PatchMapping("/{userId}")
+    public ResponseEntity<ResponseDto<Object>> patch(@PathVariable Long userId,
+                                                     @RequestBody MemberRequest memberRequest) {
+        return ResponseEntity.ok().body(memberManager.patch(userId, memberRequest));
     }
 
     @GetMapping("/form/interests")
@@ -32,8 +40,8 @@ public class MemberController {
     }
 
     @GetMapping("/form/country")
-    public ResponseEntity<ResponseDto<CountryFormResponse>> readCountryForm() {
-        return ResponseEntity.ok(memberManager.readCountryForm());
+    public ResponseEntity<ResponseDto<CountryFormResponse>> readCountryForm(Locale locale) {
+        return ResponseEntity.ok(memberManager.readCountryForm(locale));
     }
 
     @GetMapping("/form/language")
