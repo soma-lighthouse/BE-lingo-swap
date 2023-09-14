@@ -2,7 +2,6 @@ package com.lighthouse.lingoswap.question.service;
 
 import com.lighthouse.lingoswap.common.dto.SliceDto;
 import com.lighthouse.lingoswap.member.entity.Member;
-import com.lighthouse.lingoswap.question.entity.Category;
 import com.lighthouse.lingoswap.question.entity.Question;
 import com.lighthouse.lingoswap.question.repository.QuestionQueryRepository;
 import com.lighthouse.lingoswap.question.repository.QuestionRepository;
@@ -30,8 +29,8 @@ public class QuestionService {
         return questionQueryRepository.findQuestionsByCategoryId(categoryId, nextId, pageSize);
     }
 
-    public List<Question> searchMyQuestion(Member member, Category category) {
-        return questionRepository.findByCreatedMember(member, category);
+    public List<Question> searchMyQuestion(Member member) {
+        return questionRepository.findByCreatedMember(member);
     }
 }
 

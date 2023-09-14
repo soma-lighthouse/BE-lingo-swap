@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -44,12 +43,7 @@ public class QuestionManager {
 
     public ResponseDto<MyQuestionListResponse> getMyQuestion(Long userId) {
         Member member = memberService.findById(userId);
-        List<MyQuestionDetailList> myQuestionList = new ArrayList<>();
-        for (Long categoryId = 1L; categoryId < 6; categoryId++) {
-            Category category = categoryService.findById(categoryId);
-            myQuestionList.add(MyQuestionDetailList.of(category, questionService.searchMyQuestion(member, category).stream().map(MyQuestionDetail::of).toList()));
-        }
-        return ResponseDto.success(new MyQuestionListResponse(myQuestionList));
+        return ResponseDto.success(new MyQuestionListResponse(questionService.searchMyQuestion(member).stream().map(MyQuestionDetail::from).toList()));
     }
 
     @Transactional
