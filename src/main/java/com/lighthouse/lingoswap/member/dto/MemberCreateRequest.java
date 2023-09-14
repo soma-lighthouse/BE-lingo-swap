@@ -5,7 +5,8 @@ import com.lighthouse.lingoswap.member.entity.Gender;
 import java.time.LocalDate;
 import java.util.List;
 
-public record MemberCreateRequest(String profileImageUri,
+public record MemberCreateRequest(String uuid,
+                                  String profileImageUri,
                                   LocalDate birthday,
                                   String name,
                                   String email,

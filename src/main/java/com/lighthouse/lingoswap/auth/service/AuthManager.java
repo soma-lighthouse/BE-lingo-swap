@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.auth.service;
 
+import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairResponse;
 import com.lighthouse.lingoswap.auth.entity.TokenPair;
@@ -25,13 +26,13 @@ public class AuthManager {
     private final GoogleOAuthUtil googleOAuthUtil;
 
     @Transactional
-    public ResponseDto<TokenPairResponse> login(final String idTokenValue) {
+    public ResponseDto<LoginResponse> login(final String idTokenValue) {
         String idToken = jwtUtil.extractToken(idTokenValue);
         String username = googleOAuthUtil.parseIdToken(idToken);
 
-        authService.generateAuthentication(username);
+        String uuid = authService.generateAuthentication(username);
         expireIfExistsByUsername(username);
-        return generateTokenResponse(username);
+        return ResponseDto.success(LoginResponse.of(uuid, generateTokenPairResponse(username)));
     }
 
     private void expireIfExistsByUsername(final String username) {
@@ -43,22 +44,23 @@ public class AuthManager {
     }
 
     @Transactional
-    public ResponseDto<TokenPairResponse> signup(final String idTokenValue, final MemberCreateRequest memberCreateRequest) {
+    public ResponseDto<LoginResponse> signup(final String idTokenValue, final MemberCreateRequest memberCreateRequest) {
         String idToken = jwtUtil.extractToken(idTokenValue);
         String username = googleOAuthUtil.parseIdToken(idToken);
 
-        memberManager.create(memberCreateRequest);
-        return generateTokenResponse(username);
+        memberManager.create(username, memberCreateRequest);
+        String uuid = authService.generateAuthentication(username);
+        return ResponseDto.success(LoginResponse.of(uuid, generateTokenPairResponse(username)));
     }
 
-    private ResponseDto<TokenPairResponse> generateTokenResponse(final String username) {
+    private TokenPairResponse generateTokenPairResponse(final String username) {
         long now = System.currentTimeMillis();
         String accessToken = jwtUtil.generateToken(username, now);
         String refreshToken = jwtUtil.generateRefreshToken(username, now);
 
         TokenPair tokenPair = new TokenPair(username, accessToken, refreshToken);
         tokenPairService.save(tokenPair);
-        return ResponseDto.success(TokenPairResponse.of(username, accessToken, now + jwtUtil.getAccessExp(), refreshToken, now + jwtUtil.getRefreshExp()));
+        return TokenPairResponse.of(accessToken, now + jwtUtil.getAccessExp(), refreshToken, now + jwtUtil.getRefreshExp());
     }
 
     @Transactional
@@ -78,11 +80,11 @@ public class AuthManager {
             String newRefreshToken = jwtUtil.generateRefreshToken(username, now);
             TokenPair newTokenPair = new TokenPair(username, newAccessToken, newRefreshToken);
             tokenPairService.save(newTokenPair);
-            return ResponseDto.success(TokenPairResponse.of(username, newAccessToken, now + jwtUtil.getAccessExp(), newRefreshToken, now + jwtUtil.getRefreshExp()));
+            return ResponseDto.success(TokenPairResponse.of(newAccessToken, now + jwtUtil.getAccessExp(), newRefreshToken, now + jwtUtil.getRefreshExp()));
         } else {
             TokenPair newTokenPair = new TokenPair(username, newAccessToken, oldRefreshToken);
             tokenPairService.save(newTokenPair);
-            return ResponseDto.success(TokenPairResponse.of(username, newAccessToken, now + jwtUtil.getAccessExp(), null, null));
+            return ResponseDto.success(TokenPairResponse.of(newAccessToken, now + jwtUtil.getAccessExp(), null, null));
         }
     }
 

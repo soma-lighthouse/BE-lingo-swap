@@ -19,8 +19,16 @@ public class Auth implements UserDetails {
 
     private String username;
 
+    private String uuid;
+
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    public Auth(final String username, final String uuid, final Role role) {
+        this.username = username;
+        this.uuid = uuid;
+        this.role = role;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

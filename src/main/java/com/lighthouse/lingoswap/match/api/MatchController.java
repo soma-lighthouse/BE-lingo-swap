@@ -14,10 +14,10 @@ public class MatchController {
 
     private final MatchManager matchManager;
 
-    @GetMapping("/{user_id}/matches")
-    public ResponseEntity<ResponseDto<MatchedMemberProfilesResponse>> get(@PathVariable final Long user_id,
+    @GetMapping("/{memberUuid}/matches")
+    public ResponseEntity<ResponseDto<MatchedMemberProfilesResponse>> get(@PathVariable final String memberUuid,
                                                                           @RequestParam(required = false) final Long next,
                                                                           @RequestParam(defaultValue = "10") final int pageSize) {
-        return ResponseEntity.ok(matchManager.read(user_id, next, pageSize));
+        return ResponseEntity.ok(matchManager.read(memberUuid, next, pageSize));
     }
 }

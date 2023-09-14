@@ -78,8 +78,8 @@ public class JwtUtil {
 
     public boolean isExpiredSoon(final String token) {
         try {
-            long issuedAt = jwtParser.parseClaimsJws(token).getBody().getIssuedAt().getTime();
-            return issuedAt >= System.currentTimeMillis() - ONE_WEEK_IN_MS;
+            long expiration = jwtParser.parseClaimsJws(token).getBody().getExpiration().getTime();
+            return System.currentTimeMillis() >= expiration - ONE_WEEK_IN_MS;
         } catch (ExpiredJwtException ex) {
             throw new ExpiredTokenException();
         } catch (Exception ex) {

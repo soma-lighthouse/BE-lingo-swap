@@ -18,8 +18,8 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public Member findById(final Long id) {
-        return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
+    public Member findByAuthUuid(final String uuid) {
+        return memberRepository.findByAuthUuid(uuid).orElseThrow(() -> new MemberNotFoundException(uuid));
     }
 
     Member findByIdWithRegionAndUsedLanguage(final Long id) {

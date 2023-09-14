@@ -16,4 +16,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findByIdWithRegionAndUsedLanguage(Long id);
 
     Optional<Member> findByAuthUsername(String username);
+
+    Optional<Member> findByAuthUuid(String uuid);
 }

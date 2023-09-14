@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.auth.api;
 
+import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairResponse;
 import com.lighthouse.lingoswap.auth.service.AuthManager;
@@ -18,7 +19,7 @@ public class AuthController {
     private final AuthManager authManager;
 
     @PostMapping("/login/google")
-    public ResponseEntity<ResponseDto<TokenPairResponse>> login(@RequestHeader(JwtUtil.AUTH_HEADER) final String idTokenValue) {
+    public ResponseEntity<ResponseDto<LoginResponse>> login(@RequestHeader(JwtUtil.AUTH_HEADER) final String idTokenValue) {
         return ResponseEntity.ok(authManager.login(idTokenValue));
     }
 

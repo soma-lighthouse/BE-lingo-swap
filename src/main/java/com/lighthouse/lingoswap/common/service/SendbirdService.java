@@ -2,9 +2,11 @@ package com.lighthouse.lingoswap.common.service;
 
 import com.lighthouse.lingoswap.common.dto.SendbirdCreateUserRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class SendbirdService {
@@ -12,7 +14,7 @@ public class SendbirdService {
     private final WebClient webClient;
 
     public void createUser(SendbirdCreateUserRequest sendbirdCreateUserRequest) {
-        String response = webClient.post()
+        webClient.post()
                 .uri("/users")
                 .bodyValue(sendbirdCreateUserRequest)
                 .retrieve()
@@ -20,9 +22,9 @@ public class SendbirdService {
                 .block();
     }
 
-    public void deleteUser(Long memberId) {
-        String response = webClient.delete()
-                .uri("/users/" + String.valueOf(memberId))
+    public void deleteUser(String memberUuid) {
+        webClient.delete()
+                .uri("/users/" + memberUuid)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

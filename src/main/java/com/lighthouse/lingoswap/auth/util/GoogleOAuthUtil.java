@@ -17,7 +17,7 @@ public class GoogleOAuthUtil {
 
     private final GoogleIdTokenVerifier verifier;
 
-    public String parseIdToken(String idTokenString) {
+    public String parseIdToken(final String idTokenString) {
         try {
             GoogleIdToken idToken = verifier.verify(idTokenString);
             Payload payload = Objects.requireNonNull(idToken.getPayload());

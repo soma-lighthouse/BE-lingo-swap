@@ -16,16 +16,16 @@ public class ChatroomManager {
     private final SendbirdService sendbirdService;
 
     public ResponseDto<Object> create(SendbirdRequestByChatroom sendbirdRequestByChatroom) {
-        sendbirdRequestByChatroom.members().stream()
-                .map(memberService::findById)
-                .map(member -> new SendbirdCreateUserRequest(String.valueOf(member.getId()), member.getName(), member.getProfileImageUri()))
+        sendbirdRequestByChatroom.memberUuids().stream()
+                .map(memberService::findByAuthUuid)
+                .map(member -> new SendbirdCreateUserRequest(member.getAuth().getUuid(), member.getName(), member.getProfileImageUri()))
                 .forEach(sendbirdService::createUser);
         return ResponseDto.success(null);
     }
 
 
     public ResponseDto<Object> delete(SendbirdRequestByChatroom sendbirdRequestByChatroom) {
-        sendbirdRequestByChatroom.members().forEach(sendbirdService::deleteUser);
+        sendbirdRequestByChatroom.memberUuids().forEach(sendbirdService::deleteUser);
         return ResponseDto.success(null);
     }
 }

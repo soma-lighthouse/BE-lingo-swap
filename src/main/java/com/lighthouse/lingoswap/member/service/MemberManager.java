@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.service;
 
+import com.lighthouse.lingoswap.auth.entity.Auth;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SendbirdCreateUserRequest;
 import com.lighthouse.lingoswap.common.service.SendbirdService;
@@ -48,15 +49,16 @@ public class MemberManager {
         return ResponseDto.success(MemberPreSignedUrlResponse.from(preSignedUrl));
     }
 
-    public void create(MemberCreateRequest memberCreateRequest) {
+    public void create(String username, MemberCreateRequest memberCreateRequest) {
         Country country = countryService.findCountryByCode(memberCreateRequest.region());
+        Auth auth = new Auth(username, memberCreateRequest.uuid(), Role.USER);
         Member member = new Member(
                 memberCreateRequest.birthday(),
                 memberCreateRequest.name(),
                 memberCreateRequest.description(),
                 memberCreateRequest.profileImageUri(),
                 memberCreateRequest.gender(),
-                null,
+                auth,
                 country
         );
         memberService.save(member);
@@ -65,7 +67,7 @@ public class MemberManager {
         saveUsedLanguages(member, memberCreateRequest.usedLanguages());
         savePreferredInterests(member, memberCreateRequest.preferredInterests());
 
-        SendbirdCreateUserRequest sendbirdCreateUserRequest = new SendbirdCreateUserRequest(String.valueOf(member.getId()), member.getName(), member.getProfileImageUri());
+        SendbirdCreateUserRequest sendbirdCreateUserRequest = new SendbirdCreateUserRequest(auth.getUuid(), member.getName(), member.getProfileImageUri());
         sendbirdService.createUser(sendbirdCreateUserRequest);
     }
 
@@ -75,7 +77,6 @@ public class MemberManager {
                 .map(preferredCountry -> new PreferredCountry(member, preferredCountry))
                 .forEach(preferredCountryService::save);
     }
-
 
     private void saveUsedLanguages(Member member, List<UsedLanguageInfo> usedLanguageInfos) {
         usedLanguageInfos.stream()

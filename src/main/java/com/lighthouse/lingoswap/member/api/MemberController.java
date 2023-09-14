@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.member.api;
 
-import com.lighthouse.lingoswap.auth.dto.TokenPairResponse;
+import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.service.AuthManager;
 import com.lighthouse.lingoswap.auth.util.JwtUtil;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
@@ -20,7 +20,7 @@ public class MemberController {
     private final MemberManager memberManager;
 
     @PostMapping
-    public ResponseEntity<ResponseDto<TokenPairResponse>> create(@RequestHeader(JwtUtil.AUTH_HEADER) final String idTokenValue, @RequestBody @Valid final MemberCreateRequest memberCreateRequest) {
+    public ResponseEntity<ResponseDto<LoginResponse>> create(@RequestHeader(JwtUtil.AUTH_HEADER) final String idTokenValue, @RequestBody @Valid final MemberCreateRequest memberCreateRequest) {
         return ResponseEntity.ok(authManager.signup(idTokenValue, memberCreateRequest));
     }
 

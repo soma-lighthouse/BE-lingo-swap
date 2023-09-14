@@ -1,5 +1,5 @@
 package com.lighthouse.lingoswap.question.dto;
 
-public record QuestionUpdateLikeRequest(Long userId) {
+public record QuestionUpdateLikeRequest(String userId) {
 
 }
