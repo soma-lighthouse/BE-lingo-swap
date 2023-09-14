@@ -26,6 +26,7 @@ public class AuthConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/**", "/api/v1/user").permitAll()
                 .requestMatchers("/api/v1/user/form/**").permitAll()
+                .requestMatchers("/lingo/swap/**").permitAll()
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()

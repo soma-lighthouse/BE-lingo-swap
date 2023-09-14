@@ -27,7 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final String FORM_INTERESTS_URL = "/api/v1/user/form/interests";
     private static final String FORM_COUNTRY_URL = "/api/v1/user/form/country";
     private static final String FORM_LANGUAGE_URL = "/api/v1/user/form/language";
-    private static final List<String> excludedUrls = List.of(LOGIN_URL, REISSUE_URL, FORM_INTERESTS_URL, FORM_COUNTRY_URL, FORM_LANGUAGE_URL);
+    private static final String HEALTH_URL = "/lingo/swap/health";
+    private static final List<String> excludedUrls = List.of(LOGIN_URL, REISSUE_URL, FORM_INTERESTS_URL, FORM_COUNTRY_URL, FORM_LANGUAGE_URL, HEALTH_URL);
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final AuthService authService;
