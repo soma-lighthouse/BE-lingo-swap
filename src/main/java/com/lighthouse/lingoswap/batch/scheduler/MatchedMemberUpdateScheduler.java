@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.batch.schduler;
+package com.lighthouse.lingoswap.batch.scheduler;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
