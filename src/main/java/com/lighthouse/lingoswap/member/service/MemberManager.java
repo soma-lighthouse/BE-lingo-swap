@@ -7,6 +7,8 @@ import com.lighthouse.lingoswap.infra.service.DistributionService;
 import com.lighthouse.lingoswap.infra.service.S3Service;
 import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.entity.*;
+import com.lighthouse.lingoswap.question.entity.Category;
+import com.lighthouse.lingoswap.question.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -27,11 +29,11 @@ public class MemberManager {
     private final LanguageService languageService;
     private final UsedLanguageService usedLanguageService;
     private final InterestsService interestsService;
-    private final InterestsFormService interestsFormService;
     private final SendbirdService sendbirdService;
     private final S3Service s3Service;
     private final DistributionService distributionService;
     private final MessageSource messageSource;
+    private final CategoryService categoryService;
 
     @Value("${aws.s3.bucket-name}")
     private String bucketName;
@@ -103,8 +105,12 @@ public class MemberManager {
                 .forEach(preferredInterestsService::save);
     }
 
-    public ResponseDto<InterestsFormResponse> readInterestsForm() {
-        return ResponseDto.success(interestsFormService.getAllInterests());
+    @Transactional
+    public ResponseDto<InterestsFormResponse> readInterestsForm(Locale locale) {
+        List<Category> categories = categoryService.findAll();
+        return ResponseDto.success(new InterestsFormResponse(categories.stream().map(c ->
+                new InterestsFormResponseUnit(c.getName(), messageSource.getMessage(c.getName(), null, locale), c.getInterests().stream().map(i ->
+                        InterestsUnit.of(i, messageSource.getMessage(i.getName(), null, locale))).toList())).toList()));
     }
 
     public ResponseDto<CountryFormResponse> readCountryForm(Locale locale) {

@@ -35,8 +35,8 @@ public class MemberController {
     }
 
     @GetMapping("/form/interests")
-    public ResponseEntity<ResponseDto<InterestsFormResponse>> readInterestsForm() {
-        return ResponseEntity.ok(memberManager.readInterestsForm());
+    public ResponseEntity<ResponseDto<InterestsFormResponse>> readInterestsForm(Locale locale) {
+        return ResponseEntity.ok(memberManager.readInterestsForm(locale));
     }
 
     @GetMapping("/form/country")
