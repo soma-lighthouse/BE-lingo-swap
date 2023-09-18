@@ -6,6 +6,7 @@ import com.lighthouse.lingoswap.auth.util.JwtUtil;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.service.MemberManager;
+import com.lighthouse.lingoswap.question.dto.MyQuestionListResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,11 @@ public class MemberController {
         ResponseDto<TokenPairResponse> responseDto = authManager.login(idTokenValue);
         memberManager.create(memberRequest);
         return ResponseEntity.ok(responseDto);
+    }
+
+    @GetMapping("/{userId}/preference")
+    public ResponseEntity<ResponseDto<MemberPreferenceResponse>> getPreferred(@PathVariable Long userId, Locale locale) {
+        return ResponseEntity.ok().body(memberManager.getPreference(userId, locale));
     }
 
     @PatchMapping("/{userId}")
@@ -57,5 +63,10 @@ public class MemberController {
     @PostMapping("/upload/profile")
     public ResponseEntity<ResponseDto<MemberPreSignedUrlResponse>> getPreSignedUrl(@RequestBody final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
         return ResponseEntity.ok(memberManager.createPreSignedUrl(memberPreSignedUrlRequest));
+    }
+
+    @GetMapping(path = "/{userId}/question")
+    public ResponseEntity<ResponseDto<MyQuestionListResponse>> getMyQuestion(@PathVariable Long userId) {
+        return ResponseEntity.ok(memberManager.getMyQuestion(userId));
     }
 }

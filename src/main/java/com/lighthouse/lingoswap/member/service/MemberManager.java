@@ -7,8 +7,11 @@ import com.lighthouse.lingoswap.infra.service.DistributionService;
 import com.lighthouse.lingoswap.infra.service.S3Service;
 import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.entity.*;
+import com.lighthouse.lingoswap.question.dto.MyQuestionDetail;
+import com.lighthouse.lingoswap.question.dto.MyQuestionListResponse;
 import com.lighthouse.lingoswap.question.entity.Category;
 import com.lighthouse.lingoswap.question.service.CategoryService;
+import com.lighthouse.lingoswap.question.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
@@ -34,6 +37,7 @@ public class MemberManager {
     private final DistributionService distributionService;
     private final MessageSource messageSource;
     private final CategoryService categoryService;
+    private final QuestionService questionService;
 
     @Value("${aws.s3.bucket-name}")
     private String bucketName;
@@ -105,6 +109,13 @@ public class MemberManager {
                 .forEach(preferredInterestsService::save);
     }
 
+    public ResponseDto<MemberPreferenceResponse> getPreference(Long userId, Locale locale) {
+        Member member = memberService.findByIdWithRegionAndUsedLanguage(userId);
+        return ResponseDto.success(new MemberPreferenceResponse(preferredCountryService.findAllByMemberIdWithCountry(userId).stream().map(c -> new CountryFormResponseUnit(c.getCountry().getCode(), messageSource.getMessage(c.getCountry().getCode(), null, locale))).toList(),
+                member.getUsedLanguages().stream().map(l -> l.getLanguage().getName()).toList(),
+                preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(userId).stream().map(i -> new InterestsWithCategoryUnit(i.getInterests().getCategory().getName(), messageSource.getMessage(i.getInterests().getCategory().getName(), null, locale), i.getInterests().getName(), messageSource.getMessage(i.getInterests().getName(), null, locale))).toList()));
+    }
+
     @Transactional
     public ResponseDto<InterestsFormResponse> readInterestsForm(Locale locale) {
         List<Category> categories = categoryService.findAll();
@@ -128,7 +139,11 @@ public class MemberManager {
         member.updateMember(memberRequest.birthday(), memberRequest.name(), memberRequest.description(), memberRequest.profileImageUri(),
                 memberRequest.gender(), countryService.findCountryByCode(memberRequest.region()));
         memberService.save(member);
-
         return ResponseDto.success(null);
+    }
+
+    public ResponseDto<MyQuestionListResponse> getMyQuestion(Long userId) {
+        Member member = memberService.findById(userId);
+        return ResponseDto.success(new MyQuestionListResponse(questionService.searchMyQuestion(member).stream().map(MyQuestionDetail::from).toList()));
     }
 }
