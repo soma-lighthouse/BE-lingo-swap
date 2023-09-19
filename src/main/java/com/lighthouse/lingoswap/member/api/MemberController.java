@@ -56,8 +56,8 @@ public class MemberController {
     }
 
     @GetMapping("/{userId}/profile")
-    public ResponseEntity<ResponseDto<MemberProfileResponse>> get(@PathVariable final Long userId) {
-        return ResponseEntity.ok(memberManager.read(userId));
+    public ResponseEntity<ResponseDto<MemberProfileResponse>> get(@PathVariable final Long userId, Locale locale) {
+        return ResponseEntity.ok(memberManager.read(userId, locale));
     }
 
     @PostMapping("/upload/profile")

@@ -41,11 +41,6 @@ public class QuestionManager {
         return ResponseDto.success(new QuestionListResponse(questions.nextId(), results));
     }
 
-    public ResponseDto<MyQuestionListResponse> getMyQuestion(Long userId) {
-        Member member = memberService.findById(userId);
-        return ResponseDto.success(new MyQuestionListResponse(questionService.searchMyQuestion(member).stream().map(MyQuestionDetail::from).toList()));
-    }
-
     @Transactional
     public ResponseDto<Object> updateLike(Long questionId, QuestionUpdateLikeRequest questionUpdateLikeRequest) {
         Question question = questionService.findById(questionId);

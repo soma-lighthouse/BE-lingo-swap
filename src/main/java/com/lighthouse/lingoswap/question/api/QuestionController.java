@@ -1,7 +1,10 @@
 package com.lighthouse.lingoswap.question.api;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
-import com.lighthouse.lingoswap.question.dto.*;
+import com.lighthouse.lingoswap.question.dto.QuestionCreateRequest;
+import com.lighthouse.lingoswap.question.dto.QuestionDeleteLikeRequest;
+import com.lighthouse.lingoswap.question.dto.QuestionListResponse;
+import com.lighthouse.lingoswap.question.dto.QuestionUpdateLikeRequest;
 import com.lighthouse.lingoswap.question.service.QuestionManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +43,5 @@ public class QuestionController {
                                                           @PathVariable Long questionId,
                                                           @RequestBody QuestionDeleteLikeRequest questionDeleteLikeRequest) {
         return ResponseEntity.ok().body(questionManager.deleteLike(questionId, questionDeleteLikeRequest));
-    }
-
-    @GetMapping(path = "/myQuestion/{userId}")
-    public ResponseEntity<ResponseDto<MyQuestionListResponse>> getMyQuestion(@PathVariable Long userId) {
-        return ResponseEntity.ok(questionManager.getMyQuestion(userId));
     }
 }

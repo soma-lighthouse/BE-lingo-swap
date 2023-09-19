@@ -20,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+
+import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
 @Service
@@ -45,12 +48,33 @@ public class MemberManager {
     @Value("${aws.s3.profile.prefix}")
     private String profileKeyPrefix;
 
-    public ResponseDto<MemberProfileResponse> read(final Long memberId) {
+    private static Map<String, List<String>> groupInterestsByCategory(List<PreferredInterests> preferredInterests) {
+        return preferredInterests.stream().collect(
+                groupingBy(
+                        p -> p.getInterests().getCategory().getName(),
+                        mapping(p -> p.getInterests().getName(), toList())
+                )
+        );
+    }
+
+    public ResponseDto<MemberProfileResponse> read(final Long memberId, Locale locale) {
         Member member = memberService.findByIdWithRegionAndUsedLanguage(memberId);
+        Map<String, List<String>> interestsMap = groupInterestsByCategory(preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(memberId));
         List<UsedLanguage> usedLanguages = member.getUsedLanguages();
-        List<PreferredCountry> preferredCountries = preferredCountryService.findAllByMemberIdWithCountry(memberId);
-        List<PreferredInterests> preferredInterests = preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(memberId);
-        return ResponseDto.success(MemberProfileResponse.of(member, distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), usedLanguages, preferredCountries, preferredInterests));
+        return ResponseDto.success(new MemberProfileResponse(member.getId(), distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), member.getName(), member.calculateAge(), member.getDescription(), member.getRegion().getCode(),
+                preferredCountryService.findAllByMemberIdWithCountry(memberId).stream().map(c -> new CountryFormResponseUnit(c.getCountry().getCode(), messageSource.getMessage(c.getCountry().getCode(), null, locale))).toList(),
+                usedLanguages.stream().map(MemberUsedLanguage::from).toList(),
+                interestsMap.entrySet().stream().map(entry -> MemberPreferredInterests.of(new CategoryDto(entry.getKey(), messageSource.getMessage(entry.getKey(), null, locale)),
+                        entry.getValue().stream().map(v -> new InterestsDto(v, messageSource.getMessage(v, null, locale))).toList())).toList()));
+    }
+
+    public ResponseDto<MemberPreferenceResponse> getPreference(Long userId, Locale locale) {
+        Member member = memberService.findByIdWithRegionAndUsedLanguage(userId);
+        Map<String, List<String>> interestsMap = groupInterestsByCategory(preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(userId));
+        return ResponseDto.success(new MemberPreferenceResponse(preferredCountryService.findAllByMemberIdWithCountry(userId).stream().map(c -> new CountryFormResponseUnit(c.getCountry().getCode(), messageSource.getMessage(c.getCountry().getCode(), null, locale))).toList(),
+                member.getUsedLanguages().stream().map(MemberUsedLanguage::from).toList(),
+                interestsMap.entrySet().stream().map(entry -> MemberPreferredInterests.of(new CategoryDto(entry.getKey(), messageSource.getMessage(entry.getKey(), null, locale)),
+                        entry.getValue().stream().map(v -> new InterestsDto(v, messageSource.getMessage(v, null, locale))).toList())).toList()));
     }
 
     public ResponseDto<MemberPreSignedUrlResponse> createPreSignedUrl(final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
@@ -89,7 +113,6 @@ public class MemberManager {
                 .forEach(preferredCountryService::save);
     }
 
-
     @Transactional
     public void saveUsedLanguages(Member member, List<UsedLanguageInfo> usedLanguageInfos) {
         usedLanguageInfos.stream()
@@ -107,13 +130,6 @@ public class MemberManager {
                 .map(interestsService::findByName)
                 .map(interest -> new PreferredInterests(member, interest))
                 .forEach(preferredInterestsService::save);
-    }
-
-    public ResponseDto<MemberPreferenceResponse> getPreference(Long userId, Locale locale) {
-        Member member = memberService.findByIdWithRegionAndUsedLanguage(userId);
-        return ResponseDto.success(new MemberPreferenceResponse(preferredCountryService.findAllByMemberIdWithCountry(userId).stream().map(c -> new CountryFormResponseUnit(c.getCountry().getCode(), messageSource.getMessage(c.getCountry().getCode(), null, locale))).toList(),
-                member.getUsedLanguages().stream().map(l -> l.getLanguage().getName()).toList(),
-                preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(userId).stream().map(i -> new InterestsWithCategoryUnit(i.getInterests().getCategory().getName(), messageSource.getMessage(i.getInterests().getCategory().getName(), null, locale), i.getInterests().getName(), messageSource.getMessage(i.getInterests().getName(), null, locale))).toList()));
     }
 
     @Transactional
