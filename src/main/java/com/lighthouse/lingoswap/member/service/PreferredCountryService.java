@@ -14,12 +14,16 @@ public class PreferredCountryService {
 
     private final PreferredCountryRepository preferredCountryRepository;
 
-    List<PreferredCountry> findAllByMemberWithCountry(final Member member) {
-        return preferredCountryRepository.findAllByMemberWithCountry(member);
+    List<PreferredCountry> findAllByMemberIdWithCountry(final Long memberId) {
+        return preferredCountryRepository.findAllByMemberIdWithCountry(memberId);
     }
 
 
     public void save(final PreferredCountry preferredCountry) {
         preferredCountryRepository.save(preferredCountry);
+    }
+
+    public List<PreferredCountry> findByMember(Member fromMember) {
+        return preferredCountryRepository.findByMember(fromMember);
     }
 }

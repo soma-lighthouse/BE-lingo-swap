@@ -16,11 +16,11 @@ public class QuestionQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public QuestionQueryRepository(final EntityManager em) {
+    public QuestionQueryRepository(EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public SliceDto<Question> findQuestionsByCategoryId(final Long categoryId, final Long nextId, final int pageSize) {
+    public SliceDto<Question> findQuestionsByCategoryId(Long categoryId, Long nextId, int pageSize) {
         List<Question> questions = queryFactory
                 .selectFrom(question)
                 .where(
@@ -35,11 +35,27 @@ public class QuestionQueryRepository {
         return new SliceDto<>(questions, lastId);
     }
 
-    private BooleanExpression questionIdLt(final Long nextId) {
+    public SliceDto<Question> findQuestionRecommendationsByCategoryId(Long categoryId, Long nextId, int pageSize) {
+        List<Question> questions = queryFactory
+                .selectFrom(question)
+                .where(
+                        question.category.id.eq(categoryId),
+                        question.likes.goe(50),
+                        questionIdLt(nextId)
+                )
+                .orderBy(question.id.desc())
+                .limit(pageSize + 1L)
+                .fetch();
+
+        Long lastId = removeLastAndReturnNextIdByPageSize(questions, pageSize);
+        return new SliceDto<>(questions, lastId);
+    }
+
+    private BooleanExpression questionIdLt(Long nextId) {
         return nextId == null ? null : question.id.lt(nextId);
     }
 
-    private Long removeLastAndReturnNextIdByPageSize(final List<Question> questions, final int pageSize) {
+    private Long removeLastAndReturnNextIdByPageSize(List<Question> questions, final int pageSize) {
         Long lastId = -1L;
         if (questions.size() > pageSize) {
             questions.remove(pageSize);
@@ -47,4 +63,6 @@ public class QuestionQueryRepository {
         }
         return lastId;
     }
+
+
 }

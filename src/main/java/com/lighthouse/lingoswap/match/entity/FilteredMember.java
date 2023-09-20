@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class MatchedMember extends BaseEntity {
+public class FilteredMember extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,7 +25,7 @@ public class MatchedMember extends BaseEntity {
 
     private Boolean isValid;
 
-    public MatchedMember(Member fromMember, Member toMember) {
+    public FilteredMember(Member fromMember, Member toMember) {
         this.fromMember = fromMember;
         this.toMember = toMember;
     }

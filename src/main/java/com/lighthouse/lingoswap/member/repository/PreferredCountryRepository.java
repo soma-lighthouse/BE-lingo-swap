@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface PreferredCountryRepository extends JpaRepository<PreferredCountry, Long> {
 
-    @Query("select p from PreferredCountry p join fetch p.country where p.member = :member")
-    List<PreferredCountry> findAllByMemberWithCountry(Member member);
+    @Query("select p from PreferredCountry p join fetch p.country where p.member.id = :id")
+    List<PreferredCountry> findAllByMemberIdWithCountry(Long id);
+
+    List<PreferredCountry> findByMember(Member member);
 }

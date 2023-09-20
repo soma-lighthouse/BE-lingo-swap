@@ -36,8 +36,8 @@ public class MemberManager {
     public ResponseDto<MemberProfileResponse> read(final String uuid) {
         Member member = memberService.findByUuidWithRegionAndUsedLanguage(uuid);
         List<UsedLanguage> usedLanguages = member.getUsedLanguages();
-        List<PreferredCountry> preferredCountries = preferredCountryService.findAllByMemberWithCountry(member);
-        List<PreferredInterests> preferredInterests = preferredInterestsService.findAllByMemberWithInterestsAndCategory(member);
+        List<PreferredCountry> preferredCountries = preferredCountryService.findAllByMemberIdWithCountry(member.getId());
+        List<PreferredInterests> preferredInterests = preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(member.getId());
         return ResponseDto.success(MemberProfileResponse.of(member, distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), usedLanguages, preferredCountries, preferredInterests));
     }
 
