@@ -18,6 +18,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -81,6 +82,91 @@ public class MemberManager {
         String preSignedUrl = s3Service.generatePreSignedUrl(bucketName, profileKeyPrefix + memberPreSignedUrlRequest.key());
         return ResponseDto.success(MemberPreSignedUrlResponse.from(preSignedUrl));
     }
+
+    @Transactional
+    public ResponseDto<Object> patchPreference(Long userId, MemberPreferenceRequest memberRequest) {
+        Member member = memberService.findByIdWithRegionAndUsedLanguage(userId);
+        List<String> currentInterests = preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(userId).stream().map(p -> p.getInterests().getName()).toList();
+        List<String> currentCountries = preferredCountryService.findAllByMemberIdWithCountry(userId).stream().map(c -> c.getCountry().getCode()).toList();
+        List<UsedLanguageInfo> currentLanguages = member.getUsedLanguages().stream().map(UsedLanguageInfo::from).toList();
+
+        updatePreferredCountries(member, memberRequest, currentCountries);
+        updateUsedLanguages(member, memberRequest, currentLanguages);
+        updatePreferredInterests(member, memberRequest, currentInterests);
+
+        return ResponseDto.success(null);
+    }
+
+    @Transactional
+    public void updatePreferredCountries(Member member, MemberPreferenceRequest memberRequest, List<String> currentCountries) {
+
+        List<String> additionalCountryCodes = new ArrayList<>();
+        List<String> deletedCountryCodes = new ArrayList<>();
+        currentCountries.stream()
+                .filter(currentCountry -> !memberRequest.preferredCountries().contains(currentCountry))
+                .forEach(deletedCountryCodes::add);
+
+        memberRequest.preferredCountries().stream()
+                .filter(preferredCountry -> !currentCountries.contains(preferredCountry))
+                .forEach(additionalCountryCodes::add);
+
+        if (!additionalCountryCodes.isEmpty()) {
+            List<PreferredCountry> additionalPreferredCountries = countryService.findAllByCodes(additionalCountryCodes).stream().map(a -> new PreferredCountry(member, a)).toList();
+            preferredCountryService.saveAll(additionalPreferredCountries);
+        }
+
+        if (!deletedCountryCodes.isEmpty()) {
+            preferredCountryService.deleteByCountryCodeIn(countryService.findAllByCodes(deletedCountryCodes));
+        }
+    }
+
+    @Transactional
+    public void updateUsedLanguages(Member member, MemberPreferenceRequest memberRequest, List<UsedLanguageInfo> currentLanguages) {
+        List<UsedLanguageInfo> additionalUsedLanguageInfos = new ArrayList<>();
+        List<UsedLanguageInfo> deletedUsedLanguageInfos = new ArrayList<>();
+        currentLanguages.stream()
+                .filter(currentLanguage -> !memberRequest.usedLanguages().contains(currentLanguage))
+                .forEach(deletedUsedLanguageInfos::add);
+
+        memberRequest.usedLanguages().stream()
+                .filter(usedLanguageInfo -> !currentLanguages.contains(usedLanguageInfo))
+                .forEach(additionalUsedLanguageInfos::add);
+
+        if (!deletedUsedLanguageInfos.isEmpty()) {
+            usedLanguageService.deleteByLanguageCodeIn(languageService.findAllByCodes(deletedUsedLanguageInfos.stream().map(d -> d.code()).toList()));
+        }
+        if (!additionalUsedLanguageInfos.isEmpty()) {
+            List<UsedLanguage> additionalUsedLanguages = additionalUsedLanguageInfos.stream().map(a -> new UsedLanguage(member, languageService.findLanguageByCode(a.code()), a.level())).toList();
+            usedLanguageService.saveAll(additionalUsedLanguages);
+        }
+    }
+
+    @Transactional
+    public void updatePreferredInterests(Member member, MemberPreferenceRequest memberRequest, List<String> currentInterests) {
+        List<String> additionalPreferredInterestNames = new ArrayList<>();
+        List<String> deletedPreferredInterestNames = new ArrayList<>();
+        List<String> requestInterests = new ArrayList<>();
+        for (PreferredInterestsInfo info : memberRequest.preferredInterests()) {
+            for (String interests : info.interests()) {
+                requestInterests.add(interests);
+            }
+        }
+        currentInterests.stream()
+                .filter(currentInterest -> !requestInterests.contains(currentInterest))
+                .forEach(deletedPreferredInterestNames::add);
+        requestInterests.stream()
+                .filter(requestInterest -> !currentInterests.contains(requestInterest))
+                .forEach(additionalPreferredInterestNames::add);
+
+        if (!deletedPreferredInterestNames.isEmpty()) {
+            preferredInterestsService.deleteByInterestsNameIn(interestsService.findAllByNames(deletedPreferredInterestNames));
+        }
+        if (!additionalPreferredInterestNames.isEmpty()) {
+            List<PreferredInterests> additionalPreferredInterests = additionalPreferredInterestNames.stream().map(a -> new PreferredInterests(member, interestsService.findByName(a))).toList();
+            preferredInterestsService.saveAll(additionalPreferredInterests);
+        }
+    }
+
 
     @Transactional
     public ResponseDto<Object> create(MemberRequest memberRequest) {

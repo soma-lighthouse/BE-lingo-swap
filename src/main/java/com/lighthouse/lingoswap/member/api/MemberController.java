@@ -40,6 +40,12 @@ public class MemberController {
         return ResponseEntity.ok().body(memberManager.patch(userId, memberRequest));
     }
 
+    @PatchMapping("{userId}/preference")
+    public ResponseEntity<ResponseDto<Object>> patchPreference(@PathVariable Long userId,
+                                                               @RequestBody MemberPreferenceRequest memberRequest) {
+        return ResponseEntity.ok().body(memberManager.patchPreference(userId, memberRequest));
+    }
+
     @GetMapping("/form/interests")
     public ResponseEntity<ResponseDto<InterestsFormResponse>> readInterestsForm(Locale locale) {
         return ResponseEntity.ok(memberManager.readInterestsForm(locale));

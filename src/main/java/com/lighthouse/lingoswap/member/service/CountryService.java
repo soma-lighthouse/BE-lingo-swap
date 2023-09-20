@@ -24,6 +24,10 @@ public class CountryService {
         return countryRepository.findCountryByCode(code).orElseThrow(() -> new RuntimeException("국가 코드가 존재하지 않습니다"));
     }
 
+    public List<Country> findAllByCodes(List<String> codes) {
+        return countryRepository.findAllByCodeIn(codes);
+    }
+
     public List<String> findAllCode() {
         return countryRepository.findAllCode();
     }

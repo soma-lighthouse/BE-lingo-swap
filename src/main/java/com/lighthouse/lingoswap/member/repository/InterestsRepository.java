@@ -12,4 +12,6 @@ public interface InterestsRepository extends JpaRepository<Interests, Long> {
     Optional<Interests> findByName(String name);
 
     List<Interests> findByCategory(Category category);
+
+    List<Interests> findAllByNameIn(List<String> names);
 }

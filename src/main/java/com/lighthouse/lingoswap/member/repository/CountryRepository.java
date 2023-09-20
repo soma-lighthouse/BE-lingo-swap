@@ -13,4 +13,6 @@ public interface CountryRepository extends JpaRepository<Country, Integer> {
 
     @Query("select c.code from Country c")
     List<String> findAllCode();
+
+    List<Country> findAllByCodeIn(List<String> codes);
 }
