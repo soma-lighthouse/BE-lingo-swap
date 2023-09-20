@@ -1,6 +1,5 @@
 package com.lighthouse.lingoswap.question.api;
 
-import com.lighthouse.lingoswap.auth.entity.Auth;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.question.dto.QuestionCreateRequest;
 import com.lighthouse.lingoswap.question.dto.QuestionDeleteLikeRequest;
@@ -31,8 +30,7 @@ public class QuestionController {
                                                                  @RequestParam(required = false) Long next,
                                                                  @RequestParam(defaultValue = "10") final int pageSize) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Auth userDetails = (Auth) auth.getPrincipal();
-        return ResponseEntity.ok(questionManager.read(userDetails.getUuid(), categoryId, next, pageSize));
+        return ResponseEntity.ok(questionManager.read((String) auth.getPrincipal(), categoryId, next, pageSize));
     }
 
     @PostMapping(path = "/{questionId}/like")

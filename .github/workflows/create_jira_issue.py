@@ -1,6 +1,6 @@
 import os
 import requests
-from requests.auth import HTTPBasicAuth
+from requests.authDetails import HTTPBasicAuth
 import json
 
 
@@ -12,7 +12,7 @@ ISSUE_TITLE = os.environ["ISSUE_TITLE"]
 ISSUE_BODY = os.environ["ISSUE_BODY"]
 
 url = f"https://{JIRA_DOMAIN}.atlassian.net/rest/api/3/issue/bulk"
-auth = HTTPBasicAuth(JIRA_EMAIL, JIRA_API_TOKEN)
+authDetails = HTTPBasicAuth(JIRA_EMAIL, JIRA_API_TOKEN)
 headers = {"Accept": "application/json", "Content-Type": "application/json"}
 
 titles = [line.strip() for line in ISSUE_BODY.splitlines() if "- [ ]" in line]
@@ -46,6 +46,6 @@ for title in titles:
 
 payload = json.dumps({"issueUpdates": issues})
 
-response = requests.request("POST", url, data=payload, headers=headers, auth=auth)
+response = requests.request("POST", url, data=payload, headers=headers, authDetails=authDetails)
 log = json.loads(response.text)
 print(log)

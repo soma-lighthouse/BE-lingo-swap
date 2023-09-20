@@ -27,7 +27,7 @@ public class TokenPair extends BaseEntity {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }
-    
+
     public void expire() {
         isExpired = true;
     }

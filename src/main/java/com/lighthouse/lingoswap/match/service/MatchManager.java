@@ -20,7 +20,7 @@ public class MatchManager {
     private final MemberService memberService;
 
     public ResponseDto<MatchedMemberProfilesResponse> read(final String memberUuid, final Long nextId, final int pageSize) {
-        Member member = memberService.findByAuthUuid(memberUuid);
+        Member member = memberService.findByUuid(memberUuid);
         SliceDto<MatchedMember> matchedMembers = matchService.search(member, nextId, pageSize);
         List<Long> toMemberIds = matchedMembers.content().stream().map(m -> m.getToMember().getId()).toList();
         List<Member> members = memberService.findAllByIdsWithRegionAndUsedLanguage(toMemberIds);

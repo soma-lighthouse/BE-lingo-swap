@@ -2,10 +2,10 @@ package com.lighthouse.lingoswap.auth.api;
 
 import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
-import com.lighthouse.lingoswap.auth.dto.TokenPairResponse;
+import com.lighthouse.lingoswap.auth.dto.TokenPairDetails;
 import com.lighthouse.lingoswap.auth.service.AuthManager;
-import com.lighthouse.lingoswap.auth.util.JwtUtil;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
+import com.lighthouse.lingoswap.member.dto.MemberCreateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,20 +16,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
+    private static final String ID_TOKEN_PARAMETER_NAME = "id_token";
+
     private final AuthManager authManager;
 
-    @PostMapping("/login/google")
-    public ResponseEntity<ResponseDto<LoginResponse>> login(@RequestHeader(JwtUtil.AUTH_HEADER) final String idTokenValue) {
-        return ResponseEntity.ok(authManager.login(idTokenValue));
+    @PostMapping("/login")
+    public ResponseEntity<ResponseDto<LoginResponse>> login(@RequestParam(ID_TOKEN_PARAMETER_NAME) String idToken) {
+        return ResponseEntity.ok(authManager.login(idToken));
+    }
+
+    @PostMapping("/signup")
+    public ResponseEntity<ResponseDto<LoginResponse>> signup(@RequestParam(ID_TOKEN_PARAMETER_NAME) String idToken,
+                                                             @RequestBody @Valid final MemberCreateRequest memberCreateRequest) {
+        return ResponseEntity.ok(authManager.signup(idToken, memberCreateRequest));
     }
 
     @PostMapping("/token")
-    public ResponseEntity<ResponseDto<TokenPairResponse>> reissue(@RequestBody @Valid final ReissueRequest reissueRequest) {
+    public ResponseEntity<ResponseDto<TokenPairDetails>> reissue(@RequestBody @Valid final ReissueRequest reissueRequest) {
         return ResponseEntity.ok(authManager.reissue(reissueRequest));
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<ResponseDto<Object>> logout(@RequestHeader(JwtUtil.AUTH_HEADER) final String accessTokenValue) {
-        return ResponseEntity.ok(authManager.logout(accessTokenValue));
     }
 }

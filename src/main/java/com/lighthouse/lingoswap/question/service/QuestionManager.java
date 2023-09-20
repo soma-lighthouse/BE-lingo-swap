@@ -25,7 +25,7 @@ public class QuestionManager {
     private final LikeMemberService likeMemberService;
 
     public ResponseDto<Object> create(final QuestionCreateRequest questionCreateRequest) {
-        Member member = memberService.findByAuthUuid(questionCreateRequest.userId());
+        Member member = memberService.findByUuid(questionCreateRequest.userId());
         Category category = categoryService.findById(questionCreateRequest.categoryId());
         Question question = Question.of(member, category, questionCreateRequest.content());
         questionService.save(question);
@@ -34,7 +34,7 @@ public class QuestionManager {
 
     public ResponseDto<QuestionListResponse> read(final String uuid, final Long categoryId, final Long nextId, final int pageSize) {
         SliceDto<Question> questions = questionService.search(categoryId, nextId, pageSize);
-        Member member = memberService.findByAuthUuid(uuid);
+        Member member = memberService.findByUuid(uuid);
         List<LikeMember> likeMembers = likeMemberService.findAllByMember(member);
 
         List<Question> likedQuestions = likeMembers.stream().map(LikeMember::getQuestion).toList();
@@ -45,7 +45,7 @@ public class QuestionManager {
     @Transactional
     public ResponseDto<Object> updateLike(final Long questionId, final QuestionUpdateLikeRequest questionUpdateLikeRequest) {
         Question question = questionService.findById(questionId);
-        Member member = memberService.findByAuthUuid(questionUpdateLikeRequest.userId());
+        Member member = memberService.findByUuid(questionUpdateLikeRequest.userId());
 
         LikeMember likeMember = LikeMember.of(member, question);
         likeMemberService.save(likeMember);
@@ -58,7 +58,7 @@ public class QuestionManager {
     @Transactional
     public ResponseDto<Object> deleteLike(final Long questionId, final QuestionDeleteLikeRequest questionDeleteLikeRequest) {
         Question question = questionService.findById(questionId);
-        Member member = memberService.findByAuthUuid(questionDeleteLikeRequest.userId());
+        Member member = memberService.findByUuid(questionDeleteLikeRequest.userId());
         likeMemberService.deleteByQuestionAndMember(question, member);
 
         question.subtractOneLike();

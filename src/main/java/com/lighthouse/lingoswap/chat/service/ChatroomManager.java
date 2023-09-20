@@ -17,8 +17,8 @@ public class ChatroomManager {
 
     public ResponseDto<Object> create(SendbirdRequestByChatroom sendbirdRequestByChatroom) {
         sendbirdRequestByChatroom.memberUuids().stream()
-                .map(memberService::findByAuthUuid)
-                .map(member -> new SendbirdCreateUserRequest(member.getAuth().getUuid(), member.getName(), member.getProfileImageUri()))
+                .map(memberService::findByUuid)
+                .map(member -> new SendbirdCreateUserRequest(member.getAuthDetails().getUuid(), member.getName(), member.getProfileImageUri()))
                 .forEach(sendbirdService::createUser);
         return ResponseDto.success(null);
     }

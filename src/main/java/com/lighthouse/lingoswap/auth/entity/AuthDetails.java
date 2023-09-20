@@ -1,6 +1,5 @@
 package com.lighthouse.lingoswap.auth.entity;
 
-import com.lighthouse.lingoswap.member.entity.Role;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -11,11 +10,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Collections;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Embeddable
-public class Auth implements UserDetails {
+public class AuthDetails implements UserDetails {
 
     private String username;
 
@@ -24,7 +24,7 @@ public class Auth implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public Auth(final String username, final String uuid, final Role role) {
+    public AuthDetails(final String username, final String uuid, final Role role) {
         this.username = username;
         this.uuid = uuid;
         this.role = role;
@@ -32,7 +32,7 @@ public class Auth implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return role.getAuthorities();
+        return Collections.singletonList(role);
     }
 
     @Override
