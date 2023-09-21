@@ -62,7 +62,7 @@ public class MemberManager {
         Member member = memberService.findByUuidWithRegionAndUsedLanguage(uuid);
         Map<String, List<String>> interestsMap = groupInterestsByCategory(preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(member.getId()));
         List<UsedLanguage> usedLanguages = member.getUsedLanguages();
-        return ResponseDto.success(new MemberProfileResponse(member.getId(), distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), member.getName(), member.calculateAge(), member.getDescription(), member.getRegion().getCode(),
+        return ResponseDto.success(new MemberProfileResponse(member.getAuthDetails().getUuid(), distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), member.getName(), member.calculateAge(), member.getDescription(), member.getRegion().getCode(),
                 preferredCountryService.findAllByMemberIdWithCountry(member.getId()).stream().map(c -> new CountryFormResponseUnit(c.getCountry().getCode(), messageSource.getMessage(c.getCountry().getCode(), null, locale))).toList(),
                 usedLanguages.stream().map(MemberUsedLanguage::from).toList(),
                 interestsMap.entrySet().stream().map(entry -> MemberPreferredInterests.of(new CategoryDto(entry.getKey(), messageSource.getMessage(entry.getKey(), null, locale)),

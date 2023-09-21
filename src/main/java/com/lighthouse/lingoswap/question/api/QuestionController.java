@@ -44,9 +44,9 @@ public class QuestionController {
     }
 
     @GetMapping(path = "/recommendation/{categoryId}")
-    public ResponseEntity<QuestionRecommendationListResponse> getRecommendation(@PathVariable Long categoryId,
-                                                                                @RequestParam(required = false) final Long next,
-                                                                                @RequestParam(defaultValue = "10") final int pageSize) {
+    public ResponseEntity<ResponseDto<QuestionRecommendationListResponse>> getRecommendation(@PathVariable Long categoryId,
+                                                                                             @RequestParam(required = false) final Long next,
+                                                                                             @RequestParam(defaultValue = "10") final int pageSize) {
         return ResponseEntity.ok(questionManager.readRecommendation(categoryId, next, pageSize));
     }
 }

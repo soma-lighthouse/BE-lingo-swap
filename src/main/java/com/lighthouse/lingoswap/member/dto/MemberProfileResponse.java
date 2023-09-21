@@ -2,7 +2,7 @@ package com.lighthouse.lingoswap.member.dto;
 
 import java.util.List;
 
-public record MemberProfileResponse(Long id,
+public record MemberProfileResponse(String uuid,
                                     String profileImageUri,
                                     String name,
                                     int age,
