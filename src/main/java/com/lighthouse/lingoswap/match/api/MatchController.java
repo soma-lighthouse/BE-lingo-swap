@@ -1,18 +1,12 @@
 package com.lighthouse.lingoswap.match.api;
 
+import com.lighthouse.lingoswap.common.dto.ResponseDto;
+import com.lighthouse.lingoswap.match.dto.MatchedMemberProfilesResponse;
 import com.lighthouse.lingoswap.match.service.MatchManager;
-import com.lighthouse.lingoswap.member.dto.MemberSimpleProfile;
-import com.lighthouse.lingoswap.member.entity.Member;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Slice;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,12 +16,11 @@ public class MatchController {
     private final MatchManager matchManager;
 
     @Transactional
-    @GetMapping("/{user_id}/matches")
-    public ResponseEntity<Slice<MemberSimpleProfile>> get(@PathVariable final String uuid
-            , @PageableDefault(size = 10, sort = "id") Pageable pageable) {
-        Slice<Member> slice = matchManager.read(uuid, pageable);
-        Slice<MemberSimpleProfile> sliceDto = slice.map(MemberSimpleProfile::from);
+    @GetMapping(path = "/{uuid}/matches")
+    public ResponseEntity<ResponseDto<MatchedMemberProfilesResponse>> get(@PathVariable final String uuid,
+                                                                          @RequestParam(required = false) Long next,
+                                                                          @RequestParam(defaultValue = "10") final int pageSize) {
 
-        return ResponseEntity.ok(sliceDto);
+        return ResponseEntity.ok(matchManager.read(uuid, next, pageSize));
     }
 }

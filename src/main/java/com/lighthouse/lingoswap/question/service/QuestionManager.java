@@ -46,7 +46,7 @@ public class QuestionManager {
     @Transactional
     public ResponseDto<Object> updateLike(final Long questionId, final QuestionUpdateLikeRequest questionUpdateLikeRequest) {
         Question question = questionService.findById(questionId);
-        Member member = memberService.findByUuid(questionUpdateLikeRequest.userId());
+        Member member = memberService.findByUuid(questionUpdateLikeRequest.uuid());
 
         LikeMember likeMember = LikeMember.of(member, question);
         likeMemberService.save(likeMember);
@@ -59,7 +59,7 @@ public class QuestionManager {
     @Transactional
     public ResponseDto<Object> deleteLike(final Long questionId, final QuestionDeleteLikeRequest questionDeleteLikeRequest) {
         Question question = questionService.findById(questionId);
-        Member member = memberService.findByUuid(questionDeleteLikeRequest.userId());
+        Member member = memberService.findByUuid(questionDeleteLikeRequest.uuid());
         likeMemberService.deleteByQuestionAndMember(question, member);
 
         question.subtractOneLike();
@@ -67,11 +67,11 @@ public class QuestionManager {
         return ResponseDto.success(null);
     }
 
-    public QuestionRecommendationListResponse readRecommendation(Long categoryId, Long nextId, int pageSize) {
+    public ResponseDto<QuestionRecommendationListResponse> readRecommendation(Long categoryId, Long nextId, int pageSize) {
         SliceDto<Question> questionRecommendations = questionService.searchRecommendation(categoryId, nextId, pageSize);
 
         List<String> results = new ArrayList<>();
         questionRecommendations.content().stream().forEach(q -> results.add(q.getContents()));
-        return new QuestionRecommendationListResponse(questionRecommendations.nextId(), results);
+        return ResponseDto.success(new QuestionRecommendationListResponse(questionRecommendations.nextId(), results));
     }
 }
