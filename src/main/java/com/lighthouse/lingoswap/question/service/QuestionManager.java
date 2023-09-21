@@ -26,7 +26,7 @@ public class QuestionManager {
     private final LikeMemberService likeMemberService;
 
     public ResponseDto<Object> create(final QuestionCreateRequest questionCreateRequest) {
-        Member member = memberService.findByUuid(questionCreateRequest.userId());
+        Member member = memberService.findByUuid(questionCreateRequest.uuid());
         Category category = categoryService.findById(questionCreateRequest.categoryId());
         Question question = Question.of(member, category, questionCreateRequest.content());
         questionService.save(question);

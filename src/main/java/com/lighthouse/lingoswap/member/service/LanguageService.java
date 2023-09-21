@@ -7,6 +7,8 @@ import com.lighthouse.lingoswap.member.repository.LanguageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class LanguageService {
@@ -20,5 +22,9 @@ public class LanguageService {
 
     public LanguageFormResponse getAllLanguages() {
         return new LanguageFormResponse(languageQueryRepository.findAllLanguage());
+    }
+
+    public List<Language> findAllByCodes(List<String> codes) {
+        return languageRepository.findAllByCodeIn(codes);
     }
 }

@@ -1,5 +1,7 @@
-package com.lighthouse.lingoswap.member.dto;
+package com.lighthouse.lingoswap.auth.dto;
 
+import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfo;
+import com.lighthouse.lingoswap.member.dto.UsedLanguageInfo;
 import com.lighthouse.lingoswap.member.entity.Gender;
 
 import java.time.LocalDate;

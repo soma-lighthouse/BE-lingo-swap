@@ -1,11 +1,12 @@
 package com.lighthouse.lingoswap.member.service;
 
-import com.lighthouse.lingoswap.member.dto.CountryFormResponse;
 import com.lighthouse.lingoswap.member.entity.Country;
 import com.lighthouse.lingoswap.member.repository.CountryQueryRepository;
 import com.lighthouse.lingoswap.member.repository.CountryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -19,13 +20,15 @@ public class CountryService {
 
     }
 
-
     public Country findCountryByCode(String code) {
         return countryRepository.findCountryByCode(code).orElseThrow(() -> new RuntimeException("국가 코드가 존재하지 않습니다"));
     }
 
+    public List<Country> findAllByCodes(List<String> codes) {
+        return countryRepository.findAllByCodeIn(codes);
+    }
 
-    public CountryFormResponse getAllCountries() {
-        return new CountryFormResponse(countryQueryRepository.findAllCountry());
+    public List<String> findAllCode() {
+        return countryRepository.findAllCode();
     }
 }

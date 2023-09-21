@@ -5,6 +5,8 @@ import com.lighthouse.lingoswap.question.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class CategoryService {
@@ -17,5 +19,13 @@ public class CategoryService {
 
     public Category findByName(final String name) {
         return categoryRepository.findByName(name);
+    }
+
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
+    }
+
+    public List<Category> findAllWithCategory() {
+        return categoryRepository.findAllWithCategory();
     }
 }
