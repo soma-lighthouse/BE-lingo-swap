@@ -1,5 +1,7 @@
 package com.lighthouse.lingoswap.common.service;
 
+import com.lighthouse.lingoswap.chat.dto.ChatRoomUrlResponse;
+import com.lighthouse.lingoswap.common.dto.SendbirdCreateChatRoomRequest;
 import com.lighthouse.lingoswap.common.dto.SendbirdCreateUserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,8 +22,18 @@ public class SendbirdService {
                 .block();
     }
 
+    public String createChatRoom(SendbirdCreateChatRoomRequest sendbirdCreateChatRoomRequest) {
+        return webClient.post()
+                .uri("/group_channels")
+                .bodyValue(sendbirdCreateChatRoomRequest)
+                .retrieve()
+                .bodyToMono(ChatRoomUrlResponse.class)
+                .map(ChatRoomUrlResponse::channel_url)
+                .block();
+    }
+
     public void deleteUser(Long memberId) {
-        String response = webClient.delete()
+        String chatroomUrl = webClient.delete()
                 .uri("/users/" + String.valueOf(memberId))
                 .retrieve()
                 .bodyToMono(String.class)

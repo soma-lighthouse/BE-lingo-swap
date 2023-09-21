@@ -1,5 +1,7 @@
 package com.lighthouse.lingoswap.chat.api;
 
+import com.lighthouse.lingoswap.chat.dto.ChatRoomUrlResponse;
+import com.lighthouse.lingoswap.chat.dto.ChatroomCreateRequest;
 import com.lighthouse.lingoswap.chat.service.ChatroomManager;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SendbirdRequestByChatroom;
@@ -23,6 +25,11 @@ public class ChatroomController {
     @DeleteMapping
     public ResponseEntity<ResponseDto<Object>> delete(@RequestBody @Valid final SendbirdRequestByChatroom sendbirdRequestByChatroom) {
         return ResponseEntity.ok(chatroomManager.delete(sendbirdRequestByChatroom));
+    }
+
+    @PostMapping(path = "/chatroom")
+    public ResponseEntity<ResponseDto<ChatRoomUrlResponse>> createChatroom(@RequestBody final ChatroomCreateRequest chatroomCreateRequest) {
+        return ResponseEntity.ok(chatroomManager.createChatroom(chatroomCreateRequest));
     }
 }
 
