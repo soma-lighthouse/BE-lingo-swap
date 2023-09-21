@@ -1,6 +1,5 @@
 package com.lighthouse.lingoswap.common.service;
 
-import com.lighthouse.lingoswap.chat.dto.ChatRoomUrlResponse;
 import com.lighthouse.lingoswap.common.dto.SendbirdCreateChatRoomRequest;
 import com.lighthouse.lingoswap.common.dto.SendbirdCreateUserRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,7 @@ public class SendbirdService {
     private final WebClient webClient;
 
     public void createUser(SendbirdCreateUserRequest sendbirdCreateUserRequest) {
-        String response = webClient.post()
+        webClient.post()
                 .uri("/users")
                 .bodyValue(sendbirdCreateUserRequest)
                 .retrieve()
@@ -22,19 +21,18 @@ public class SendbirdService {
                 .block();
     }
 
-    public String createChatRoom(SendbirdCreateChatRoomRequest sendbirdCreateChatRoomRequest) {
-        return webClient.post()
+    public void createChatRoom(SendbirdCreateChatRoomRequest sendbirdCreateChatRoomRequest) {
+        webClient.post()
                 .uri("/group_channels")
                 .bodyValue(sendbirdCreateChatRoomRequest)
                 .retrieve()
-                .bodyToMono(ChatRoomUrlResponse.class)
-                .map(ChatRoomUrlResponse::channel_url)
+                .bodyToMono(String.class)
                 .block();
     }
 
-    public void deleteUser(Long memberId) {
-        String chatroomUrl = webClient.delete()
-                .uri("/users/" + String.valueOf(memberId))
+    public void deleteUser(String uuid) {
+        webClient.delete()
+                .uri("/users/" + uuid)
                 .retrieve()
                 .bodyToMono(String.class)
                 .block();

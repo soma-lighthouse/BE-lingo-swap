@@ -13,7 +13,7 @@ public class MemberExceptionHandler {
 
     @ExceptionHandler(MemberNotFoundException.class)
     private ResponseEntity handleMemberNotFound(final MemberNotFoundException ex) {
-        log.error("MemberNotFoundException", ex);
+        log.error("{}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ResponseDto.error("40000", ex.getMessage()));
     }

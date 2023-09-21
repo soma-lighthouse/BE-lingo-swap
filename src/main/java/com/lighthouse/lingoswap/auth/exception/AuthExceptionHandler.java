@@ -21,14 +21,14 @@ public class AuthExceptionHandler {
 
     @ExceptionHandler(AuthenticationException.class)
     private ResponseEntity handleInvalidAccess(final AuthenticationException ex) {
-        log.error(ex.getMessage());
+        log.error("", ex);
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ResponseDto.error("40300", ex.getMessage()));
     }
 
     @ExceptionHandler(ExpiredTokenException.class)
     public ResponseEntity handleInvalidAccess(final ExpiredTokenException ex) {
-        log.error(ex.getMessage());
+        log.error("", ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(ResponseDto.error("40100", ex.getMessage()));
     }

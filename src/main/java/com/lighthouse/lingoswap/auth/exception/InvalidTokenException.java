@@ -7,4 +7,8 @@ public class InvalidTokenException extends JwtException {
     public InvalidTokenException() {
         super(MESSAGE);
     }
+
+    public InvalidTokenException(Throwable reason) {
+        super(MESSAGE, reason);
+    }
 }

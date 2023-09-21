@@ -1,28 +1,28 @@
-package com.lighthouse.lingoswap.auth.util;
+package com.lighthouse.lingoswap.auth.service;
 
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
-import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken.Payload;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.lighthouse.lingoswap.auth.exception.InvalidIdTokenException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.util.Objects;
 
 @RequiredArgsConstructor
-@Component
-public class GoogleOAuthUtil {
+@Service
+public class GoogleIdTokenService {
 
     private final GoogleIdTokenVerifier verifier;
 
-    public String parseIdToken(String idTokenString) {
+    public String parseIdToken(final String idTokenString) {
         try {
             GoogleIdToken idToken = verifier.verify(idTokenString);
-            Payload payload = idToken.getPayload();
-            return payload.getEmail();
+            GoogleIdToken.Payload payload = Objects.requireNonNull(idToken.getPayload());
+            return Objects.requireNonNull(payload.getEmail());
         } catch (GeneralSecurityException | IllegalArgumentException | NullPointerException | IOException ex) {
-            throw new InvalidIdTokenException();
+            throw new InvalidIdTokenException(ex);
         }
     }
 }

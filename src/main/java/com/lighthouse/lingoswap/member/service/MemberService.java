@@ -1,9 +1,11 @@
 package com.lighthouse.lingoswap.member.service;
 
 import com.lighthouse.lingoswap.member.entity.Member;
+import com.lighthouse.lingoswap.member.exception.DuplicateMemberException;
 import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
 import com.lighthouse.lingoswap.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,18 +17,28 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     public void save(Member member) {
-        memberRepository.save(member);
+        try {
+            memberRepository.save(member);
+        } catch (DataIntegrityViolationException ex) {
+            throw new DuplicateMemberException(member.getAuthDetails().getUsername(), ex);
+        }
     }
 
-    public Member findById(final Long id) {
-        return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException(id));
+    public Member findByUuid(final String uuid) {
+        return memberRepository.findByAuthDetailsUuid(uuid)
+                .orElseThrow(() -> new MemberNotFoundException(uuid));
     }
 
-    Member findByIdWithRegionAndUsedLanguage(final Long id) {
-        return memberRepository.findByIdWithRegionAndUsedLanguage(id);
+    Member findByUuidWithRegionAndUsedLanguage(final String uuid) {
+        return memberRepository.findByUuidWithRegionAndUsedLanguage(uuid)
+                .orElseThrow((() -> new MemberNotFoundException(uuid)));
     }
 
     public List<Member> findAllByIdsWithRegionAndUsedLanguage(final List<Long> ids) {
         return memberRepository.findAllByIdsWithRegionAndUsedLanguage(ids);
+    }
+
+    public List<Member> findAll() {
+        return memberRepository.findAll();
     }
 }

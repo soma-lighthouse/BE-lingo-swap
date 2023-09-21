@@ -35,6 +35,22 @@ public class QuestionQueryRepository {
         return new SliceDto<>(questions, lastId);
     }
 
+    public SliceDto<Question> findQuestionRecommendationsByCategoryId(Long categoryId, Long nextId, int pageSize) {
+        List<Question> questions = queryFactory
+                .selectFrom(question)
+                .where(
+                        question.category.id.eq(categoryId),
+                        question.likes.goe(50),
+                        questionIdLt(nextId)
+                )
+                .orderBy(question.id.desc())
+                .limit(pageSize + 1L)
+                .fetch();
+
+        Long lastId = removeLastAndReturnNextIdByPageSize(questions, pageSize);
+        return new SliceDto<>(questions, lastId);
+    }
+
     private BooleanExpression questionIdLt(Long nextId) {
         return nextId == null ? null : question.id.lt(nextId);
     }
@@ -47,4 +63,6 @@ public class QuestionQueryRepository {
         }
         return lastId;
     }
+
+
 }

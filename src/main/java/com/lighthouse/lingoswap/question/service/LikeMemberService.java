@@ -15,19 +15,19 @@ public class LikeMemberService {
 
     private final LikeMemberRepository likeMemberRepository;
 
-    void save(LikeMember likeMember) {
+    void save(final LikeMember likeMember) {
         likeMemberRepository.save(likeMember);
     }
 
-    LikeMember findByMemberId(Long memberId) {
+    LikeMember findByMember(final Long memberId) {
         return likeMemberRepository.findByMemberId(memberId);
     }
 
-    List<LikeMember> findAllByMemberId(Long memberId) {
-        return likeMemberRepository.findAllByMemberId(memberId);
+    List<LikeMember> findAllByMember(final Member member) {
+        return likeMemberRepository.findAllByMember(member);
     }
 
-    void deleteByQuestionAndMember(Question question, Member member) {
+    void deleteByQuestionAndMember(final Question question, final Member member) {
         likeMemberRepository.deleteByQuestionAndMember(question, member);
     }
 }

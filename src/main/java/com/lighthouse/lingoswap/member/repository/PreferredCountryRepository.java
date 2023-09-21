@@ -1,6 +1,7 @@
 package com.lighthouse.lingoswap.member.repository;
 
 import com.lighthouse.lingoswap.member.entity.Country;
+import com.lighthouse.lingoswap.member.entity.Member;
 import com.lighthouse.lingoswap.member.entity.PreferredCountry;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -19,4 +20,6 @@ public interface PreferredCountryRepository extends JpaRepository<PreferredCount
     @Transactional
     @Query("DELETE FROM PreferredCountry p WHERE p.country IN :countries")
     void deleteAllByCountryIn(@Param("countries") List<Country> countries);
+
+    List<PreferredCountry> findAllByMember(Member member);
 }

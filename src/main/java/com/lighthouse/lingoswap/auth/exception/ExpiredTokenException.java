@@ -4,7 +4,7 @@ public class ExpiredTokenException extends JwtException {
 
     private static final String MESSAGE = "Your token is expired.";
 
-    public ExpiredTokenException() {
-        super(MESSAGE);
+    public ExpiredTokenException(Throwable reason) {
+        super(MESSAGE, reason);
     }
 }

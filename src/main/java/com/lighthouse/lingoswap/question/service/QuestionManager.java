@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,17 +25,18 @@ public class QuestionManager {
     private final QuestionService questionService;
     private final LikeMemberService likeMemberService;
 
-    public ResponseDto<Object> create(QuestionCreateRequest questionCreateRequest) {
-        Member member = memberService.findById(questionCreateRequest.userId());
+    public ResponseDto<Object> create(final QuestionCreateRequest questionCreateRequest) {
+        Member member = memberService.findByUuid(questionCreateRequest.uuid());
         Category category = categoryService.findById(questionCreateRequest.categoryId());
         Question question = Question.of(member, category, questionCreateRequest.content());
         questionService.save(question);
         return ResponseDto.success(null);
     }
 
-    public ResponseDto<QuestionListResponse> read(Long userId, Long categoryId, Long nextId, int pageSize) {
+    public ResponseDto<QuestionListResponse> read(final String uuid, final Long categoryId, final Long nextId, final int pageSize) {
         SliceDto<Question> questions = questionService.search(categoryId, nextId, pageSize);
-        List<LikeMember> likeMembers = likeMemberService.findAllByMemberId(userId);
+        Member member = memberService.findByUuid(uuid);
+        List<LikeMember> likeMembers = likeMemberService.findAllByMember(member);
 
         List<Question> likedQuestions = likeMembers.stream().map(LikeMember::getQuestion).toList();
         List<QuestionDetail> results = questions.content().stream().map(q -> QuestionDetail.of(q, q.getCreatedMember(), likedQuestions.contains(q))).toList();
@@ -42,9 +44,9 @@ public class QuestionManager {
     }
 
     @Transactional
-    public ResponseDto<Object> updateLike(Long questionId, QuestionUpdateLikeRequest questionUpdateLikeRequest) {
+    public ResponseDto<Object> updateLike(final Long questionId, final QuestionUpdateLikeRequest questionUpdateLikeRequest) {
         Question question = questionService.findById(questionId);
-        Member member = memberService.findById(questionUpdateLikeRequest.userId());
+        Member member = memberService.findByUuid(questionUpdateLikeRequest.userId());
 
         LikeMember likeMember = LikeMember.of(member, question);
         likeMemberService.save(likeMember);
@@ -55,13 +57,21 @@ public class QuestionManager {
     }
 
     @Transactional
-    public ResponseDto<Object> deleteLike(Long questionId, QuestionDeleteLikeRequest questionDeleteLikeRequest) {
+    public ResponseDto<Object> deleteLike(final Long questionId, final QuestionDeleteLikeRequest questionDeleteLikeRequest) {
         Question question = questionService.findById(questionId);
-        Member member = memberService.findById(questionDeleteLikeRequest.userId());
+        Member member = memberService.findByUuid(questionDeleteLikeRequest.userId());
         likeMemberService.deleteByQuestionAndMember(question, member);
 
         question.subtractOneLike();
         questionService.save(question);
         return ResponseDto.success(null);
+    }
+
+    public QuestionRecommendationListResponse readRecommendation(Long categoryId, Long nextId, int pageSize) {
+        SliceDto<Question> questionRecommendations = questionService.searchRecommendation(categoryId, nextId, pageSize);
+
+        List<String> results = new ArrayList<>();
+        questionRecommendations.content().stream().forEach(q -> results.add(q.getContents()));
+        return new QuestionRecommendationListResponse(questionRecommendations.nextId(), results);
     }
 }

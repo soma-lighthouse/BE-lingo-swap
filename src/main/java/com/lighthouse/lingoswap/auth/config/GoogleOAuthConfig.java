@@ -15,7 +15,7 @@ import java.util.Collections;
 public class GoogleOAuthConfig {
 
     @Value("${spring.security.oauth.google.client-id}")
-    public String clientId;
+    private String clientId;
 
     @Bean
     HttpTransport httpTransport() {

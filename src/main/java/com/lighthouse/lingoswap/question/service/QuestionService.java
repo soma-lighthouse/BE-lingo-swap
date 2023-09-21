@@ -32,5 +32,9 @@ public class QuestionService {
     public List<Question> searchMyQuestion(Member member) {
         return questionRepository.findByCreatedMember(member);
     }
+
+    SliceDto<Question> searchRecommendation(Long categoryId, Long nextId, int pageSize) {
+        return questionQueryRepository.findQuestionRecommendationsByCategoryId(categoryId, nextId, pageSize);
+    }
 }
 

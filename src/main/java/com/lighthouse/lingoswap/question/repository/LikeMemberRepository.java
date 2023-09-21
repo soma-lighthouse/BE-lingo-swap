@@ -11,7 +11,7 @@ public interface LikeMemberRepository extends JpaRepository<LikeMember, Long> {
 
     LikeMember findByMemberId(Long memberId);
 
-    List<LikeMember> findAllByMemberId(Long memberId);
+    List<LikeMember> findAllByMember(Member member);
 
     void deleteByQuestionAndMember(Question question, Member member);
 }

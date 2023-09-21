@@ -13,11 +13,11 @@ public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    Category findById(Long id) {
+    Category findById(final Long id) {
         return categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("카테고리가 없습니다"));
     }
 
-    public Category findByName(String name) {
+    public Category findByName(final String name) {
         return categoryRepository.findByName(name);
     }
 

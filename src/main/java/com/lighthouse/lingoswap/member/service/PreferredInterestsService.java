@@ -18,7 +18,7 @@ public class PreferredInterestsService {
         preferredInterestsRepository.save(preferredInterests);
     }
 
-    List<PreferredInterests> findAllByMemberIdWithInterestsAndCategory(Long id) {
+    public List<PreferredInterests> findAllByMemberIdWithInterestsAndCategory(Long id) {
         return preferredInterestsRepository.findAllByMemberIdWithInterestsAndCategory(id);
     }
 

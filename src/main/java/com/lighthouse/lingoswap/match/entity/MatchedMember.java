@@ -24,4 +24,9 @@ public class MatchedMember extends BaseEntity {
     private Member toMember;
 
     private Boolean isValid;
+
+    public MatchedMember(Member fromMember, Member toMember) {
+        this.fromMember = fromMember;
+        this.toMember = toMember;
+    }
 }

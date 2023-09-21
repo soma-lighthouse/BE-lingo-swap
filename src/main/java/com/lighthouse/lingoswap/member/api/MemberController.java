@@ -1,13 +1,9 @@
 package com.lighthouse.lingoswap.member.api;
 
-import com.lighthouse.lingoswap.auth.dto.TokenPairResponse;
-import com.lighthouse.lingoswap.auth.service.AuthManager;
-import com.lighthouse.lingoswap.auth.util.JwtUtil;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.service.MemberManager;
 import com.lighthouse.lingoswap.question.dto.MyQuestionListResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,31 +15,23 @@ import java.util.Locale;
 @RequestMapping("/api/v1/user")
 public class MemberController {
 
-    private final AuthManager authManager;
     private final MemberManager memberManager;
 
-    @PostMapping
-    public ResponseEntity<ResponseDto<TokenPairResponse>> create(@RequestHeader(JwtUtil.AUTH_HEADER) final String idTokenValue, @RequestBody @Valid final MemberRequest memberRequest) {
-        ResponseDto<TokenPairResponse> responseDto = authManager.login(idTokenValue);
-        memberManager.create(memberRequest);
-        return ResponseEntity.ok(responseDto);
+    @GetMapping("/{uuid}/preference")
+    public ResponseEntity<ResponseDto<MemberPreferenceResponse>> getPreferred(@PathVariable String uuid, Locale locale) {
+        return ResponseEntity.ok().body(memberManager.getPreference(uuid, locale));
     }
 
-    @GetMapping("/{userId}/preference")
-    public ResponseEntity<ResponseDto<MemberPreferenceResponse>> getPreferred(@PathVariable Long userId, Locale locale) {
-        return ResponseEntity.ok().body(memberManager.getPreference(userId, locale));
-    }
-
-    @PatchMapping("/{userId}")
-    public ResponseEntity<ResponseDto<Object>> patch(@PathVariable Long userId,
+    @PatchMapping("/{uuid}")
+    public ResponseEntity<ResponseDto<Object>> patch(@PathVariable String uuid,
                                                      @RequestBody MemberRequest memberRequest) {
-        return ResponseEntity.ok().body(memberManager.patch(userId, memberRequest));
+        return ResponseEntity.ok().body(memberManager.patch(uuid, memberRequest));
     }
 
-    @PatchMapping("{userId}/preference")
-    public ResponseEntity<ResponseDto<Object>> patchPreference(@PathVariable Long userId,
+    @PatchMapping("{uuid}/preference")
+    public ResponseEntity<ResponseDto<Object>> patchPreference(@PathVariable String uuid,
                                                                @RequestBody MemberPreferenceRequest memberRequest) {
-        return ResponseEntity.ok().body(memberManager.patchPreference(userId, memberRequest));
+        return ResponseEntity.ok().body(memberManager.patchPreference(uuid, memberRequest));
     }
 
     @GetMapping("/form/interests")
@@ -61,9 +49,9 @@ public class MemberController {
         return ResponseEntity.ok(memberManager.readLanguageForm());
     }
 
-    @GetMapping("/{userId}/profile")
-    public ResponseEntity<ResponseDto<MemberProfileResponse>> get(@PathVariable final Long userId, Locale locale) {
-        return ResponseEntity.ok(memberManager.read(userId, locale));
+    @GetMapping("/{uuid}/profile")
+    public ResponseEntity<ResponseDto<MemberProfileResponse>> get(@PathVariable final String uuid, Locale locale) {
+        return ResponseEntity.ok(memberManager.read(uuid, locale));
     }
 
     @PostMapping("/upload/profile")
@@ -71,8 +59,8 @@ public class MemberController {
         return ResponseEntity.ok(memberManager.createPreSignedUrl(memberPreSignedUrlRequest));
     }
 
-    @GetMapping(path = "/{userId}/question")
-    public ResponseEntity<ResponseDto<MyQuestionListResponse>> getMyQuestion(@PathVariable Long userId) {
-        return ResponseEntity.ok(memberManager.getMyQuestion(userId));
+    @GetMapping(path = "/{uuid}/question")
+    public ResponseEntity<ResponseDto<MyQuestionListResponse>> getMyQuestion(@PathVariable String uuid) {
+        return ResponseEntity.ok(memberManager.getMyQuestion(uuid));
     }
 }

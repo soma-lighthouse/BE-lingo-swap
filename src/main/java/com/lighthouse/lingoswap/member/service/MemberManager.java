@@ -58,21 +58,21 @@ public class MemberManager {
         );
     }
 
-    public ResponseDto<MemberProfileResponse> read(final Long memberId, Locale locale) {
-        Member member = memberService.findByIdWithRegionAndUsedLanguage(memberId);
-        Map<String, List<String>> interestsMap = groupInterestsByCategory(preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(memberId));
+    public ResponseDto<MemberProfileResponse> read(final String uuid, Locale locale) {
+        Member member = memberService.findByUuidWithRegionAndUsedLanguage(uuid);
+        Map<String, List<String>> interestsMap = groupInterestsByCategory(preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(member.getId()));
         List<UsedLanguage> usedLanguages = member.getUsedLanguages();
         return ResponseDto.success(new MemberProfileResponse(member.getId(), distributionService.generateUri(profileKeyPrefix + member.getProfileImageUri()), member.getName(), member.calculateAge(), member.getDescription(), member.getRegion().getCode(),
-                preferredCountryService.findAllByMemberIdWithCountry(memberId).stream().map(c -> new CountryFormResponseUnit(c.getCountry().getCode(), messageSource.getMessage(c.getCountry().getCode(), null, locale))).toList(),
+                preferredCountryService.findAllByMemberIdWithCountry(member.getId()).stream().map(c -> new CountryFormResponseUnit(c.getCountry().getCode(), messageSource.getMessage(c.getCountry().getCode(), null, locale))).toList(),
                 usedLanguages.stream().map(MemberUsedLanguage::from).toList(),
                 interestsMap.entrySet().stream().map(entry -> MemberPreferredInterests.of(new CategoryDto(entry.getKey(), messageSource.getMessage(entry.getKey(), null, locale)),
                         entry.getValue().stream().map(v -> new InterestsDto(v, messageSource.getMessage(v, null, locale))).toList())).toList()));
     }
 
-    public ResponseDto<MemberPreferenceResponse> getPreference(Long userId, Locale locale) {
-        Member member = memberService.findByIdWithRegionAndUsedLanguage(userId);
-        Map<String, List<String>> interestsMap = groupInterestsByCategory(preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(userId));
-        return ResponseDto.success(new MemberPreferenceResponse(preferredCountryService.findAllByMemberIdWithCountry(userId).stream().map(c -> new CountryFormResponseUnit(c.getCountry().getCode(), messageSource.getMessage(c.getCountry().getCode(), null, locale))).toList(),
+    public ResponseDto<MemberPreferenceResponse> getPreference(String uuid, Locale locale) {
+        Member member = memberService.findByUuidWithRegionAndUsedLanguage(uuid);
+        Map<String, List<String>> interestsMap = groupInterestsByCategory(preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(member.getId()));
+        return ResponseDto.success(new MemberPreferenceResponse(preferredCountryService.findAllByMemberIdWithCountry(member.getId()).stream().map(c -> new CountryFormResponseUnit(c.getCountry().getCode(), messageSource.getMessage(c.getCountry().getCode(), null, locale))).toList(),
                 member.getUsedLanguages().stream().map(MemberUsedLanguage::from).toList(),
                 interestsMap.entrySet().stream().map(entry -> MemberPreferredInterests.of(new CategoryDto(entry.getKey(), messageSource.getMessage(entry.getKey(), null, locale)),
                         entry.getValue().stream().map(v -> new InterestsDto(v, messageSource.getMessage(v, null, locale))).toList())).toList()));
@@ -84,10 +84,10 @@ public class MemberManager {
     }
 
     @Transactional
-    public ResponseDto<Object> patchPreference(Long userId, MemberPreferenceRequest memberRequest) {
-        Member member = memberService.findByIdWithRegionAndUsedLanguage(userId);
-        List<String> currentInterests = preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(userId).stream().map(p -> p.getInterests().getName()).toList();
-        List<String> currentCountries = preferredCountryService.findAllByMemberIdWithCountry(userId).stream().map(c -> c.getCountry().getCode()).toList();
+    public ResponseDto<Object> patchPreference(String uuid, MemberPreferenceRequest memberRequest) {
+        Member member = memberService.findByUuidWithRegionAndUsedLanguage(uuid);
+        List<String> currentInterests = preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(member.getId()).stream().map(p -> p.getInterests().getName()).toList();
+        List<String> currentCountries = preferredCountryService.findAllByMemberIdWithCountry(member.getId()).stream().map(c -> c.getCountry().getCode()).toList();
         List<UsedLanguageInfo> currentLanguages = member.getUsedLanguages().stream().map(UsedLanguageInfo::from).toList();
 
         updatePreferredCountries(member, memberRequest, currentCountries);
@@ -236,16 +236,16 @@ public class MemberManager {
         return ResponseDto.success(languageService.getAllLanguages());
     }
 
-    public ResponseDto<Object> patch(Long userId, MemberRequest memberRequest) {
-        Member member = memberService.findById(userId);
+    public ResponseDto<Object> patch(String uuid, MemberRequest memberRequest) {
+        Member member = memberService.findByUuid(uuid);
         member.updateMember(memberRequest.birthday(), memberRequest.name(), memberRequest.description(), memberRequest.profileImageUri(),
                 memberRequest.gender(), countryService.findCountryByCode(memberRequest.region()));
         memberService.save(member);
         return ResponseDto.success(null);
     }
 
-    public ResponseDto<MyQuestionListResponse> getMyQuestion(Long userId) {
-        Member member = memberService.findById(userId);
+    public ResponseDto<MyQuestionListResponse> getMyQuestion(String uuid) {
+        Member member = memberService.findByUuid(uuid);
         return ResponseDto.success(new MyQuestionListResponse(questionService.searchMyQuestion(member).stream().map(MyQuestionDetail::from).toList()));
     }
 }
