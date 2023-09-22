@@ -2,6 +2,7 @@ package com.lighthouse.lingoswap.match.service;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
+import com.lighthouse.lingoswap.infra.service.DistributionService;
 import com.lighthouse.lingoswap.match.dto.MatchedMemberProfilesResponse;
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
 import com.lighthouse.lingoswap.member.dto.MemberSimpleProfile;
@@ -13,6 +14,7 @@ import com.lighthouse.lingoswap.member.service.UsedLanguageService;
 import com.lighthouse.lingoswap.question.entity.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,7 +27,9 @@ public class MatchManager {
     private final PreferredCountryService preferredCountryService;
     private final UsedLanguageService usedLanguageService;
     private final PreferredInterestsService preferredInterestsService;
+    private final DistributionService distributionService;
 
+    @Transactional
     public ResponseDto<MatchedMemberProfilesResponse> read(final String uuid, final Long nextId, final int pageSize) {
         Member fromMember = memberService.findByUuid(uuid);
         if (nextId == null) {
@@ -51,8 +55,7 @@ public class MatchManager {
         }
 
         SliceDto<MatchedMember> matchedMembers = matchService.findFilteredMembers(fromMember.getId(), nextId, pageSize);
-        List<MemberSimpleProfile> results = matchedMembers.content().stream().map(MatchedMember::getToMember).map(MemberSimpleProfile::from).toList();
-        return ResponseDto.success(new MatchedMemberProfilesResponse(matchedMembers.nextId(), results));
+        List<MemberSimpleProfile> results = matchedMembers.content().stream().map(MatchedMember::getToMember).map(m -> MemberSimpleProfile.of(m, distributionService.generateUri(m.getProfileImageUri()))).toList();
+        return ResponseDto.success(new MatchedMemberProfilesResponse(matchedMembers.content().get(9).getId() - 1, results));
     }
 }
-

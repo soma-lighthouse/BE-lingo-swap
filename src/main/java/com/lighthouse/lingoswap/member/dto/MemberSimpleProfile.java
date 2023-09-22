@@ -11,10 +11,10 @@ public record MemberSimpleProfile(String uuid,
                                   String region,
                                   List<MemberUsedLanguage> languages) {
 
-    public static MemberSimpleProfile from(Member member) {
+    public static MemberSimpleProfile of(final Member member, final String profileImageUri) {
         return new MemberSimpleProfile(
                 member.getAuthDetails().getUuid(),
-                member.getProfileImageUri(),
+                profileImageUri,
                 member.getName(),
                 member.getDescription(),
                 member.getRegion().getCode(),

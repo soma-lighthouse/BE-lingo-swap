@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 @Profile({"local", "dev"})
 public class DistributionService {
 
-    @Value("${aws.distribution.domain}")
-    private String domain;
+    @Value("${aws.distribution.uri}")
+    private String distributionUri;
 
     public String generateUri(String fileName) {
-        return "https://%s/%s".formatted(domain, fileName);
+        return distributionUri + fileName;
     }
 }
