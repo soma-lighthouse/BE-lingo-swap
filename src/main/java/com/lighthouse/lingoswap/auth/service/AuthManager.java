@@ -1,6 +1,7 @@
 package com.lighthouse.lingoswap.auth.service;
 
 import com.lighthouse.lingoswap.auth.dto.LoginResponse;
+import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairDetails;
 import com.lighthouse.lingoswap.auth.entity.AuthDetails;
@@ -8,7 +9,6 @@ import com.lighthouse.lingoswap.auth.entity.Role;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SendbirdCreateUserRequest;
 import com.lighthouse.lingoswap.common.service.SendbirdService;
-import com.lighthouse.lingoswap.member.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfo;
 import com.lighthouse.lingoswap.member.dto.UsedLanguageInfo;
 import com.lighthouse.lingoswap.member.entity.*;

@@ -7,6 +7,7 @@ import com.lighthouse.lingoswap.member.service.MemberService;
 import com.lighthouse.lingoswap.question.dto.QuestionCreateRequest;
 import com.lighthouse.lingoswap.question.dto.QuestionDetail;
 import com.lighthouse.lingoswap.question.dto.QuestionListResponse;
+import com.lighthouse.lingoswap.question.dto.QuestionRecommendationListResponse;
 import com.lighthouse.lingoswap.question.entity.Category;
 import com.lighthouse.lingoswap.question.entity.LikeMember;
 import com.lighthouse.lingoswap.question.entity.Question;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class QuestionManager {
     private final LikeMemberService likeMemberService;
 
     public ResponseDto<Object> create(final QuestionCreateRequest questionCreateRequest) {
-        Member member = memberService.findByUuid(questionCreateRequest.userId());
+        Member member = memberService.findByUuid(questionCreateRequest.uuid());
         Category category = categoryService.findById(questionCreateRequest.categoryId());
         Question question = Question.of(member, category, questionCreateRequest.content());
         questionService.save(question);
@@ -66,5 +68,13 @@ public class QuestionManager {
         question.subtractOneLike();
         questionService.save(question);
         return ResponseDto.success(null);
+    }
+
+    public ResponseDto<QuestionRecommendationListResponse> readRecommendation(final Long categoryId, final Long nextId, final int pageSize) {
+        SliceDto<Question> questionRecommendations = questionService.searchRecommendation(categoryId, nextId, pageSize);
+
+        List<String> results = new ArrayList<>();
+        questionRecommendations.content().forEach(q -> results.add(q.getContents()));
+        return ResponseDto.success(new QuestionRecommendationListResponse(questionRecommendations.nextId(), results));
     }
 }

@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.service;
 
+import com.lighthouse.lingoswap.member.entity.Country;
 import com.lighthouse.lingoswap.member.entity.Member;
 import com.lighthouse.lingoswap.member.entity.PreferredCountry;
 import com.lighthouse.lingoswap.member.repository.PreferredCountryRepository;
@@ -14,12 +15,24 @@ public class PreferredCountryService {
 
     private final PreferredCountryRepository preferredCountryRepository;
 
-    List<PreferredCountry> findAllByMemberWithCountry(final Member member) {
-        return preferredCountryRepository.findAllByMemberWithCountry(member);
+    List<PreferredCountry> findAllByMemberIdWithCountry(Long id) {
+        return preferredCountryRepository.findAllByMemberIdWithCountry(id);
     }
 
 
-    public void save(final PreferredCountry preferredCountry) {
+    public void save(PreferredCountry preferredCountry) {
         preferredCountryRepository.save(preferredCountry);
+    }
+
+    public void deleteByCountryCodeIn(List<Country> countries) {
+        preferredCountryRepository.deleteAllByCountryIn(countries);
+    }
+
+    public void saveAll(List<PreferredCountry> preferredCountries) {
+        preferredCountryRepository.saveAll(preferredCountries);
+    }
+
+    public List<PreferredCountry> findByMember(Member member) {
+        return preferredCountryRepository.findAllByMember(member);
     }
 }

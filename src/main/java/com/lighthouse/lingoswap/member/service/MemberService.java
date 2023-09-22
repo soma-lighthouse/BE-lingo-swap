@@ -37,4 +37,8 @@ public class MemberService {
     public List<Member> findAllByIdsWithRegionAndUsedLanguage(final List<Long> ids) {
         return memberRepository.findAllByIdsWithRegionAndUsedLanguage(ids);
     }
+
+    public List<Member> findAll() {
+        return memberRepository.findAll();
+    }
 }

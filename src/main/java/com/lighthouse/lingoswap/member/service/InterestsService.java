@@ -5,6 +5,8 @@ import com.lighthouse.lingoswap.member.repository.InterestsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class InterestsService {
@@ -17,5 +19,9 @@ public class InterestsService {
 
     public void save(Interests interests) {
         interestsRepository.save(interests);
+    }
+
+    public List<Interests> findAllByNames(List<String> names) {
+        return interestsRepository.findAllByNameIn(names);
     }
 }

@@ -1,11 +1,11 @@
 package com.lighthouse.lingoswap.auth.api;
 
 import com.lighthouse.lingoswap.auth.dto.LoginResponse;
+import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairDetails;
 import com.lighthouse.lingoswap.auth.service.AuthManager;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
-import com.lighthouse.lingoswap.member.dto.MemberCreateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
