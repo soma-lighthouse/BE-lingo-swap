@@ -2,9 +2,7 @@ package com.lighthouse.lingoswap.question.api;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.question.dto.QuestionCreateRequest;
-import com.lighthouse.lingoswap.question.dto.QuestionDeleteLikeRequest;
 import com.lighthouse.lingoswap.question.dto.QuestionListResponse;
-import com.lighthouse.lingoswap.question.dto.QuestionUpdateLikeRequest;
 import com.lighthouse.lingoswap.question.service.QuestionManager;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,14 +32,14 @@ public class QuestionController {
     }
 
     @PostMapping(path = "/{questionId}/like")
-    public ResponseEntity<ResponseDto<Object>> postLike(@PathVariable Long questionId,
-                                                        @RequestBody QuestionUpdateLikeRequest questionUpdateLikeRequest) {
-        return ResponseEntity.ok().body(questionManager.updateLike(questionId, questionUpdateLikeRequest));
+    public ResponseEntity<ResponseDto<Object>> postLike(@PathVariable Long questionId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok().body(questionManager.updateLike((String) auth.getPrincipal(), questionId));
     }
 
     @DeleteMapping(path = "/{questionId}/like")
-    public ResponseEntity<ResponseDto<Object>> deleteLike(@PathVariable Long questionId,
-                                                          @RequestBody QuestionDeleteLikeRequest questionDeleteLikeRequest) {
-        return ResponseEntity.ok().body(questionManager.deleteLike(questionId, questionDeleteLikeRequest));
+    public ResponseEntity<ResponseDto<Object>> deleteLike(@PathVariable Long questionId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return ResponseEntity.ok().body(questionManager.deleteLike((String) auth.getPrincipal(), questionId));
     }
 }

@@ -4,7 +4,9 @@ import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
 import com.lighthouse.lingoswap.member.entity.Member;
 import com.lighthouse.lingoswap.member.service.MemberService;
-import com.lighthouse.lingoswap.question.dto.*;
+import com.lighthouse.lingoswap.question.dto.QuestionCreateRequest;
+import com.lighthouse.lingoswap.question.dto.QuestionDetail;
+import com.lighthouse.lingoswap.question.dto.QuestionListResponse;
 import com.lighthouse.lingoswap.question.entity.Category;
 import com.lighthouse.lingoswap.question.entity.LikeMember;
 import com.lighthouse.lingoswap.question.entity.Question;
@@ -43,9 +45,9 @@ public class QuestionManager {
     }
 
     @Transactional
-    public ResponseDto<Object> updateLike(final Long questionId, final QuestionUpdateLikeRequest questionUpdateLikeRequest) {
+    public ResponseDto<Object> updateLike(final String uuid, final Long questionId) {
         Question question = questionService.findById(questionId);
-        Member member = memberService.findByUuid(questionUpdateLikeRequest.userId());
+        Member member = memberService.findByUuid(uuid);
 
         LikeMember likeMember = LikeMember.of(member, question);
         likeMemberService.save(likeMember);
@@ -56,9 +58,9 @@ public class QuestionManager {
     }
 
     @Transactional
-    public ResponseDto<Object> deleteLike(final Long questionId, final QuestionDeleteLikeRequest questionDeleteLikeRequest) {
+    public ResponseDto<Object> deleteLike(final String uuid, final Long questionId) {
         Question question = questionService.findById(questionId);
-        Member member = memberService.findByUuid(questionDeleteLikeRequest.userId());
+        Member member = memberService.findByUuid(uuid);
         likeMemberService.deleteByQuestionAndMember(question, member);
 
         question.subtractOneLike();

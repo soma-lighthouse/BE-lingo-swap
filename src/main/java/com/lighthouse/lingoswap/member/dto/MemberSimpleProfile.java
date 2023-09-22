@@ -4,7 +4,7 @@ import com.lighthouse.lingoswap.member.entity.Member;
 
 import java.util.List;
 
-public record MemberSimpleProfile(Long id,
+public record MemberSimpleProfile(String uuid,
                                   String profileImageUri,
                                   String name,
                                   String description,
@@ -13,7 +13,7 @@ public record MemberSimpleProfile(Long id,
 
     public static MemberSimpleProfile from(Member member) {
         return new MemberSimpleProfile(
-                member.getId(),
+                member.getAuthDetails().getUuid(),
                 member.getProfileImageUri(),
                 member.getName(),
                 member.getDescription(),
