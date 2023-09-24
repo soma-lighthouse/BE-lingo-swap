@@ -51,7 +51,7 @@ public interface MatchedMemberRepository extends JpaRepository<MatchedMember, Lo
                 ) AS sub
 
                 GROUP BY sub.mm_id
-                ORDER BY SUM(sub.score) DESC
+                ORDER BY SUM(sub.score)
             """, nativeQuery = true)
     void saveMatchedMembersWithPreferences(
             @Param("memberId") Long memberId,
