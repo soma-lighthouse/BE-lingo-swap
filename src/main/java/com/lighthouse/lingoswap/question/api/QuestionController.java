@@ -24,7 +24,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionManager.create(questionCreateRequest));
     }
 
-    @GetMapping("/category")
+    @GetMapping
     public ResponseEntity<ResponseDto<QuestionListResponse>> get(@RequestParam(defaultValue = "1") final Long categoryId,
                                                                  @RequestParam(required = false) Long next,
                                                                  @RequestParam(defaultValue = "10") final int pageSize) {
