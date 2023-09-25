@@ -8,8 +8,8 @@ public record MemberProfileResponse(String uuid,
                                     int age,
                                     String description,
                                     String region,
-                                    List<CountryFormResponseUnit> preferredCountries,
-                                    List<MemberUsedLanguage> usedLanguages,
+                                    List<CodeNameDto> preferredCountries,
+                                    List<UsedLanguageDto> usedLanguages,
                                     List<MemberPreferredInterests> preferredInterests) {
 
 }

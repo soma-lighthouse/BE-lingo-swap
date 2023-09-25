@@ -3,7 +3,7 @@ package com.lighthouse.lingoswap.member.api;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.service.MemberManager;
-import com.lighthouse.lingoswap.question.dto.MyQuestionListResponse;
+import com.lighthouse.lingoswap.question.dto.MyQuestionsResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,7 +60,7 @@ public class MemberController {
     }
 
     @GetMapping(path = "/{uuid}/question")
-    public ResponseEntity<ResponseDto<MyQuestionListResponse>> getMyQuestion(@PathVariable final String uuid) {
+    public ResponseEntity<ResponseDto<MyQuestionsResponse>> getMyQuestion(@PathVariable final String uuid) {
         return ResponseEntity.ok(memberManager.getMyQuestion(uuid));
     }
 }

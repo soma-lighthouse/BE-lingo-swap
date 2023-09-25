@@ -2,9 +2,9 @@ package com.lighthouse.lingoswap.member.dto;
 
 import java.util.List;
 
-public record MemberPreferredInterests(CategoryDto category, List<InterestsDto> interests) {
+public record MemberPreferredInterests(CodeNameDto category, List<CodeNameDto> interests) {
 
-    public static MemberPreferredInterests of(final CategoryDto category, final List<InterestsDto> interests) {
+    public static MemberPreferredInterests of(final CodeNameDto category, final List<CodeNameDto> interests) {
         return new MemberPreferredInterests(category, interests);
     }
 }

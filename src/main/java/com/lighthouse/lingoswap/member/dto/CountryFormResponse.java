@@ -9,5 +9,5 @@ import java.util.List;
 @Getter
 public class CountryFormResponse {
 
-    List<CountryFormResponseUnit> countryForm;
+    List<CodeNameDto> countryForm;
 }

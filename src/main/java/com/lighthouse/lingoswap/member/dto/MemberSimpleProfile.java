@@ -9,7 +9,7 @@ public record MemberSimpleProfile(String uuid,
                                   String name,
                                   String description,
                                   String region,
-                                  List<MemberUsedLanguage> languages) {
+                                  List<UsedLanguageDto> usedLanguages) {
 
     public static MemberSimpleProfile of(final Member member, final String profileImageUri) {
         return new MemberSimpleProfile(
@@ -18,7 +18,7 @@ public record MemberSimpleProfile(String uuid,
                 member.getName(),
                 member.getDescription(),
                 member.getRegion().getCode(),
-                member.getUsedLanguages().stream().map(MemberUsedLanguage::from).toList()
+                member.getUsedLanguages().stream().map(UsedLanguageDto::from).toList()
         );
     }
 }
