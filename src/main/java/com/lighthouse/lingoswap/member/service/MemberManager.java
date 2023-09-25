@@ -229,8 +229,13 @@ public class MemberManager {
 
     public ResponseDto<Object> patch(final String uuid, final MemberRequest memberRequest) {
         Member member = memberService.findByUuid(uuid);
-        member.updateMember(memberRequest.birthday(), memberRequest.name(), memberRequest.description(), memberRequest.profileImageUri(),
-                memberRequest.gender(), countryService.findCountryByCode(memberRequest.region()));
+        if (memberRequest.region() == null) {
+            member.updateMember(memberRequest.birthday(), memberRequest.name(), memberRequest.description(), memberRequest.profileImageUri(),
+                    memberRequest.gender(), null);
+        } else {
+            member.updateMember(memberRequest.birthday(), memberRequest.name(), memberRequest.description(), memberRequest.profileImageUri(),
+                    memberRequest.gender(), countryService.findCountryByCode(memberRequest.region()));
+        }
         memberService.save(member);
         return ResponseDto.success(null);
     }

@@ -56,12 +56,12 @@ public class Member extends BaseEntity {
     }
 
     public void updateMember(LocalDate birthday, String name, String description, String profileImageUri, Gender gender, Country region) {
-        this.birthday = birthday;
-        this.name = name;
-        this.description = description;
-        this.profileImageUri = profileImageUri;
-        this.gender = gender;
-        this.region = region;
+        if (birthday != null) this.birthday = birthday;
+        if (name != null) this.name = name;
+        if (description != null) this.description = description;
+        if (profileImageUri != null) this.profileImageUri = profileImageUri;
+        if (gender != null) this.gender = gender;
+        if (region != null) this.region = region;
     }
 
     public void patchDescription(String description) {
