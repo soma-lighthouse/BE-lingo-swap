@@ -24,28 +24,28 @@ public class QuestionController {
         return ResponseEntity.ok(questionManager.create(questionCreateRequest));
     }
 
-    @GetMapping(path = "/category/{categoryId}")
-    public ResponseEntity<ResponseDto<QuestionListResponse>> get(@PathVariable final Long categoryId,
+    @GetMapping("/category")
+    public ResponseEntity<ResponseDto<QuestionListResponse>> get(@RequestParam(defaultValue = "1") final Long categoryId,
                                                                  @RequestParam(required = false) Long next,
                                                                  @RequestParam(defaultValue = "10") final int pageSize) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(questionManager.read((String) auth.getPrincipal(), categoryId, next, pageSize));
     }
 
-    @PostMapping(path = "/{questionId}/like")
-    public ResponseEntity<ResponseDto<Object>> postLike(@PathVariable Long questionId) {
+    @PostMapping("/{questionId}/like")
+    public ResponseEntity<ResponseDto<Object>> postLike(@PathVariable final Long questionId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok().body(questionManager.updateLike((String) auth.getPrincipal(), questionId));
     }
 
-    @DeleteMapping(path = "/{questionId}/like")
-    public ResponseEntity<ResponseDto<Object>> deleteLike(@PathVariable Long questionId) {
+    @DeleteMapping("/{questionId}/like")
+    public ResponseEntity<ResponseDto<Object>> deleteLike(@PathVariable final Long questionId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok().body(questionManager.deleteLike((String) auth.getPrincipal(), questionId));
     }
 
-    @GetMapping(path = "/recommendation/{categoryId}")
-    public ResponseEntity<ResponseDto<QuestionRecommendationListResponse>> getRecommendation(@PathVariable final Long categoryId,
+    @GetMapping("/recommendation")
+    public ResponseEntity<ResponseDto<QuestionRecommendationListResponse>> getRecommendation(@RequestParam(defaultValue = "1") final Long categoryId,
                                                                                              @RequestParam(required = false) final Long next,
                                                                                              @RequestParam(defaultValue = "10") final int pageSize) {
         return ResponseEntity.ok(questionManager.readRecommendation(categoryId, next, pageSize));

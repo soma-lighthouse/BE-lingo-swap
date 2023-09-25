@@ -3,7 +3,7 @@ package com.lighthouse.lingoswap.chat.api;
 import com.lighthouse.lingoswap.chat.dto.ChatroomCreateRequest;
 import com.lighthouse.lingoswap.chat.service.ChatroomManager;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
-import com.lighthouse.lingoswap.common.dto.SendbirdRequestByChatroom;
+import com.lighthouse.lingoswap.infra.dto.SendbirdRequestByChatroom;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

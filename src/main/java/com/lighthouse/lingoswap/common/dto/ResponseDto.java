@@ -22,7 +22,11 @@ public class ResponseDto<T> {
         return new ResponseDto<>(SUCCESS_CODE, SUCCESS_MESSAGE, data);
     }
 
-    public static <T> ResponseDto<T> error(final String code, final String message) {
+    public static ResponseDto<ErrorMessage> error(final String code, final String message) {
         return new ResponseDto<>(code, message, null);
+    }
+
+    public static ResponseDto<ErrorMessage> error(final String code, final String message, final ErrorMessage errorMessage) {
+        return new ResponseDto<>(code, message, errorMessage);
     }
 }

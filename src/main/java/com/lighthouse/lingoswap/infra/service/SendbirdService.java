@@ -1,7 +1,7 @@
-package com.lighthouse.lingoswap.common.service;
+package com.lighthouse.lingoswap.infra.service;
 
-import com.lighthouse.lingoswap.common.dto.SendbirdCreateChatRoomRequest;
-import com.lighthouse.lingoswap.common.dto.SendbirdCreateUserRequest;
+import com.lighthouse.lingoswap.infra.dto.SendbirdCreateChatRoomRequest;
+import com.lighthouse.lingoswap.infra.dto.SendbirdCreateUserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
