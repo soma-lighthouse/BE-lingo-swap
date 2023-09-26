@@ -55,16 +55,12 @@ public class Member extends BaseEntity {
         return Period.between(birthday, LocalDate.now()).getYears();
     }
 
-    public void updateMember(LocalDate birthday, String name, String description, String profileImageUri, Gender gender, Country region) {
-        if (birthday != null) this.birthday = birthday;
-        if (name != null) this.name = name;
+    public void updateMember(final String description, final String profileImageUri) {
         if (description != null) this.description = description;
         if (profileImageUri != null) this.profileImageUri = profileImageUri;
-        if (gender != null) this.gender = gender;
-        if (region != null) this.region = region;
     }
 
-    public void patchDescription(String description) {
+    public void patchDescription(final String description) {
         this.description = description;
     }
 }

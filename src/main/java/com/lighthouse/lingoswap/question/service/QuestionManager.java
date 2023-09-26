@@ -2,6 +2,7 @@ package com.lighthouse.lingoswap.question.service;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
+import com.lighthouse.lingoswap.infra.service.DistributionService;
 import com.lighthouse.lingoswap.member.entity.Member;
 import com.lighthouse.lingoswap.member.service.MemberService;
 import com.lighthouse.lingoswap.question.dto.QuestionCreateRequest;
@@ -27,6 +28,7 @@ public class QuestionManager {
     private final CategoryService categoryService;
     private final QuestionService questionService;
     private final LikeMemberService likeMemberService;
+    private final DistributionService distributionService;
 
     public ResponseDto<Object> create(final QuestionCreateRequest questionCreateRequest) {
         Member member = memberService.findByUuid(questionCreateRequest.uuid());
@@ -42,7 +44,7 @@ public class QuestionManager {
         List<LikeMember> likeMembers = likeMemberService.findAllByMember(member);
 
         List<Question> likedQuestions = likeMembers.stream().map(LikeMember::getQuestion).toList();
-        List<QuestionDetail> results = questions.content().stream().map(q -> QuestionDetail.of(q, q.getCreatedMember(), likedQuestions.contains(q))).toList();
+        List<QuestionDetail> results = questions.content().stream().map(q -> QuestionDetail.of(q, q.getCreatedMember(), distributionService.generateUri(member.getProfileImageUri()), likedQuestions.contains(q))).toList();
         return ResponseDto.success(new QuestionListResponse(questions.nextId(), results));
     }
 

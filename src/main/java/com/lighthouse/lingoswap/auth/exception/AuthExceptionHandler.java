@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class AuthExceptionHandler {
 
     @ExceptionHandler(AuthNotFoundException.class)
-    private ResponseEntity handleMemberNotFound(final AuthNotFoundException ex) {
+    private ResponseEntity handleAuthNotFound(final AuthNotFoundException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(ResponseDto.error("40400", ex.getMessage()));
@@ -27,7 +27,7 @@ public class AuthExceptionHandler {
     }
 
     @ExceptionHandler(ExpiredTokenException.class)
-    public ResponseEntity handleInvalidAccess(final ExpiredTokenException ex) {
+    public ResponseEntity handleExpiredToken(final ExpiredTokenException ex) {
         log.error("", ex);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(ResponseDto.error("40100", ex.getMessage()));

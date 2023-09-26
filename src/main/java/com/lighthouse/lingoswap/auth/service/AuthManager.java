@@ -7,8 +7,8 @@ import com.lighthouse.lingoswap.auth.dto.TokenPairDetails;
 import com.lighthouse.lingoswap.auth.entity.AuthDetails;
 import com.lighthouse.lingoswap.auth.entity.Role;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
-import com.lighthouse.lingoswap.common.dto.SendbirdCreateUserRequest;
-import com.lighthouse.lingoswap.common.service.SendbirdService;
+import com.lighthouse.lingoswap.infra.dto.SendbirdCreateUserRequest;
+import com.lighthouse.lingoswap.infra.service.SendbirdService;
 import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfo;
 import com.lighthouse.lingoswap.member.dto.UsedLanguageInfo;
 import com.lighthouse.lingoswap.member.entity.*;
@@ -40,7 +40,7 @@ public class AuthManager {
         String email = idTokenService.parseIdToken(idToken);
         AuthDetails authDetails = authService.loadUserByUsername(email);
         TokenPairDetails tokenPairDetails = tokenPairService.generateTokenPairDetailsByUsername(email);
-        return ResponseDto.success(LoginResponse.of(authDetails.getUuid(), tokenPairDetails));
+        return ResponseDto.success(LoginResponse.of(authDetails.getUuid(), authDetails.getUsername(), tokenPairDetails));
     }
 
     @Transactional
@@ -70,7 +70,7 @@ public class AuthManager {
         sendbirdService.createUser(sendbirdCreateUserRequest);
 
         TokenPairDetails tokenPairDetails = tokenPairService.generateTokenPairDetailsByUsername(email);
-        return ResponseDto.success(LoginResponse.of(uuid, tokenPairDetails));
+        return ResponseDto.success(LoginResponse.of(uuid, authDetails.getUsername(), tokenPairDetails));
     }
 
     private void savePreferredCountries(Member member, List<String> preferredCountries) {
