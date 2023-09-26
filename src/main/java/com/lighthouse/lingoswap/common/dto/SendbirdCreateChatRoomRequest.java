@@ -9,8 +9,6 @@ import java.util.List;
 @Getter
 public class SendbirdCreateChatRoomRequest {
 
-    private boolean is_distinct;
+    private Boolean is_distinct;
     private List<String> user_ids;
-
-
 }
