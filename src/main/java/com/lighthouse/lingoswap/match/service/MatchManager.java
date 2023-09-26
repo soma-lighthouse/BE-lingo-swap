@@ -56,6 +56,6 @@ public class MatchManager {
 
         SliceDto<MatchedMember> matchedMembers = matchService.findFilteredMembers(fromMember.getId(), nextId, pageSize);
         List<MemberSimpleProfile> results = matchedMembers.content().stream().map(MatchedMember::getToMember).map(m -> MemberSimpleProfile.of(m, distributionService.generateUri(m.getProfileImageUri()))).toList();
-        return ResponseDto.success(new MatchedMemberProfilesResponse(matchedMembers.content().get(9).getId() - 1, results));
+        return ResponseDto.success(new MatchedMemberProfilesResponse(matchedMembers.nextId(), results));
     }
 }
