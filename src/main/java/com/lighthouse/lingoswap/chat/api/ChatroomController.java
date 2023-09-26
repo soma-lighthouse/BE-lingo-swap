@@ -3,6 +3,7 @@ package com.lighthouse.lingoswap.chat.api;
 import com.lighthouse.lingoswap.chat.dto.ChatroomCreateRequest;
 import com.lighthouse.lingoswap.chat.service.ChatroomManager;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
+import com.lighthouse.lingoswap.common.entity.SendbirdCreateChatroomResponse;
 import com.lighthouse.lingoswap.infra.dto.SendbirdRequestByChatroom;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class ChatroomController {
     }
 
     @PostMapping(path = "/chatroom")
-    public ResponseEntity<ResponseDto<Object>> createChatroom(@RequestBody final ChatroomCreateRequest chatroomCreateRequest) {
+    public ResponseEntity<ResponseDto<SendbirdCreateChatroomResponse>> createChatroom(@RequestBody final ChatroomCreateRequest chatroomCreateRequest) {
         return ResponseEntity.ok(chatroomManager.createChatroom(chatroomCreateRequest));
     }
 }

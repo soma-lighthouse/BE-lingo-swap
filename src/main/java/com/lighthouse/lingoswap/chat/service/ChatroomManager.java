@@ -2,6 +2,7 @@ package com.lighthouse.lingoswap.chat.service;
 
 import com.lighthouse.lingoswap.chat.dto.ChatroomCreateRequest;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
+import com.lighthouse.lingoswap.common.entity.SendbirdCreateChatroomResponse;
 import com.lighthouse.lingoswap.infra.dto.SendbirdCreateChatRoomRequest;
 import com.lighthouse.lingoswap.infra.dto.SendbirdCreateUserRequest;
 import com.lighthouse.lingoswap.infra.dto.SendbirdRequestByChatroom;
@@ -31,9 +32,8 @@ public class ChatroomManager {
         return ResponseDto.success(null);
     }
 
-    public ResponseDto<Object> createChatroom(ChatroomCreateRequest chatroomCreateRequest) {
-        SendbirdCreateChatRoomRequest sendbirdCreateChatRoomRequest = new SendbirdCreateChatRoomRequest(true, chatroomCreateRequest.uuids());
-        sendbirdService.createChatRoom(sendbirdCreateChatRoomRequest);
-        return ResponseDto.success(null);
+    public ResponseDto<SendbirdCreateChatroomResponse> createChatroom(ChatroomCreateRequest chatroomCreateRequest) {
+        SendbirdCreateChatRoomRequest sendbirdCreateChatRoomRequest = new SendbirdCreateChatRoomRequest(true, chatroomCreateRequest.users());
+        return ResponseDto.success(sendbirdService.createChatRoom(sendbirdCreateChatRoomRequest));
     }
 }
