@@ -7,7 +7,7 @@ public record MemberProfileResponse(String uuid,
                                     String name,
                                     int age,
                                     String description,
-                                    String region,
+                                    CodeNameDto region,
                                     List<CodeNameDto> preferredCountries,
                                     List<UsedLanguageDto> usedLanguages,
                                     List<MemberPreferredInterests> preferredInterests) {
