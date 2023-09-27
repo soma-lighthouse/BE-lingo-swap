@@ -65,7 +65,8 @@ public class QuestionManager {
     public ResponseDto<Object> deleteLike(final String uuid, final Long questionId) {
         Question question = questionService.findById(questionId);
         Member member = memberService.findByUuid(uuid);
-        likeMemberService.deleteByQuestionAndMember(question, member);
+        LikeMember likeMember = likeMemberService.findByMemberAndQuestion(member, question);
+        likeMemberService.delete(likeMember);
 
         question.subtractOneLike();
         questionService.save(question);

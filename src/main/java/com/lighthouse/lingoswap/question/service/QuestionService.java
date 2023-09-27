@@ -3,6 +3,7 @@ package com.lighthouse.lingoswap.question.service;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
 import com.lighthouse.lingoswap.member.entity.Member;
 import com.lighthouse.lingoswap.question.entity.Question;
+import com.lighthouse.lingoswap.question.exception.QuestionNotFoundException;
 import com.lighthouse.lingoswap.question.repository.QuestionQueryRepository;
 import com.lighthouse.lingoswap.question.repository.QuestionRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class QuestionService {
     private final QuestionQueryRepository questionQueryRepository;
 
     Question findById(Long id) {
-        return questionRepository.findById(id).orElseThrow(() -> new RuntimeException("멤버가 없습니다"));
+        return questionRepository.findById(id).orElseThrow(() -> new QuestionNotFoundException(id));
     }
 
     void save(Question question) {
