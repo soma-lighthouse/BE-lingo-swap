@@ -20,6 +20,11 @@ public class MemberController {
         return ResponseEntity.ok().body(memberManager.getPreference(uuid));
     }
 
+    @GetMapping("/{uuid}/profile")
+    public ResponseEntity<ResponseDto<MemberProfileResponse>> get(@PathVariable final String uuid) {
+        return ResponseEntity.ok(memberManager.read(uuid));
+    }
+
     @PatchMapping("/{uuid}/profile")
     public ResponseEntity<ResponseDto<Object>> patch(@PathVariable final String uuid,
                                                      @RequestBody final MemberUpdateProfileRequest memberUpdateProfileRequest) {
@@ -45,11 +50,6 @@ public class MemberController {
     @GetMapping("/form/language")
     public ResponseEntity<ResponseDto<LanguageFormResponse>> readLanguageForm() {
         return ResponseEntity.ok(memberManager.readLanguageForm());
-    }
-
-    @GetMapping("/{uuid}/profile")
-    public ResponseEntity<ResponseDto<MemberProfileResponse>> get(@PathVariable final String uuid) {
-        return ResponseEntity.ok(memberManager.read(uuid));
     }
 
     @PostMapping("/upload/profile")

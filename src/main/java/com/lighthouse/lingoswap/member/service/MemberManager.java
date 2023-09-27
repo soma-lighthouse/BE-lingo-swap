@@ -56,7 +56,7 @@ public class MemberManager {
                         member.getName(),
                         member.calculateAge(),
                         member.getDescription(),
-                        member.getRegion().getCode(),
+                        messageSourceService.translate(member.getRegion().getCode()),
                         preferredCountryService.findAllByMemberIdWithCountry(member.getId())
                                 .stream()
                                 .map(c -> new CodeNameDto(c.getCountry().getCode(), messageSourceService.translate(c.getCountry().getCode())))

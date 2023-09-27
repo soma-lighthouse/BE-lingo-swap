@@ -16,11 +16,11 @@ public class QuestionQueryRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public QuestionQueryRepository(EntityManager em) {
+    public QuestionQueryRepository(final EntityManager em) {
         this.queryFactory = new JPAQueryFactory(em);
     }
 
-    public SliceDto<Question> findQuestionsByCategoryId(Long categoryId, Long nextId, int pageSize) {
+    public SliceDto<Question> findQuestionsByCategoryId(final Long categoryId, final Long nextId, final int pageSize) {
         List<Question> questions = queryFactory
                 .selectFrom(question)
                 .where(
@@ -35,7 +35,7 @@ public class QuestionQueryRepository {
         return new SliceDto<>(questions, lastId);
     }
 
-    public SliceDto<Question> findQuestionRecommendationsByCategoryId(Long categoryId, Long nextId, int pageSize) {
+    public SliceDto<Question> findQuestionRecommendationsByCategoryId(final Long categoryId, final Long nextId, final int pageSize) {
         List<Question> questions = queryFactory
                 .selectFrom(question)
                 .where(
@@ -55,7 +55,7 @@ public class QuestionQueryRepository {
         return nextId == null ? null : question.id.lt(nextId);
     }
 
-    private Long removeLastAndReturnNextIdByPageSize(List<Question> questions, final int pageSize) {
+    private Long removeLastAndReturnNextIdByPageSize(final List<Question> questions, final int pageSize) {
         Long lastId = -1L;
         if (questions.size() > pageSize) {
             questions.remove(pageSize);

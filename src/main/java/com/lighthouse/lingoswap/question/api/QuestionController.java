@@ -19,17 +19,17 @@ public class QuestionController {
 
     private final QuestionManager questionManager;
 
-    @PostMapping
-    public ResponseEntity<ResponseDto<Object>> post(@RequestBody @Valid final QuestionCreateRequest questionCreateRequest) {
-        return ResponseEntity.ok(questionManager.create(questionCreateRequest));
-    }
-
     @GetMapping
     public ResponseEntity<ResponseDto<QuestionListResponse>> get(@RequestParam(defaultValue = "1") final Long categoryId,
                                                                  @RequestParam(required = false) Long next,
                                                                  @RequestParam(defaultValue = "10") final int pageSize) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         return ResponseEntity.ok(questionManager.read((String) auth.getPrincipal(), categoryId, next, pageSize));
+    }
+
+    @PostMapping
+    public ResponseEntity<ResponseDto<Object>> post(@RequestBody @Valid final QuestionCreateRequest questionCreateRequest) {
+        return ResponseEntity.ok(questionManager.create(questionCreateRequest));
     }
 
     @PostMapping("/{questionId}/like")

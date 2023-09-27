@@ -1,7 +1,7 @@
 package com.lighthouse.lingoswap.auth.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lighthouse.lingoswap.auth.exception.AuthNotFoundException;
+import com.lighthouse.lingoswap.auth.exception.ExpiredTokenException;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,15 +28,16 @@ public class ExceptionAuthenticationFailureHandler implements AuthenticationFail
 
         HttpStatus status;
         String code;
-        if (ex instanceof AuthNotFoundException) {
-            status = HttpStatus.NOT_FOUND;
-            code = "40400";
-        } else {
+        if (ex instanceof ExpiredTokenException) {
             status = HttpStatus.UNAUTHORIZED;
             code = "40100";
+        } else {
+            status = HttpStatus.FORBIDDEN;
+            code = "40300";
         }
         response.setStatus(status.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding("UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(ResponseDto.error(code, ex.getMessage())));
     }
 }

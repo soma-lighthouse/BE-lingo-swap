@@ -17,7 +17,6 @@ public class CountryService {
 
     public Country findById(Integer id) {
         return countryRepository.findById(id).orElseThrow(() -> new RuntimeException("국가가 없습니다"));
-
     }
 
     public Country findCountryByCode(String code) {
