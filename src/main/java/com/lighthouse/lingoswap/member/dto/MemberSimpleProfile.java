@@ -8,16 +8,16 @@ public record MemberSimpleProfile(String uuid,
                                   String profileImageUri,
                                   String name,
                                   String description,
-                                  String region,
+                                  CodeNameDto region,
                                   List<UsedLanguageDto> usedLanguages) {
 
-    public static MemberSimpleProfile of(final Member member, final String profileImageUri) {
+    public static MemberSimpleProfile of(final Member member, final CodeNameDto region, final String profileImageUri) {
         return new MemberSimpleProfile(
                 member.getAuthDetails().getUuid(),
                 profileImageUri,
                 member.getName(),
                 member.getDescription(),
-                member.getRegion().getCode(),
+                region,
                 member.getUsedLanguages().stream().map(UsedLanguageDto::from).toList()
         );
     }

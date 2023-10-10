@@ -2,9 +2,11 @@ package com.lighthouse.lingoswap.match.service;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
+import com.lighthouse.lingoswap.common.service.MessageSourceService;
 import com.lighthouse.lingoswap.infra.service.DistributionService;
 import com.lighthouse.lingoswap.match.dto.MatchedMemberProfilesResponse;
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
+import com.lighthouse.lingoswap.member.dto.CodeNameDto;
 import com.lighthouse.lingoswap.member.dto.MemberSimpleProfile;
 import com.lighthouse.lingoswap.member.entity.*;
 import com.lighthouse.lingoswap.member.service.MemberService;
@@ -28,6 +30,7 @@ public class MatchManager {
     private final UsedLanguageService usedLanguageService;
     private final PreferredInterestsService preferredInterestsService;
     private final DistributionService distributionService;
+    private final MessageSourceService messageSourceService;
 
     @Transactional
     public ResponseDto<MatchedMemberProfilesResponse> read(final String uuid, final Long nextId, final int pageSize) {
@@ -55,7 +58,12 @@ public class MatchManager {
         }
 
         SliceDto<MatchedMember> matchedMembers = matchService.findFilteredMembers(fromMember.getId(), nextId, pageSize);
-        List<MemberSimpleProfile> results = matchedMembers.content().stream().map(MatchedMember::getToMember).map(m -> MemberSimpleProfile.of(m, distributionService.generateUri(m.getProfileImageUri()))).toList();
+        List<MemberSimpleProfile> results = matchedMembers.content().stream().map(MatchedMember::getToMember)
+                .map(m -> MemberSimpleProfile.of(
+                        m,
+                        new CodeNameDto(m.getRegion().getCode(), messageSourceService.translate(m.getRegion().getCode())),
+                        distributionService.generateUri(m.getProfileImageUri())))
+                .toList();
         return ResponseDto.success(new MatchedMemberProfilesResponse(matchedMembers.nextId(), results));
     }
 }
