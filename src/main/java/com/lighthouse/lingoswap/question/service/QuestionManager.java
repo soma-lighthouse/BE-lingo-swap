@@ -44,7 +44,7 @@ public class QuestionManager {
         List<LikeMember> likeMembers = likeMemberService.findAllByMember(member);
 
         List<Question> likedQuestions = likeMembers.stream().map(LikeMember::getQuestion).toList();
-        List<QuestionDetail> results = questions.content().stream().map(q -> QuestionDetail.of(q, q.getCreatedMember(), distributionService.generateUri(member.getProfileImageUri()), likedQuestions.contains(q))).toList();
+        List<QuestionDetail> results = questions.content().stream().map(q -> QuestionDetail.of(q, q.getCreatedMember(), distributionService.generateUri(q.getCreatedMember().getProfileImageUri()), likedQuestions.contains(q))).toList();
         return ResponseDto.success(new QuestionListResponse(questions.nextId(), results));
     }
 
