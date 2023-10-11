@@ -2,8 +2,10 @@ package com.lighthouse.lingoswap.member.service;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.service.MessageSourceService;
+import com.lighthouse.lingoswap.infra.dto.SendbirdUpdateUserProfileUrlRequest;
 import com.lighthouse.lingoswap.infra.service.DistributionService;
 import com.lighthouse.lingoswap.infra.service.S3Service;
+import com.lighthouse.lingoswap.infra.service.SendbirdService;
 import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.entity.*;
 import com.lighthouse.lingoswap.question.dto.MyQuestionDetail;
@@ -38,6 +40,7 @@ public class MemberManager {
     private final MessageSourceService messageSourceService;
     private final CategoryService categoryService;
     private final QuestionService questionService;
+    private final SendbirdService sendbirdService;
 
     @Value("${aws.s3.bucket-name}")
     private String bucketName;
@@ -204,8 +207,13 @@ public class MemberManager {
         return ResponseDto.success(new LanguageFormResponse(dto));
     }
 
+    @Transactional
     public ResponseDto<Object> patch(final String uuid, final MemberUpdateProfileRequest memberUpdateProfileRequest) {
         Member member = memberService.findByUuid(uuid);
+        if (!member.getProfileImageUri().equals(memberUpdateProfileRequest.profileImageUri())) {
+            SendbirdUpdateUserProfileUrlRequest sendbirdUpdateUserProfileUrlRequest = new SendbirdUpdateUserProfileUrlRequest(distributionService.generateUri(member.getProfileImageUri()));
+            sendbirdService.updateUserProfileUrl(uuid, sendbirdUpdateUserProfileUrlRequest);
+        }
         member.updateMember(memberUpdateProfileRequest.description(), memberUpdateProfileRequest.profileImageUri());
         memberService.save(member);
         return ResponseDto.success(null);
