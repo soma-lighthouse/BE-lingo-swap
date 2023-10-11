@@ -3,6 +3,7 @@ package com.lighthouse.lingoswap.infra.service;
 import com.lighthouse.lingoswap.common.entity.SendbirdCreateChatroomResponse;
 import com.lighthouse.lingoswap.infra.dto.SendbirdCreateChatRoomRequest;
 import com.lighthouse.lingoswap.infra.dto.SendbirdCreateUserRequest;
+import com.lighthouse.lingoswap.infra.dto.SendbirdUpdateUserProfileUrlRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -42,6 +43,15 @@ public class SendbirdService {
 
         HttpEntity<SendbirdCreateChatRoomRequest> entity = new HttpEntity<>(sendbirdCreateChatRoomRequest, headers);
         return restTemplate.postForEntity(apiUrl + "/group_channels", entity, SendbirdCreateChatroomResponse.class).getBody();
+    }
+
+    public void updateUserProfileUrl(final String uuid, final SendbirdUpdateUserProfileUrlRequest sendbirdUpdateUserProfileUrlRequest) {
+        webClient.put()
+                .uri("/users/" + uuid)
+                .bodyValue(sendbirdUpdateUserProfileUrlRequest)
+                .retrieve()
+                .bodyToMono(String.class)
+                .block();
     }
 
     public void deleteUser(final String uuid) {

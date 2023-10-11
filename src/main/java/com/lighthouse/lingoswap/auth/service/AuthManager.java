@@ -8,6 +8,7 @@ import com.lighthouse.lingoswap.auth.entity.AuthDetails;
 import com.lighthouse.lingoswap.auth.entity.Role;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.infra.dto.SendbirdCreateUserRequest;
+import com.lighthouse.lingoswap.infra.service.DistributionService;
 import com.lighthouse.lingoswap.infra.service.SendbirdService;
 import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfo;
 import com.lighthouse.lingoswap.member.dto.UsedLanguageInfo;
@@ -34,6 +35,7 @@ public class AuthManager {
     private final PreferredCountryService preferredCountryService;
     private final PreferredInterestsService preferredInterestsService;
     private final SendbirdService sendbirdService;
+    private final DistributionService distributionService;
 
     @Transactional
     public ResponseDto<LoginResponse> login(final String idToken) {
@@ -66,7 +68,7 @@ public class AuthManager {
         saveUsedLanguages(member, memberCreateRequest.usedLanguages());
         savePreferredInterests(member, memberCreateRequest.preferredInterests());
 
-        SendbirdCreateUserRequest sendbirdCreateUserRequest = new SendbirdCreateUserRequest(authDetails.getUuid(), member.getName(), member.getProfileImageUri());
+        SendbirdCreateUserRequest sendbirdCreateUserRequest = new SendbirdCreateUserRequest(authDetails.getUuid(), member.getName(), distributionService.generateUri(member.getProfileImageUri()));
         sendbirdService.createUser(sendbirdCreateUserRequest);
 
         TokenPairDetails tokenPairDetails = tokenPairService.generateTokenPairDetailsByUsername(email);
