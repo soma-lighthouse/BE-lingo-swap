@@ -211,7 +211,7 @@ public class MemberManager {
     public ResponseDto<Object> patch(final String uuid, final MemberUpdateProfileRequest memberUpdateProfileRequest) {
         Member member = memberService.findByUuid(uuid);
         if (!member.getProfileImageUri().equals(memberUpdateProfileRequest.profileImageUri())) {
-            SendbirdUpdateUserProfileUrlRequest sendbirdUpdateUserProfileUrlRequest = new SendbirdUpdateUserProfileUrlRequest(distributionService.generateUri(member.getProfileImageUri()));
+            SendbirdUpdateUserProfileUrlRequest sendbirdUpdateUserProfileUrlRequest = new SendbirdUpdateUserProfileUrlRequest(distributionService.generateUri(memberUpdateProfileRequest.profileImageUri()));
             sendbirdService.updateUserProfileUrl(uuid, sendbirdUpdateUserProfileUrlRequest);
         }
         member.updateMember(memberUpdateProfileRequest.description(), memberUpdateProfileRequest.profileImageUri());
