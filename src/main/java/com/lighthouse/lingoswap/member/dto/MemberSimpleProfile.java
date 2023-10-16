@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.member.dto;
 
-import com.lighthouse.lingoswap.member.entity.Member;
+import com.lighthouse.lingoswap.member.domain.model.Member;
 
 import java.util.List;
 
@@ -13,12 +13,13 @@ public record MemberSimpleProfile(String uuid,
 
     public static MemberSimpleProfile of(final Member member, final CodeNameDto region, final String profileImageUri) {
         return new MemberSimpleProfile(
-                member.getAuthDetails().getUuid(),
+                member.getUuid(),
                 profileImageUri,
                 member.getName(),
                 member.getDescription(),
                 region,
-                member.getUsedLanguages().stream().map(UsedLanguageDto::from).toList()
+                member.getMemberUsedLanguages().stream().map(UsedLanguageDto::from).toList()
         );
     }
+    
 }

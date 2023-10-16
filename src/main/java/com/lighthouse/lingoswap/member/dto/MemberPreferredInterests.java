@@ -7,4 +7,5 @@ public record MemberPreferredInterests(CodeNameDto category, List<CodeNameDto> i
     public static MemberPreferredInterests of(final CodeNameDto category, final List<CodeNameDto> interests) {
         return new MemberPreferredInterests(category, interests);
     }
+
 }

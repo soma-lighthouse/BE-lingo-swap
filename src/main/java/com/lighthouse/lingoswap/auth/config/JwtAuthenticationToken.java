@@ -28,4 +28,5 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
     public Object getPrincipal() {
         return this.uuid;
     }
+
 }

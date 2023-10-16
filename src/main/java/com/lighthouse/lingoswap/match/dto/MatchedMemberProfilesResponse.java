@@ -9,4 +9,5 @@ public record MatchedMemberProfilesResponse(Long nextId, List<MemberSimpleProfil
     public static MatchedMemberProfilesResponse of(Long nextId, List<MemberSimpleProfile> profiles) {
         return new MatchedMemberProfilesResponse(nextId, profiles);
     }
+
 }

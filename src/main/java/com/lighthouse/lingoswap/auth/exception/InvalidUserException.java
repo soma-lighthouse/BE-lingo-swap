@@ -9,4 +9,5 @@ public class InvalidUserException extends AuthenticationException {
     public InvalidUserException(final String username) {
         super(MESSAGE.formatted(username));
     }
+
 }

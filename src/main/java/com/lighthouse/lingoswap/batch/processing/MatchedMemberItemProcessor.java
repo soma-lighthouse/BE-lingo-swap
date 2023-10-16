@@ -1,8 +1,8 @@
 package com.lighthouse.lingoswap.batch.processing;
 
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
-import com.lighthouse.lingoswap.member.entity.Member;
-import com.lighthouse.lingoswap.member.service.MemberService;
+import com.lighthouse.lingoswap.member.application.MemberService;
+import com.lighthouse.lingoswap.member.domain.model.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;

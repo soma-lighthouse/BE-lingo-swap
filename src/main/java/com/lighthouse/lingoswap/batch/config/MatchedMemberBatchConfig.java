@@ -3,8 +3,8 @@ package com.lighthouse.lingoswap.batch.config;
 import com.lighthouse.lingoswap.batch.processing.MatchedMemberItemProcessor;
 import com.lighthouse.lingoswap.batch.processing.MatchedMemberItemWriter;
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
-import com.lighthouse.lingoswap.member.entity.Member;
-import com.lighthouse.lingoswap.member.service.MemberService;
+import com.lighthouse.lingoswap.member.application.MemberService;
+import com.lighthouse.lingoswap.member.domain.model.Member;
 import jakarta.persistence.EntityManagerFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
@@ -75,4 +75,5 @@ public class MatchedMemberBatchConfig {
     public ItemWriter<List<MatchedMember>> writer() {
         return new MatchedMemberItemWriter(entityManagerFactory);
     }
+
 }

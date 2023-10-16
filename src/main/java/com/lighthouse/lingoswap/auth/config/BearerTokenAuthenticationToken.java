@@ -24,4 +24,5 @@ public class BearerTokenAuthenticationToken extends AbstractAuthenticationToken 
     public Object getPrincipal() {
         return this.token;
     }
+
 }

@@ -12,10 +12,11 @@ public class DistributionService {
     @Value("${aws.distribution.uri}")
     private String distributionUri;
 
-    public String generateUri(String fileName) {
+    public String generateUri(final String fileName) {
         if (StringUtils.hasText(fileName)) {
             return distributionUri + fileName;
         }
         return "";
     }
+
 }

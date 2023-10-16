@@ -16,4 +16,5 @@ public class AuthenticationManagerConfig {
     AuthenticationManager authenticationManager() {
         return new ProviderManager(jwtAuthenticationProvider);
     }
+
 }

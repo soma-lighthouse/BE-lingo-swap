@@ -9,4 +9,5 @@ public class InvalidIdTokenException extends AuthenticationException {
     public InvalidIdTokenException(final Throwable cause) {
         super(MESSAGE, cause);
     }
+
 }

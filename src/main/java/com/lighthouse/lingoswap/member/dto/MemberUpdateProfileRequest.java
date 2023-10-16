@@ -1,5 +1,7 @@
 package com.lighthouse.lingoswap.member.dto;
 
-public record MemberUpdateProfileRequest(String description, String profileImageUri) {
+import jakarta.validation.constraints.NotNull;
+
+public record MemberUpdateProfileRequest(@NotNull String description, @NotNull String profileImageUri) {
 
 }

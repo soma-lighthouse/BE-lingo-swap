@@ -7,7 +7,7 @@ import com.lighthouse.lingoswap.infra.dto.SendbirdCreateChatRoomRequest;
 import com.lighthouse.lingoswap.infra.dto.SendbirdCreateUserRequest;
 import com.lighthouse.lingoswap.infra.dto.SendbirdRequestByChatroom;
 import com.lighthouse.lingoswap.infra.service.SendbirdService;
-import com.lighthouse.lingoswap.member.service.MemberService;
+import com.lighthouse.lingoswap.member.application.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class ChatroomManager {
     public ResponseDto<Object> create(SendbirdRequestByChatroom sendbirdRequestByChatroom) {
         sendbirdRequestByChatroom.memberUuids().stream()
                 .map(memberService::findByUuid)
-                .map(member -> new SendbirdCreateUserRequest(member.getAuthDetails().getUuid(), member.getName(), member.getProfileImageUri()))
+                .map(member -> new SendbirdCreateUserRequest(member.getUuid(), member.getName(), member.getProfileImageUri()))
                 .forEach(sendbirdService::createUser);
         return ResponseDto.success(null);
     }
@@ -36,4 +36,5 @@ public class ChatroomManager {
         SendbirdCreateChatRoomRequest sendbirdCreateChatRoomRequest = new SendbirdCreateChatRoomRequest(true, chatroomCreateRequest.users());
         return ResponseDto.success(sendbirdService.createChatRoom(sendbirdCreateChatRoomRequest));
     }
+
 }

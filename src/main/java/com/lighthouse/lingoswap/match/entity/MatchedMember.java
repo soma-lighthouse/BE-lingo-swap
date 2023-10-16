@@ -1,7 +1,7 @@
 package com.lighthouse.lingoswap.match.entity;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
-import com.lighthouse.lingoswap.member.entity.Member;
+import com.lighthouse.lingoswap.member.domain.model.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -29,4 +29,5 @@ public class MatchedMember extends BaseEntity {
         this.fromMember = fromMember;
         this.toMember = toMember;
     }
+
 }

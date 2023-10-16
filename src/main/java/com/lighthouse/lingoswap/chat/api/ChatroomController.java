@@ -31,5 +31,6 @@ public class ChatroomController {
     public ResponseEntity<ResponseDto<SendbirdCreateChatroomResponse>> createChatroom(@RequestBody final ChatroomCreateRequest chatroomCreateRequest) {
         return ResponseEntity.ok(chatroomManager.createChatroom(chatroomCreateRequest));
     }
+    
 }
 

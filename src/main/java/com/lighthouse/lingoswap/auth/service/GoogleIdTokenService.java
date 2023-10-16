@@ -25,4 +25,5 @@ public class GoogleIdTokenService {
             throw new InvalidIdTokenException(ex);
         }
     }
+
 }

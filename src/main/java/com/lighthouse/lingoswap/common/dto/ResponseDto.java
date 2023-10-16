@@ -29,4 +29,5 @@ public class ResponseDto<T> {
     public static ResponseDto<ErrorMessage> error(final String code, final String message, final ErrorMessage errorMessage) {
         return new ResponseDto<>(code, message, errorMessage);
     }
+
 }

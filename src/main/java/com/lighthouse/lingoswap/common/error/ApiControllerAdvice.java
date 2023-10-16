@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.common.error;
 
+import com.lighthouse.lingoswap.category.exception.CategoryNotFoundException;
 import com.lighthouse.lingoswap.common.service.ErrorResponseService;
 import com.lighthouse.lingoswap.member.exception.DuplicateMemberException;
 import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
@@ -39,7 +40,8 @@ public class ApiControllerAdvice {
 
     @ExceptionHandler({
             MemberNotFoundException.class,
-            QuestionNotFoundException.class
+            QuestionNotFoundException.class,
+            CategoryNotFoundException.class
     })
     private ResponseEntity handleLoginUserNotFoundException(final RuntimeException ex) {
         log.error("{}", ex.getMessage());
@@ -54,4 +56,5 @@ public class ApiControllerAdvice {
         log.error("{}", ex.getMessage());
         return errorResponseService.build(VALIDATION_ERROR);
     }
+
 }

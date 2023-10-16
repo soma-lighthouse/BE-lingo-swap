@@ -20,4 +20,5 @@ public class MatchController {
                                                                           @RequestParam(defaultValue = "10") final int pageSize) {
         return ResponseEntity.ok(matchManager.read(uuid, next, pageSize));
     }
+
 }

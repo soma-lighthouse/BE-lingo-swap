@@ -7,4 +7,5 @@ public class DuplicateMemberException extends RuntimeException {
     public DuplicateMemberException(final String username, final Throwable cause) {
         super(MESSAGE.formatted(username), cause);
     }
+
 }

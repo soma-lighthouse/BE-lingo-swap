@@ -28,4 +28,5 @@ public class BearerTokenResolver implements TokenResolver {
         }
         return matcher.group("token");
     }
+
 }

@@ -58,4 +58,5 @@ public interface MatchedMemberRepository extends JpaRepository<MatchedMember, Lo
             @Param("preferredCountryIds") List<Long> preferredCountryIds,
             @Param("languageIds") List<Long> preferredLanguages,
             @Param("categoryIds") List<Long> preferredInterests);
+    
 }

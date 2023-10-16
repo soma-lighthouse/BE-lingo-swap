@@ -7,4 +7,5 @@ public class DuplicateLikeException extends RuntimeException {
     public DuplicateLikeException() {
         super(MESSAGE);
     }
+
 }

@@ -5,4 +5,5 @@ public record LoginResponse(String uuid, String username, TokenPairDetails token
     public static LoginResponse of(final String uuid, final String username, final TokenPairDetails tokens) {
         return new LoginResponse(uuid, username, tokens);
     }
+    
 }

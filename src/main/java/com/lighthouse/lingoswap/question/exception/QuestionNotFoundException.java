@@ -7,4 +7,5 @@ public class QuestionNotFoundException extends RuntimeException {
     public QuestionNotFoundException(final Long id) {
         super(MESSAGE.formatted(id));
     }
+
 }

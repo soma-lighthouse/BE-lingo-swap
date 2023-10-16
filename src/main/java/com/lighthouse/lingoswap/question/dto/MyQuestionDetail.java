@@ -1,18 +1,19 @@
 package com.lighthouse.lingoswap.question.dto;
 
-import com.lighthouse.lingoswap.question.entity.Question;
+import com.lighthouse.lingoswap.question.domain.model.Question;
 
 import java.time.LocalDateTime;
 
 public record MyQuestionDetail(Long questionId,
                                String contents,
-                               Integer likes,
+                               Long likes,
                                Long category,
                                LocalDateTime createdAt) {
 
     public static MyQuestionDetail from(Question question) {
-        return new MyQuestionDetail(question.getId(), question.getContents(), question.getLikes(), question.getCategory().getId(), question.getCreatedAt());
+        return new MyQuestionDetail(question.getId(), question.getContents(), question.getLike(), question.getCategoryId(), question.getCreatedAt());
     }
+
 }
 
 

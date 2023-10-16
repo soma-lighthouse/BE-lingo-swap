@@ -7,4 +7,5 @@ public class MemberNotFoundException extends RuntimeException {
     public MemberNotFoundException(final String uuid) {
         super(MESSAGE.formatted(uuid));
     }
+
 }

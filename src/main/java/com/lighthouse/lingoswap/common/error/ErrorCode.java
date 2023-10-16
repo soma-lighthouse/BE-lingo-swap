@@ -31,4 +31,5 @@ public enum ErrorCode {
     public String getKey() {
         return ERROR_MESSAGE_KEY_FORMAT.formatted(code);
     }
+
 }

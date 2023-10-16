@@ -7,4 +7,5 @@ public class LikeMemberNotFoundException extends RuntimeException {
     public LikeMemberNotFoundException(final String username, final Long questionId) {
         super(MESSAGE.formatted(username, questionId));
     }
+
 }

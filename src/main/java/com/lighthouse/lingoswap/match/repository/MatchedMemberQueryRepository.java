@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.lighthouse.lingoswap.match.entity.QMatchedMember.matchedMember;
-import static com.lighthouse.lingoswap.member.entity.QMember.member;
+import static com.lighthouse.lingoswap.member.domain.model.QMember.member;
 
 @Repository
 public class MatchedMemberQueryRepository {
@@ -50,4 +50,5 @@ public class MatchedMemberQueryRepository {
         }
         return lastId;
     }
+
 }

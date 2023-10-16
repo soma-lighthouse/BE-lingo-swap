@@ -1,9 +1,9 @@
 package com.lighthouse.lingoswap.auth.config;
 
-import com.lighthouse.lingoswap.auth.entity.AuthDetails;
 import com.lighthouse.lingoswap.auth.entity.TokenPair;
 import com.lighthouse.lingoswap.auth.service.AuthService;
 import com.lighthouse.lingoswap.auth.service.TokenPairService;
+import com.lighthouse.lingoswap.member.domain.model.AuthDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -34,4 +34,5 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
     public boolean supports(final Class<?> authentication) {
         return BearerTokenAuthenticationToken.class.isAssignableFrom(authentication);
     }
+
 }

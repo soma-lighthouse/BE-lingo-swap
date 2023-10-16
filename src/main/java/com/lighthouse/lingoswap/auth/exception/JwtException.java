@@ -11,4 +11,5 @@ public abstract class JwtException extends AuthenticationException {
     protected JwtException(final String message) {
         super(message);
     }
+
 }

@@ -30,4 +30,5 @@ public class MatchedMemberListener implements JobExecutionListener {
             log.info("!!! JOB FINISHED!");
         }
     }
+
 }

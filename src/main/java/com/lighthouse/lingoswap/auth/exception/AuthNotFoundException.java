@@ -9,4 +9,5 @@ public class AuthNotFoundException extends AuthenticationException {
     public AuthNotFoundException(final String username) {
         super(MESSAGE.formatted(username));
     }
+
 }

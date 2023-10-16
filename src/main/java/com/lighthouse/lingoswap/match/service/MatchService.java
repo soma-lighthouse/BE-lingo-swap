@@ -35,4 +35,5 @@ public class MatchService {
     public void delete() {
         matchedMemberRepository.deleteAll();
     }
+    
 }

@@ -36,4 +36,5 @@ public class MatchedMemberItemWriter implements ItemWriter<List<MatchedMember>> 
             entityManager.close();
         }
     }
+
 }

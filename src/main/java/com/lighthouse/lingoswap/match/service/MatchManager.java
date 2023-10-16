@@ -2,18 +2,20 @@ package com.lighthouse.lingoswap.match.service;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
-import com.lighthouse.lingoswap.common.service.MessageSourceService;
+import com.lighthouse.lingoswap.common.message.MessageSourceManager;
 import com.lighthouse.lingoswap.infra.service.DistributionService;
 import com.lighthouse.lingoswap.match.dto.MatchedMemberProfilesResponse;
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
+import com.lighthouse.lingoswap.member.application.MemberService;
+import com.lighthouse.lingoswap.member.application.PreferredCountryService;
+import com.lighthouse.lingoswap.member.application.UsedLanguageService;
+import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.dto.CodeNameDto;
 import com.lighthouse.lingoswap.member.dto.MemberSimpleProfile;
-import com.lighthouse.lingoswap.member.entity.*;
-import com.lighthouse.lingoswap.member.service.MemberService;
-import com.lighthouse.lingoswap.member.service.PreferredCountryService;
-import com.lighthouse.lingoswap.member.service.PreferredInterestsService;
-import com.lighthouse.lingoswap.member.service.UsedLanguageService;
-import com.lighthouse.lingoswap.question.entity.Category;
+import com.lighthouse.lingoswap.preferredcountry.domain.model.PreferredCountry;
+import com.lighthouse.lingoswap.preferredinterests.application.PreferredInterestsManager;
+import com.lighthouse.lingoswap.preferredinterests.domain.model.PreferredInterests;
+import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,9 +30,9 @@ public class MatchManager {
     private final MemberService memberService;
     private final PreferredCountryService preferredCountryService;
     private final UsedLanguageService usedLanguageService;
-    private final PreferredInterestsService preferredInterestsService;
+    private final PreferredInterestsManager preferredInterestsManager;
     private final DistributionService distributionService;
-    private final MessageSourceService messageSourceService;
+    private final MessageSourceManager messageSourceManager;
 
     @Transactional
     public ResponseDto<MatchedMemberProfilesResponse> read(final String uuid, final Long nextId, final int pageSize) {
@@ -46,11 +48,9 @@ public class MatchManager {
                     .map(PreferredCountry::getId)
                     .toList();
 
-            List<Long> categoryIds = preferredInterestsService.findAllByMemberIdWithInterestsAndCategory(fromMember.getId())
+            List<Long> categoryIds = preferredInterestsManager.findAllByMemberIdWithInterestsAndCategory(fromMember.getId())
                     .stream()
-                    .map(PreferredInterests::getInterests)
-                    .map(Interests::getCategory)
-                    .map(Category::getId)
+                    .map(PreferredInterests::getInterestsCategoryId)
                     .toList();
 
             matchService.saveMatchedMembersWithPreferences(
@@ -61,9 +61,10 @@ public class MatchManager {
         List<MemberSimpleProfile> results = matchedMembers.content().stream().map(MatchedMember::getToMember)
                 .map(m -> MemberSimpleProfile.of(
                         m,
-                        new CodeNameDto(m.getRegion().getCode(), messageSourceService.translate(m.getRegion().getCode())),
+                        new CodeNameDto(m.getRegionCode(), messageSourceManager.translate(m.getRegionCode())),
                         distributionService.generateUri(m.getProfileImageUri())))
                 .toList();
         return ResponseDto.success(new MatchedMemberProfilesResponse(matchedMembers.nextId(), results));
     }
+
 }

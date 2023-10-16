@@ -14,4 +14,5 @@ public record TokenPairDetails(String accessToken,
     private static Long convertToSeconds(final Long milliseconds) {
         return milliseconds != null ? milliseconds / 1000 : null;
     }
+    
 }

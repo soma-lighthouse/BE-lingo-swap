@@ -35,4 +35,5 @@ public class AuthController {
     public ResponseEntity<ResponseDto<TokenPairDetails>> reissue(@RequestBody @Valid final ReissueRequest reissueRequest) {
         return ResponseEntity.ok(authManager.reissue(reissueRequest));
     }
+
 }

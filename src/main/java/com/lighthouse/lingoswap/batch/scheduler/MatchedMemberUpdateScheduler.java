@@ -26,4 +26,5 @@ public class MatchedMemberUpdateScheduler {
                 .toJobParameters();
         jobLauncher.run(createMatchedMembersJob, params);
     }
+    
 }

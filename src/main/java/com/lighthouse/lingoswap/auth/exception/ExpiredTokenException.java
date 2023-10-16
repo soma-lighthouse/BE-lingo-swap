@@ -7,4 +7,5 @@ public class ExpiredTokenException extends JwtException {
     public ExpiredTokenException(Throwable reason) {
         super(MESSAGE, reason);
     }
+
 }

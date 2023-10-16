@@ -4,15 +4,17 @@ import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairDetails;
-import com.lighthouse.lingoswap.auth.entity.AuthDetails;
-import com.lighthouse.lingoswap.auth.entity.Role;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.infra.dto.SendbirdCreateUserRequest;
 import com.lighthouse.lingoswap.infra.service.SendbirdService;
+import com.lighthouse.lingoswap.member.application.*;
+import com.lighthouse.lingoswap.member.domain.model.*;
 import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfo;
 import com.lighthouse.lingoswap.member.dto.UsedLanguageInfo;
-import com.lighthouse.lingoswap.member.entity.*;
-import com.lighthouse.lingoswap.member.service.*;
+import com.lighthouse.lingoswap.preferredcountry.domain.model.PreferredCountry;
+import com.lighthouse.lingoswap.preferredinterests.application.PreferredInterestsManager;
+import com.lighthouse.lingoswap.preferredinterests.domain.model.PreferredInterests;
+import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +34,7 @@ public class AuthManager {
     private final InterestsService interestsService;
     private final CountryService countryService;
     private final PreferredCountryService preferredCountryService;
-    private final PreferredInterestsService preferredInterestsService;
+    private final PreferredInterestsManager preferredInterestsManager;
     private final SendbirdService sendbirdService;
 
     @Transactional
@@ -57,7 +59,9 @@ public class AuthManager {
                 memberCreateRequest.description(),
                 memberCreateRequest.profileImageUri(),
                 memberCreateRequest.gender(),
-                authDetails,
+                email,
+                uuid,
+                Role.USER,
                 country
         );
         memberService.save(member);
@@ -94,7 +98,7 @@ public class AuthManager {
                 .flatMap(userInterestsByDto -> userInterestsByDto.interests().stream())
                 .map(interestsService::findByName)
                 .map(interest -> new PreferredInterests(member, interest))
-                .forEach(preferredInterestsService::save);
+                .forEach(preferredInterestsManager::save);
     }
 
     @Transactional
@@ -102,4 +106,5 @@ public class AuthManager {
         String refreshToken = reissueRequest.refreshToken();
         return ResponseDto.success(tokenPairService.reissue(refreshToken));
     }
+
 }

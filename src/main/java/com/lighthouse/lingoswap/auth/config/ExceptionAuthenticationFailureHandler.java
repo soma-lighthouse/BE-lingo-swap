@@ -40,4 +40,5 @@ public class ExceptionAuthenticationFailureHandler implements AuthenticationFail
         response.setCharacterEncoding("UTF-8");
         response.getWriter().write(objectMapper.writeValueAsString(ResponseDto.error(code, ex.getMessage())));
     }
+
 }

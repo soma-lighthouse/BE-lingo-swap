@@ -13,4 +13,5 @@ public interface TokenPairRepository extends JpaRepository<TokenPair, Long> {
     Optional<TokenPair> findTopByRefreshTokenAndIsExpiredIsFalse(String refreshToken);
 
     List<TokenPair> findAllByUsernameAndIsExpiredIsFalse(String username);
+
 }

@@ -66,4 +66,5 @@ public class TokenPairService {
         return tokenPairRepository.findTopByUsernameAndIsExpiredIsFalse(username)
                 .orElseThrow(() -> new InvalidUserException(username));
     }
+
 }

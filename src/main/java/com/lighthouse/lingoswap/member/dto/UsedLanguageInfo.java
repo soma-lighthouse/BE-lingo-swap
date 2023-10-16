@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.member.dto;
 
-import com.lighthouse.lingoswap.member.entity.UsedLanguage;
+import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
 
 import java.util.Objects;
 
@@ -23,4 +23,5 @@ public record UsedLanguageInfo(String code, Integer level) {
     public int hashCode() {
         return Objects.hash(code, level);
     }
+
 }

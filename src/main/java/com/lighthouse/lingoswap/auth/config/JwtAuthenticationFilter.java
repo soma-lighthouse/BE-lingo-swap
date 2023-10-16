@@ -64,4 +64,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return excludedPatterns.stream()
                 .anyMatch(p -> antPathMatcher.match(p, request.getServletPath()));
     }
+    
 }

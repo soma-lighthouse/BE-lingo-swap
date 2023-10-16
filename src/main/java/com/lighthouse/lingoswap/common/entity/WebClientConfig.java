@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 @Profile({"local", "dev"})
-public class WebClientConfig { ///센드버드컨피그로 이름을 바꿔야함
+public class WebClientConfig {
 
     @Value("${sendbird.api-url}")
     private String apiUrl;
@@ -24,4 +24,5 @@ public class WebClientConfig { ///센드버드컨피그로 이름을 바꿔야�
                 .defaultHeader("Api-Token", apiToken)
                 .build();
     }
+
 }

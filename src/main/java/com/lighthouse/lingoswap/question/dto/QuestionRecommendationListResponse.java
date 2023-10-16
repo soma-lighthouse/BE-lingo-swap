@@ -7,5 +7,6 @@ public record QuestionRecommendationListResponse(Long nextId, List<String> quest
     public static QuestionRecommendationListResponse of(Long nextId, List<String> questions) {
         return new QuestionRecommendationListResponse(nextId, questions);
     }
+
 }
 

@@ -31,4 +31,5 @@ public class TokenPair extends BaseEntity {
     public void expire() {
         isExpired = true;
     }
+
 }

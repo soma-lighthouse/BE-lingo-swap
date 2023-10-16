@@ -15,4 +15,5 @@ public class HomeController {
     public ResponseEntity<HttpHeaders> home(@RequestHeader HttpHeaders headers) {
         return ResponseEntity.ok(headers);
     }
+
 }
