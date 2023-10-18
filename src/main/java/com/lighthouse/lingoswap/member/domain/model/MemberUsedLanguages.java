@@ -16,7 +16,7 @@ class MemberUsedLanguages {
     @OneToMany(mappedBy = "member")
     private final List<UsedLanguage> usedLanguages = new ArrayList<>();
 
-    public List<UsedLanguage> getUsedLanguages() {
+    List<UsedLanguage> getUsedLanguages() {
         return usedLanguages;
     }
 

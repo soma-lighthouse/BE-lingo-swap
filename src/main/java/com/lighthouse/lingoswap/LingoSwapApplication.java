@@ -11,4 +11,5 @@ public class LingoSwapApplication {
     public static void main(String[] args) {
         SpringApplication.run(LingoSwapApplication.class, args);
     }
+
 }

@@ -4,14 +4,21 @@ import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairDetails;
+import com.lighthouse.lingoswap.chat.service.SendbirdService;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
-import com.lighthouse.lingoswap.infra.dto.SendbirdCreateUserRequest;
-import com.lighthouse.lingoswap.infra.service.SendbirdService;
-import com.lighthouse.lingoswap.member.application.*;
-import com.lighthouse.lingoswap.member.domain.model.*;
+import com.lighthouse.lingoswap.member.application.InterestsService;
+import com.lighthouse.lingoswap.member.application.LanguageService;
+import com.lighthouse.lingoswap.member.application.PreferredCountryService;
+import com.lighthouse.lingoswap.member.application.UsedLanguageService;
+import com.lighthouse.lingoswap.member.domain.model.AuthDetails;
+import com.lighthouse.lingoswap.member.domain.model.Language;
+import com.lighthouse.lingoswap.member.domain.model.Member;
+import com.lighthouse.lingoswap.member.domain.model.Role;
+import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
 import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfo;
 import com.lighthouse.lingoswap.member.dto.UsedLanguageInfo;
 import com.lighthouse.lingoswap.preferredcountry.domain.model.PreferredCountry;
+import com.lighthouse.lingoswap.preferredcountry.domain.repository.CountryRepository;
 import com.lighthouse.lingoswap.preferredinterests.application.PreferredInterestsManager;
 import com.lighthouse.lingoswap.preferredinterests.domain.model.PreferredInterests;
 import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
@@ -28,11 +35,11 @@ public class AuthManager {
     private final AuthService authService;
     private final TokenPairService tokenPairService;
     private final GoogleIdTokenService idTokenService;
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final LanguageService languageService;
     private final UsedLanguageService usedLanguageService;
     private final InterestsService interestsService;
-    private final CountryService countryService;
+    private final CountryRepository countryRepository;
     private final PreferredCountryService preferredCountryService;
     private final PreferredInterestsManager preferredInterestsManager;
     private final SendbirdService sendbirdService;
@@ -52,35 +59,35 @@ public class AuthManager {
 
         AuthDetails authDetails = new AuthDetails(email, uuid, Role.USER);
 
-        Country country = countryService.findCountryByCode(memberCreateRequest.region());
+        countryRepository.validateExistsByCode(memberCreateRequest.region());
+
         Member member = new Member(
                 memberCreateRequest.birthday(),
                 memberCreateRequest.name(),
                 memberCreateRequest.description(),
-                memberCreateRequest.profileImageUri(),
+                memberCreateRequest.profileImageUrl(),
                 memberCreateRequest.gender(),
                 email,
                 uuid,
                 Role.USER,
-                country
+                memberCreateRequest.region()
         );
-        memberService.save(member);
+        memberRepository.save(member);
 
         savePreferredCountries(member, memberCreateRequest.preferredCountries());
         saveUsedLanguages(member, memberCreateRequest.usedLanguages());
         savePreferredInterests(member, memberCreateRequest.preferredInterests());
 
-        SendbirdCreateUserRequest sendbirdCreateUserRequest = new SendbirdCreateUserRequest(authDetails.getUuid(), member.getName(), member.getProfileImageUri());
-        sendbirdService.createUser(sendbirdCreateUserRequest);
+        sendbirdService.createUser(authDetails.getUuid(), member.getName(), member.getProfileImageUrl());
 
         TokenPairDetails tokenPairDetails = tokenPairService.generateTokenPairDetailsByUsername(email);
         return ResponseDto.success(LoginResponse.of(uuid, authDetails.getUsername(), tokenPairDetails));
     }
 
-    private void savePreferredCountries(Member member, List<String> preferredCountries) {
-        preferredCountries.stream()
-                .map(countryService::findCountryByCode)
-                .map(preferredCountry -> new PreferredCountry(member, preferredCountry))
+    private void savePreferredCountries(Member member, List<String> codes) {
+        codes.stream()
+                .map(countryRepository::getByCode)
+                .map(p -> new PreferredCountry(member, p))
                 .forEach(preferredCountryService::save);
     }
 

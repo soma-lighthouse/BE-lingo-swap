@@ -1,8 +1,8 @@
 package com.lighthouse.lingoswap.batch.processing;
 
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
-import com.lighthouse.lingoswap.member.application.MemberService;
 import com.lighthouse.lingoswap.member.domain.model.Member;
+import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import java.util.Random;
 @Component
 public class MatchedMemberItemProcessor implements ItemProcessor<Member, List<MatchedMember>> {
 
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final Random random = new Random();
 
     private List<Member> allMembers;
@@ -26,7 +26,7 @@ public class MatchedMemberItemProcessor implements ItemProcessor<Member, List<Ma
     @Override
     public List<MatchedMember> process(Member currentMember) throws Exception {
         if (allMembers == null) {
-            allMembers = memberService.findAll();
+            allMembers = memberRepository.findAll();
         }
         List<Member> selectedMembers = selectRandomMembers(allMembers, currentMember);
         List<MatchedMember> matchedMembers = new ArrayList<>();
@@ -55,4 +55,5 @@ public class MatchedMemberItemProcessor implements ItemProcessor<Member, List<Ma
         }
         return selectedMembers;
     }
+
 }

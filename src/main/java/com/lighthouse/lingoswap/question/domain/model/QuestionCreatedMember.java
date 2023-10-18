@@ -7,17 +7,17 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
-public class QuestionCreatedMember {
+class QuestionCreatedMember {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "created_member_id")
     private Member member;
 
-    public QuestionCreatedMember(final Member member) {
+    QuestionCreatedMember(final Member member) {
         this.member = member;
     }
 
-    public String getName() {
+    String getName() {
         return member.getName();
     }
 
@@ -26,11 +26,11 @@ public class QuestionCreatedMember {
     }
 
     String getRegion() {
-        return member.getRegionCode();
+        return member.getRegion();
     }
 
-    String getProfileImageUri() {
-        return member.getProfileImageUri();
+    String getProfileImageUrl() {
+        return member.getProfileImageUrl();
     }
 
 }

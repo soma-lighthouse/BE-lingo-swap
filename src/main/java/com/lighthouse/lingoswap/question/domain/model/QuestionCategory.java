@@ -13,7 +13,7 @@ public class QuestionCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public QuestionCategory(final Category category) {
+    QuestionCategory(final Category category) {
         this.category = category;
     }
 

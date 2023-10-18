@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
-public class Like {
+class Like {
 
     @Column(name = "likes")
     private Long value;
@@ -17,11 +17,11 @@ public class Like {
         return value;
     }
 
-    public void addOneLike() {
+    void addOneLike() {
         value++;
     }
 
-    public void subtractOneLike() {
+    void subtractOneLike() {
         validateRange();
         value--;
     }

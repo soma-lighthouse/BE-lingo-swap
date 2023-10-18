@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record MemberCreateRequest(String uuid,
-                                  String profileImageUri,
+                                  String profileImageUrl,
                                   LocalDate birthday,
                                   String name,
                                   String email,

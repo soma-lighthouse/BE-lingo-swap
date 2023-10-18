@@ -17,7 +17,7 @@ public class MemberController {
 
     @GetMapping("/{uuid}/preference")
     public ResponseEntity<ResponseDto<MemberPreferenceResponse>> getPreference(@PathVariable final String uuid) {
-        return ResponseEntity.ok().body(memberManager.getPreference(uuid));
+        return ResponseEntity.ok().body(memberManager.readPreference(uuid));
     }
 
     @GetMapping("/{uuid}/profile")

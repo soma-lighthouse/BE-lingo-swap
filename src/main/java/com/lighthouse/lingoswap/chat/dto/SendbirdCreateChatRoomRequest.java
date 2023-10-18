@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.infra.dto;
+package com.lighthouse.lingoswap.chat.dto;
 
 import java.util.List;
 

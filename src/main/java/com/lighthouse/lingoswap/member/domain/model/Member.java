@@ -21,8 +21,8 @@ public class Member extends BaseEntity {
     @Embedded
     private AuthDetails authDetails;
 
-    @Embedded
-    private MemberCountry region;
+    @Column(length = 2)
+    private String region;
 
     @Embedded
     private MemberUsedLanguages memberUsedLanguages;
@@ -39,21 +39,21 @@ public class Member extends BaseEntity {
     private LocalDate birthday;
     private String description;
     private String name;
-    private String profileImageUri;
+    private String profileImageUrl;
 
     @Builder
-    public Member(final LocalDate birthday, final String name, final String description, final String profileImageUri, final Gender gender, final String username, final String uuid, final Role role, final Country region) {
+    public Member(final LocalDate birthday, final String name, final String description, final String profileImageUrl, final Gender gender, final String username, final String uuid, final Role role, final String region) {
         this.birthday = birthday;
         this.name = name;
         this.description = description;
-        this.profileImageUri = profileImageUri;
+        this.profileImageUrl = profileImageUrl;
         this.gender = gender;
         this.authDetails = AuthDetails.builder()
                 .username(username)
                 .uuid(uuid)
                 .role(role)
                 .build();
-        this.region = new MemberCountry(region);
+        this.region = region;
     }
 
     public Long getId() {
@@ -72,8 +72,8 @@ public class Member extends BaseEntity {
         return authDetails.getUsername();
     }
 
-    public String getRegionCode() {
-        return region.getCode();
+    public String getRegion() {
+        return region;
     }
 
     public List<UsedLanguage> getMemberUsedLanguages() {
@@ -104,8 +104,8 @@ public class Member extends BaseEntity {
         return name;
     }
 
-    public String getProfileImageUri() {
-        return profileImageUri;
+    public String getProfileImageUrl() {
+        return profileImageUrl;
     }
 
     public int calculateAge(final LocalDate currentDateTime) {
@@ -116,8 +116,8 @@ public class Member extends BaseEntity {
         this.description = description;
     }
 
-    public void changeProfileImageUri(final String profileImageUri) {
-        this.profileImageUri = profileImageUri;
+    public void changeProfileImageUrl(final String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
 }

@@ -3,10 +3,8 @@ package com.lighthouse.lingoswap.interests.domain.model;
 import com.lighthouse.lingoswap.category.domain.model.Category;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Embeddable
 class InterestsCategory {

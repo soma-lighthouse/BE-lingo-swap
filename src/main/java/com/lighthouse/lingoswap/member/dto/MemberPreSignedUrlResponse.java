@@ -1,8 +1,10 @@
 package com.lighthouse.lingoswap.member.dto;
 
-public record MemberPreSignedUrlResponse(String url) {
+import java.net.URL;
 
-    public static MemberPreSignedUrlResponse from(String url) {
+public record MemberPreSignedUrlResponse(URL url) {
+
+    public static MemberPreSignedUrlResponse from(URL url) {
         return new MemberPreSignedUrlResponse(url);
     }
 

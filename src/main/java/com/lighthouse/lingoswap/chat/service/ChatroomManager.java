@@ -1,13 +1,10 @@
 package com.lighthouse.lingoswap.chat.service;
 
+import com.lighthouse.lingoswap.chat.dto.ChatUserRequest;
 import com.lighthouse.lingoswap.chat.dto.ChatroomCreateRequest;
+import com.lighthouse.lingoswap.common.dto.ChatCreateChatroomResponse;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
-import com.lighthouse.lingoswap.common.entity.SendbirdCreateChatroomResponse;
-import com.lighthouse.lingoswap.infra.dto.SendbirdCreateChatRoomRequest;
-import com.lighthouse.lingoswap.infra.dto.SendbirdCreateUserRequest;
-import com.lighthouse.lingoswap.infra.dto.SendbirdRequestByChatroom;
-import com.lighthouse.lingoswap.infra.service.SendbirdService;
-import com.lighthouse.lingoswap.member.application.MemberService;
+import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,26 +12,24 @@ import org.springframework.stereotype.Service;
 @Service
 public class ChatroomManager {
 
-    private final MemberService memberService;
+    private final MemberRepository memberRepository;
     private final SendbirdService sendbirdService;
 
-    public ResponseDto<Object> create(SendbirdRequestByChatroom sendbirdRequestByChatroom) {
-        sendbirdRequestByChatroom.memberUuids().stream()
-                .map(memberService::findByUuid)
-                .map(member -> new SendbirdCreateUserRequest(member.getUuid(), member.getName(), member.getProfileImageUri()))
-                .forEach(sendbirdService::createUser);
+    public ResponseDto<Object> create(ChatUserRequest chatUserRequest) {
+        chatUserRequest.memberUuids().stream()
+                .map(memberRepository::getByUuid)
+                .forEach(m -> sendbirdService.createUser(m.getUuid(), m.getName(), m.getProfileImageUrl()));
         return ResponseDto.success(null);
     }
 
-
-    public ResponseDto<Object> delete(SendbirdRequestByChatroom sendbirdRequestByChatroom) {
-        sendbirdRequestByChatroom.memberUuids().forEach(sendbirdService::deleteUser);
+    public ResponseDto<Object> delete(ChatUserRequest chatUserRequest) {
+        chatUserRequest.memberUuids().forEach(sendbirdService::deleteUser);
         return ResponseDto.success(null);
     }
 
-    public ResponseDto<SendbirdCreateChatroomResponse> createChatroom(ChatroomCreateRequest chatroomCreateRequest) {
-        SendbirdCreateChatRoomRequest sendbirdCreateChatRoomRequest = new SendbirdCreateChatRoomRequest(true, chatroomCreateRequest.users());
-        return ResponseDto.success(sendbirdService.createChatRoom(sendbirdCreateChatRoomRequest));
+    public ResponseDto<ChatCreateChatroomResponse> createChatroom(ChatroomCreateRequest chatroomCreateRequest) {
+        String channelUrl = sendbirdService.createChatroom(chatroomCreateRequest.users());
+        return ResponseDto.success(new ChatCreateChatroomResponse(channelUrl));
     }
 
 }
