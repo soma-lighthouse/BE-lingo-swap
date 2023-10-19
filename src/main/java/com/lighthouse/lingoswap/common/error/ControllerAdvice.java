@@ -1,5 +1,7 @@
 package com.lighthouse.lingoswap.common.error;
 
+import com.lighthouse.lingoswap.common.dto.ErrorMessage;
+import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.service.ErrorResponseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +25,7 @@ public class ControllerAdvice {
     private final ErrorResponseService errorResponseService;
 
     @ExceptionHandler(Exception.class)
-    private ResponseEntity handleUnexpectedException(final Exception ex) {
+    private ResponseEntity<ResponseDto<ErrorMessage>> handleUnexpectedException(final Exception ex) {
         log.error("{}", ex.getMessage());
         return errorResponseService.build(SERVER_ERROR);
     }
@@ -32,7 +34,7 @@ public class ControllerAdvice {
             HttpRequestMethodNotSupportedException.class,
             HttpMessageNotReadableException.class,
     })
-    private ResponseEntity handleForbiddenException(final Exception ex) {
+    private ResponseEntity<ResponseDto<ErrorMessage>> handleForbiddenException(final Exception ex) {
         log.error("{}", ex.getMessage());
         return errorResponseService.build(FORBIDDEN_ERROR);
     }
@@ -41,7 +43,7 @@ public class ControllerAdvice {
             MethodArgumentNotValidException.class,
             MethodArgumentTypeMismatchException.class
     })
-    private ResponseEntity handleMethodArgumentNotValidException(final Exception ex) {
+    private ResponseEntity<ResponseDto<ErrorMessage>> handleMethodArgumentNotValidException(final Exception ex) {
         log.error("{}", ex.getMessage());
         return errorResponseService.build(VALIDATION_ERROR);
     }

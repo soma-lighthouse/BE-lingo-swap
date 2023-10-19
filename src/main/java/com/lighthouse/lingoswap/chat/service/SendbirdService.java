@@ -1,8 +1,8 @@
 package com.lighthouse.lingoswap.chat.service;
 
+import com.lighthouse.lingoswap.chat.dto.ChannelUrlResponse;
 import com.lighthouse.lingoswap.chat.dto.SendbirdCreateChatRoomRequest;
 import com.lighthouse.lingoswap.chat.dto.SendbirdCreateUserRequest;
-import com.lighthouse.lingoswap.common.dto.ChatCreateChatroomResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
@@ -57,10 +57,10 @@ public class SendbirdService {
         headers.set("Api-Token", apiToken);
 
         HttpEntity<SendbirdCreateChatRoomRequest> entity = new HttpEntity<>(new SendbirdCreateChatRoomRequest(true, userIds), headers);
-        ChatCreateChatroomResponse body = restTemplate.postForEntity(
+        ChannelUrlResponse body = restTemplate.postForEntity(
                         apiUrl + "/group_channels",
                         entity,
-                        ChatCreateChatroomResponse.class)
+                        ChannelUrlResponse.class)
                 .getBody();
         return Objects.requireNonNull(body).channel_url();
     }

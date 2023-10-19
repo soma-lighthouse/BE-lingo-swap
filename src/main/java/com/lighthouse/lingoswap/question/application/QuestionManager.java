@@ -10,7 +10,6 @@ import com.lighthouse.lingoswap.likemember.domian.model.LikeMember;
 import com.lighthouse.lingoswap.likemember.domian.repository.LikeMemberRepository;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
-import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
 import com.lighthouse.lingoswap.question.domain.model.Question;
 import com.lighthouse.lingoswap.question.domain.repository.QuestionQueryRepository;
 import com.lighthouse.lingoswap.question.domain.repository.QuestionRepository;
@@ -35,20 +34,22 @@ public class QuestionManager {
     private final LikeMemberRepository likeMemberRepository;
     private final CloudFrontService cloudFrontService;
 
-    public ResponseDto<Object> create(final QuestionCreateRequest questionCreateRequest) {
-        Member member = memberRepository.findByUuidWithRegionAndUsedLanguage(questionCreateRequest.uuid())
-                .orElseThrow(MemberNotFoundException::new);
+    public ResponseDto<Void> create(final QuestionCreateRequest questionCreateRequest) {
+        Member member = memberRepository.getByUuid(questionCreateRequest.uuid());
         Category category = categoryRepository.findById(questionCreateRequest.categoryId())
                 .orElseThrow(() -> new CategoryNotFoundException(questionCreateRequest.categoryId()));
-        Question question = new Question(member, category, questionCreateRequest.content());
+        Question question = Question.builder()
+                .member(member)
+                .category(category)
+                .contents(questionCreateRequest.content())
+                .build();
         questionRepository.save(question);
-        return ResponseDto.success(null);
+        return ResponseDto.noData();
     }
 
     public ResponseDto<QuestionListResponse> read(final String memberUuid, final Long categoryId, final Long nextId, final int pageSize) {
         SliceDto<Question> questions = questionQueryRepository.findQuestionsByCategoryId(categoryId, nextId, pageSize);
-        Member member = memberRepository.findByUuidWithRegionAndUsedLanguage(memberUuid)
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.getByUuid(memberUuid);
         List<LikeMember> likeMembers = likeMemberRepository.findAllByMember(member);
 
         List<Question> likedQuestions = likeMembers.stream().map(LikeMember::getQuestion).toList();
@@ -59,31 +60,29 @@ public class QuestionManager {
         return ResponseDto.success(new QuestionListResponse(questions.nextId(), results));
     }
 
-    public ResponseDto<Object> updateLike(final String memberUuid, final Long questionId) {
+    public ResponseDto<Void> updateLike(final String memberUuid, final Long questionId) {
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new QuestionNotFoundException(questionId));
-        Member member = memberRepository.findByUuidWithRegionAndUsedLanguage(memberUuid)
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.getByUuid(memberUuid);
 
         LikeMember likeMember = LikeMember.of(member, question);
         likeMemberRepository.save(likeMember);
 
         question.addOneLike();
         questionRepository.save(question);
-        return ResponseDto.success(null);
+        return ResponseDto.noData();
     }
 
-    public ResponseDto<Object> deleteLike(final String memberUuid, final Long questionId) {
+    public ResponseDto<Void> deleteLike(final String memberUuid, final Long questionId) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new QuestionNotFoundException(questionId));
-        Member member = memberRepository.findByUuidWithRegionAndUsedLanguage(memberUuid)
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.getByUuid(memberUuid);
         LikeMember likeMember = likeMemberRepository.findByMemberAndQuestion(member, question)
                 .orElseThrow(() -> new LikeMemberNotFoundException(member.getUsername(), question.getId()));
         likeMemberRepository.delete(likeMember);
 
         question.subtractOneLike();
         questionRepository.save(question);
-        return ResponseDto.success(null);
+        return ResponseDto.noData();
     }
 
     public ResponseDto<QuestionRecommendationListResponse> readRecommendation(final Long categoryId, final Long nextId, final int pageSize) {
@@ -93,8 +92,7 @@ public class QuestionManager {
     }
 
     public ResponseDto<MyQuestionsResponse> readByCreatedMember(final String memberUuid) {
-        Member member = memberRepository.findByUuidWithRegionAndUsedLanguage(memberUuid)
-                .orElseThrow(MemberNotFoundException::new);
+        Member member = memberRepository.getByUuid(memberUuid);
         return ResponseDto.success(new MyQuestionsResponse(questionRepository.findByCreatedMember(member).stream().map(MyQuestionDetail::from).toList()));
     }
 

@@ -17,39 +17,31 @@ public class MemberController {
 
     @GetMapping("/{uuid}/preference")
     public ResponseEntity<ResponseDto<MemberPreferenceResponse>> getPreference(@PathVariable final String uuid) {
-        return ResponseEntity.ok().body(memberManager.readPreference(uuid));
+        return ResponseEntity.ok(ResponseDto.success(memberManager.readPreference(uuid)));
     }
 
     @GetMapping("/{uuid}/profile")
     public ResponseEntity<ResponseDto<MemberProfileResponse>> get(@PathVariable final String uuid) {
-        return ResponseEntity.ok(memberManager.read(uuid));
+        return ResponseEntity.ok(ResponseDto.success(memberManager.readProfile(uuid)));
     }
 
     @PatchMapping("/{uuid}/profile")
-    public ResponseEntity<ResponseDto<Object>> patch(@PathVariable final String uuid,
-                                                     @RequestBody @Valid final MemberUpdateProfileRequest memberUpdateProfileRequest) {
-        return ResponseEntity.ok().body(memberManager.updateProfile(uuid, memberUpdateProfileRequest));
+    public ResponseEntity<ResponseDto<Void>> patch(@PathVariable final String uuid,
+                                                   @RequestBody @Valid final MemberUpdateProfileRequest memberUpdateProfileRequest) {
+        memberManager.updateProfile(uuid, memberUpdateProfileRequest);
+        return ResponseEntity.ok(ResponseDto.noData());
     }
 
     @PatchMapping("/{uuid}/preference")
-    public ResponseEntity<ResponseDto<Object>> patchPreference(@PathVariable final String uuid,
-                                                               @RequestBody final MemberPreferenceRequest memberRequest) {
-        return ResponseEntity.ok().body(memberManager.updatePreference(uuid, memberRequest));
-    }
-
-    @GetMapping("/form/country")
-    public ResponseEntity<ResponseDto<CountryFormResponse>> readCountryForm() {
-        return ResponseEntity.ok(memberManager.readCountryForm());
-    }
-
-    @GetMapping("/form/language")
-    public ResponseEntity<ResponseDto<LanguageFormResponse>> readLanguageForm() {
-        return ResponseEntity.ok(memberManager.readLanguageForm());
+    public ResponseEntity<ResponseDto<Void>> patchPreference(@PathVariable final String uuid,
+                                                             @RequestBody final MemberPreferenceRequest memberRequest) {
+        memberManager.updatePreference(uuid, memberRequest);
+        return ResponseEntity.ok(ResponseDto.noData());
     }
 
     @PostMapping("/upload/profile")
     public ResponseEntity<ResponseDto<MemberPreSignedUrlResponse>> getPreSignedUrl(@RequestBody final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
-        return ResponseEntity.ok(memberManager.createPreSignedUrl(memberPreSignedUrlRequest));
+        return ResponseEntity.ok(ResponseDto.success(memberManager.createPreSignedUrl(memberPreSignedUrlRequest)));
     }
 
 }

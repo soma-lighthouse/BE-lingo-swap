@@ -1,41 +1,39 @@
 package com.lighthouse.lingoswap.preferredcountry.domain.model;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
-import com.lighthouse.lingoswap.member.domain.model.Country;
+import com.lighthouse.lingoswap.country.domain.model.Country;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Entity
 public class PreferredCountry extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Embedded
+    private PreferredCountryMember member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "country_id")
-    private Country country;
+    @Embedded
+    private CountryInfo country;
 
     private Boolean isValid;
 
-    public PreferredCountry(Member member, Country country) {
-        this.member = member;
-        this.country = country;
+    @Builder
+    public PreferredCountry(final Member member, final Country country) {
+        this.member = new PreferredCountryMember(member);
+        this.country = new CountryInfo(country);
     }
 
     public Long getId() {
         return id;
     }
 
-    public String getCountryCode() {
+    public String getCode() {
         return country.getCode();
     }
 

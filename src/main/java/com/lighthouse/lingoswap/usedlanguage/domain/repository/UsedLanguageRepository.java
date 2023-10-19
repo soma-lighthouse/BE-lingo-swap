@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.usedlanguage.domain.repository;
 
-import com.lighthouse.lingoswap.member.domain.model.Language;
+import com.lighthouse.lingoswap.language.domain.model.Language;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,11 +13,12 @@ import java.util.List;
 
 public interface UsedLanguageRepository extends JpaRepository<UsedLanguage, Long> {
 
-    List<UsedLanguage> findByMember(Member member);
+    @Query("SELECT u FROM UsedLanguage u WHERE u.member.member = :member")
+    List<UsedLanguage> findAllByMember(@Param("member") final Member member);
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM UsedLanguage u WHERE u.language IN :languages")
-    void deleteAllByLanguageIn(@Param("languages") List<Language> languages);
-    
+    @Query("DELETE FROM UsedLanguage u WHERE u.languageInfo.language IN :languages")
+    void deleteAllByLanguageIn(@Param("languages") final List<Language> languages);
+
 }

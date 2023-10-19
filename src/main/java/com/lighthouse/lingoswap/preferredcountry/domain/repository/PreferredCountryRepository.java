@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.preferredcountry.domain.repository;
 
-import com.lighthouse.lingoswap.member.domain.model.Country;
+import com.lighthouse.lingoswap.country.domain.model.Country;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.preferredcountry.domain.model.PreferredCountry;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,14 +13,12 @@ import java.util.List;
 
 public interface PreferredCountryRepository extends JpaRepository<PreferredCountry, Long> {
 
-    @Query("select p from PreferredCountry p join fetch p.country where p.member.id = :id")
-    List<PreferredCountry> findAllByMemberIdWithCountry(@Param("id") Long id);
+    @Query("SELECT p FROM PreferredCountry p WHERE p.member.member = :member")
+    List<PreferredCountry> findAllByMember(@Param("member") final Member member);
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM PreferredCountry p WHERE p.country IN :countries")
-    void deleteAllByCountryIn(@Param("countries") List<Country> countries);
-
-    List<PreferredCountry> findAllByMember(Member member);
+    @Query("DELETE FROM PreferredCountry p WHERE p.country.country IN :countries")
+    void deleteAllByCountryIn(@Param("countries") final List<Country> countries);
 
 }

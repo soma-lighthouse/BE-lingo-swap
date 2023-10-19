@@ -14,7 +14,7 @@ public interface MatchedMemberRepository extends JpaRepository<MatchedMember, Lo
 
     @Modifying(clearAutomatically = true)
     @Query(value = "DELETE FROM matched_member as mm WHERE mm.from_member_id = :memberId", nativeQuery = true)
-    void deletePreviousMatchedMember(@Param("memberId") Long memberId);
+    void deletePreviousMatchedMember(@Param("memberId") final Long memberId);
 
     @Modifying(clearAutomatically = true)
     @Query(value = """
@@ -54,9 +54,9 @@ public interface MatchedMemberRepository extends JpaRepository<MatchedMember, Lo
                 ORDER BY SUM(sub.score)
             """, nativeQuery = true)
     void saveMatchedMembersWithPreferences(
-            @Param("memberId") Long memberId,
-            @Param("preferredCountryIds") List<Long> preferredCountryIds,
-            @Param("languageIds") List<Long> preferredLanguages,
-            @Param("categoryIds") List<Long> preferredInterests);
-    
+            @Param("memberId") final Long memberId,
+            @Param("preferredCountryIds") final List<Long> preferredCountryIds,
+            @Param("languageIds") final List<Long> preferredLanguages,
+            @Param("categoryIds") final List<Long> preferredInterests);
+
 }

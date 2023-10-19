@@ -4,9 +4,9 @@ import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.message.MessageSourceManager;
 import com.lighthouse.lingoswap.interests.domain.model.Interests;
 import com.lighthouse.lingoswap.interests.domain.repository.InterestsRepository;
-import com.lighthouse.lingoswap.interests.dto.TranslatedCodeDto;
+import com.lighthouse.lingoswap.interests.dto.InterestsFormResponse;
 import com.lighthouse.lingoswap.member.dto.CategoryInterestsMapDto;
-import com.lighthouse.lingoswap.member.dto.InterestsFormResponse;
+import com.lighthouse.lingoswap.member.dto.CodeNameDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +30,8 @@ public class InterestsManager {
                         ))
                         .entrySet().stream()
                         .map(e -> new CategoryInterestsMapDto(
-                                new TranslatedCodeDto(e.getKey(), messageSourceManager.translate(e.getKey())),
-                                e.getValue().stream().map(v -> new TranslatedCodeDto(v, messageSourceManager.translate(v))).toList())
+                                new CodeNameDto(e.getKey(), messageSourceManager.translate(e.getKey())),
+                                e.getValue().stream().map(v -> new CodeNameDto(v, messageSourceManager.translate(v))).toList())
                         )
                         .toList());
         return ResponseDto.success(interestsFormResponse);

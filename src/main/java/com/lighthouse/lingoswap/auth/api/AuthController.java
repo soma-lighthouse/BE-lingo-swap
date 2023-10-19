@@ -3,7 +3,7 @@ package com.lighthouse.lingoswap.auth.api;
 import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
-import com.lighthouse.lingoswap.auth.dto.TokenPairDetails;
+import com.lighthouse.lingoswap.auth.dto.TokenPairInfoResponse;
 import com.lighthouse.lingoswap.auth.service.AuthManager;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import jakarta.validation.Valid;
@@ -32,7 +32,7 @@ public class AuthController {
     }
 
     @PostMapping("/token")
-    public ResponseEntity<ResponseDto<TokenPairDetails>> reissue(@RequestBody @Valid final ReissueRequest reissueRequest) {
+    public ResponseEntity<ResponseDto<TokenPairInfoResponse>> reissue(@RequestBody @Valid final ReissueRequest reissueRequest) {
         return ResponseEntity.ok(authManager.reissue(reissueRequest));
     }
 

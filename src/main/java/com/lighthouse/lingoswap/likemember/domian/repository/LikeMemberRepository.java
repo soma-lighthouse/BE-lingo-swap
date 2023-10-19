@@ -10,11 +10,7 @@ import java.util.Optional;
 
 public interface LikeMemberRepository extends JpaRepository<LikeMember, Long> {
 
-    LikeMember findByMemberId(Long memberId);
-
     List<LikeMember> findAllByMember(Member member);
-
-    void deleteByQuestionAndMember(Question question, Member member);
 
     Optional<LikeMember> findByMemberAndQuestion(Member member, Question question);
 

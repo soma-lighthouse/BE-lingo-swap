@@ -3,25 +3,25 @@ package com.lighthouse.lingoswap.auth.service;
 import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
-import com.lighthouse.lingoswap.auth.dto.TokenPairDetails;
+import com.lighthouse.lingoswap.auth.dto.TokenPairInfoResponse;
 import com.lighthouse.lingoswap.chat.service.SendbirdService;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
-import com.lighthouse.lingoswap.member.application.InterestsService;
-import com.lighthouse.lingoswap.member.application.LanguageService;
-import com.lighthouse.lingoswap.member.application.PreferredCountryService;
-import com.lighthouse.lingoswap.member.application.UsedLanguageService;
+import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
+import com.lighthouse.lingoswap.interests.domain.repository.InterestsRepository;
+import com.lighthouse.lingoswap.language.domain.model.Language;
+import com.lighthouse.lingoswap.language.domain.repository.LanguageRepository;
 import com.lighthouse.lingoswap.member.domain.model.AuthDetails;
-import com.lighthouse.lingoswap.member.domain.model.Language;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.domain.model.Role;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
-import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfo;
-import com.lighthouse.lingoswap.member.dto.UsedLanguageInfo;
+import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfoDto;
+import com.lighthouse.lingoswap.member.dto.UsedLanguageInfoDto;
 import com.lighthouse.lingoswap.preferredcountry.domain.model.PreferredCountry;
-import com.lighthouse.lingoswap.preferredcountry.domain.repository.CountryRepository;
-import com.lighthouse.lingoswap.preferredinterests.application.PreferredInterestsManager;
+import com.lighthouse.lingoswap.preferredcountry.domain.repository.PreferredCountryRepository;
 import com.lighthouse.lingoswap.preferredinterests.domain.model.PreferredInterests;
+import com.lighthouse.lingoswap.preferredinterests.domain.repository.PreferredInterestsRepository;
 import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
+import com.lighthouse.lingoswap.usedlanguage.domain.repository.UsedLanguageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,28 +36,26 @@ public class AuthManager {
     private final TokenPairService tokenPairService;
     private final GoogleIdTokenService idTokenService;
     private final MemberRepository memberRepository;
-    private final LanguageService languageService;
-    private final UsedLanguageService usedLanguageService;
-    private final InterestsService interestsService;
+    private final LanguageRepository languageRepository;
+    private final UsedLanguageRepository usedLanguageRepository;
+    private final InterestsRepository interestsRepository;
     private final CountryRepository countryRepository;
-    private final PreferredCountryService preferredCountryService;
-    private final PreferredInterestsManager preferredInterestsManager;
+    private final PreferredCountryRepository preferredCountryRepository;
+    private final PreferredInterestsRepository preferredInterestsRepository;
     private final SendbirdService sendbirdService;
 
     @Transactional
     public ResponseDto<LoginResponse> login(final String idToken) {
         String email = idTokenService.parseIdToken(idToken);
         AuthDetails authDetails = authService.loadUserByUsername(email);
-        TokenPairDetails tokenPairDetails = tokenPairService.generateTokenPairDetailsByUsername(email);
-        return ResponseDto.success(LoginResponse.of(authDetails.getUuid(), authDetails.getUsername(), tokenPairDetails));
+        TokenPairInfoResponse tokenPairInfoResponse = tokenPairService.generateTokenPairDetailsByUsername(email);
+        return ResponseDto.success(LoginResponse.of(authDetails.getUuid(), authDetails.getUsername(), tokenPairInfoResponse));
     }
 
     @Transactional
     public ResponseDto<LoginResponse> signup(final String idToken, final MemberCreateRequest memberCreateRequest) {
         String email = idTokenService.parseIdToken(idToken);
         String uuid = memberCreateRequest.uuid();
-
-        AuthDetails authDetails = new AuthDetails(email, uuid, Role.USER);
 
         countryRepository.validateExistsByCode(memberCreateRequest.region());
 
@@ -78,38 +76,38 @@ public class AuthManager {
         saveUsedLanguages(member, memberCreateRequest.usedLanguages());
         savePreferredInterests(member, memberCreateRequest.preferredInterests());
 
-        sendbirdService.createUser(authDetails.getUuid(), member.getName(), member.getProfileImageUrl());
+        sendbirdService.createUser(member.getUuid(), member.getName(), member.getProfileImageUrl());
 
-        TokenPairDetails tokenPairDetails = tokenPairService.generateTokenPairDetailsByUsername(email);
-        return ResponseDto.success(LoginResponse.of(uuid, authDetails.getUsername(), tokenPairDetails));
+        TokenPairInfoResponse tokenPairInfoResponse = tokenPairService.generateTokenPairDetailsByUsername(email);
+        return ResponseDto.success(LoginResponse.of(uuid, member.getUsername(), tokenPairInfoResponse));
     }
 
     private void savePreferredCountries(Member member, List<String> codes) {
         codes.stream()
                 .map(countryRepository::getByCode)
-                .map(p -> new PreferredCountry(member, p))
-                .forEach(preferredCountryService::save);
+                .map(c -> new PreferredCountry(member, c))
+                .forEach(preferredCountryRepository::save);
     }
 
-    private void saveUsedLanguages(Member member, List<UsedLanguageInfo> usedLanguageInfos) {
-        usedLanguageInfos.stream()
-                .map(lang -> {
-                    Language language = languageService.findLanguageByCode(lang.code());
-                    return new UsedLanguage(member, language, lang.level());
+    private void saveUsedLanguages(Member member, List<UsedLanguageInfoDto> usedLanguageInfoDtos) {
+        usedLanguageInfoDtos.stream()
+                .map(dto -> {
+                    Language language = languageRepository.getLanguageByCode(dto.code());
+                    return new UsedLanguage(member, language, dto.level());
                 })
-                .forEach(usedLanguageService::save);
+                .forEach(usedLanguageRepository::save);
     }
 
-    private void savePreferredInterests(Member member, List<PreferredInterestsInfo> preferredInterestsInfos) {
-        preferredInterestsInfos.stream()
+    private void savePreferredInterests(Member member, List<PreferredInterestsInfoDto> preferredInterestsInfoDtos) {
+        preferredInterestsInfoDtos.stream()
                 .flatMap(userInterestsByDto -> userInterestsByDto.interests().stream())
-                .map(interestsService::findByName)
+                .map(interestsRepository::getByName)
                 .map(interest -> new PreferredInterests(member, interest))
-                .forEach(preferredInterestsManager::save);
+                .forEach(preferredInterestsRepository::save);
     }
 
     @Transactional
-    public ResponseDto<TokenPairDetails> reissue(final ReissueRequest reissueRequest) {
+    public ResponseDto<TokenPairInfoResponse> reissue(final ReissueRequest reissueRequest) {
         String refreshToken = reissueRequest.refreshToken();
         return ResponseDto.success(tokenPairService.reissue(refreshToken));
     }

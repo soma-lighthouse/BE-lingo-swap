@@ -20,7 +20,7 @@ public class ErrorResponseService {
         String code = errorCode.getCode();
         String key = errorCode.getKey();
         return ResponseEntity.status(status)
-                .body(ResponseDto.error(code, null, new ErrorMessage(messageSourceManager.translate(key))));
+                .body(ResponseDto.error(code, null, ErrorMessage.of(messageSourceManager.translate(key))));
     }
 
 }

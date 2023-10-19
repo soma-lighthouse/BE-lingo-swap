@@ -5,6 +5,7 @@ import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -27,6 +28,7 @@ public class Question extends BaseEntity {
     private Boolean isValid;
     private Boolean isRecommended;
 
+    @Builder
     public Question(final Member member, final Category category, final String contents) {
         this.questionCreatedMember = new QuestionCreatedMember(member);
         this.questionCategory = new QuestionCategory(category);
@@ -69,11 +71,11 @@ public class Question extends BaseEntity {
     }
 
     public void addOneLike() {
-        like.addOneLike();
+        like = like.addOneLike();
     }
 
     public void subtractOneLike() {
-        like.subtractOneLike();
+        like = like.subtractOneLike();
     }
 
 }

@@ -1,9 +1,14 @@
 package com.lighthouse.lingoswap.member.dto;
 
-import com.lighthouse.lingoswap.interests.dto.TranslatedCodeDto;
+import lombok.Builder;
 
 import java.util.List;
 
-public record CategoryInterestsMapDto(TranslatedCodeDto category, List<TranslatedCodeDto> interests) {
+public record CategoryInterestsMapDto(CodeNameDto category, List<CodeNameDto> interests) {
+
+    @Builder
+    public static CategoryInterestsMapDto of(final CodeNameDto category, final List<CodeNameDto> interests) {
+        return new CategoryInterestsMapDto(category, interests);
+    }
 
 }

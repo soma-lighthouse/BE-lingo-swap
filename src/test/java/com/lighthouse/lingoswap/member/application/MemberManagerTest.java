@@ -4,7 +4,9 @@ import com.lighthouse.lingoswap.common.support.IntegrationTestSupport;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 class MemberManagerTest extends IntegrationTestSupport {
 
     @Autowired
@@ -12,10 +14,6 @@ class MemberManagerTest extends IntegrationTestSupport {
 
     @Autowired
     private MemberRepository memberRepository;
-
-    @Test
-    void read() {
-    }
 
     @Test
     void getPreference() {

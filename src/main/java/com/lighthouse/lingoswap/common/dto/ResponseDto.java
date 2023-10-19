@@ -22,6 +22,10 @@ public class ResponseDto<T> {
         return new ResponseDto<>(SUCCESS_CODE, SUCCESS_MESSAGE, data);
     }
 
+    public static ResponseDto<Void> noData() {
+        return new ResponseDto<>(SUCCESS_CODE, SUCCESS_MESSAGE, null);
+    }
+
     public static ResponseDto<ErrorMessage> error(final String code, final String message) {
         return new ResponseDto<>(code, message, null);
     }

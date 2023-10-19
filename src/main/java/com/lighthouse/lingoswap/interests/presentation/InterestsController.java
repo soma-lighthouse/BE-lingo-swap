@@ -2,7 +2,7 @@ package com.lighthouse.lingoswap.interests.presentation;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.interests.application.InterestsManager;
-import com.lighthouse.lingoswap.member.dto.InterestsFormResponse;
+import com.lighthouse.lingoswap.interests.dto.InterestsFormResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

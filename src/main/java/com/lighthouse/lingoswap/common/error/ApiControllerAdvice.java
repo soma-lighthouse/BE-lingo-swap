@@ -1,6 +1,8 @@
 package com.lighthouse.lingoswap.common.error;
 
 import com.lighthouse.lingoswap.category.exception.CategoryNotFoundException;
+import com.lighthouse.lingoswap.common.dto.ErrorMessage;
+import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.service.ErrorResponseService;
 import com.lighthouse.lingoswap.member.exception.DuplicateMemberException;
 import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
@@ -27,13 +29,13 @@ public class ApiControllerAdvice {
     private final ErrorResponseService errorResponseService;
 
     @ExceptionHandler(AuthenticationException.class)
-    private ResponseEntity handleAuthenticationException(final RuntimeException ex) {
+    private ResponseEntity<ResponseDto<ErrorMessage>> handleAuthenticationException(final RuntimeException ex) {
         log.error("{}", ex.getMessage());
         return errorResponseService.build(FORBIDDEN_ERROR);
     }
 
     @ExceptionHandler(DuplicateMemberException.class)
-    private ResponseEntity handleDuplicateMemberException(final RuntimeException ex) {
+    private ResponseEntity<ResponseDto<ErrorMessage>> handleDuplicateMemberException(final RuntimeException ex) {
         log.error("{}", ex.getMessage());
         return errorResponseService.build(DUPLICATE_USER_ERROR);
     }
@@ -43,7 +45,7 @@ public class ApiControllerAdvice {
             QuestionNotFoundException.class,
             CategoryNotFoundException.class
     })
-    private ResponseEntity handleLoginUserNotFoundException(final RuntimeException ex) {
+    private ResponseEntity<ResponseDto<ErrorMessage>> handleLoginUserNotFoundException(final RuntimeException ex) {
         log.error("{}", ex.getMessage());
         return errorResponseService.build(NOT_FOUND_ERROR);
     }
@@ -52,7 +54,7 @@ public class ApiControllerAdvice {
             DuplicateLikeException.class,
             LikeMemberNotFoundException.class
     })
-    private ResponseEntity handleDuplicateLikeException(final RuntimeException ex) {
+    private ResponseEntity<ResponseDto<ErrorMessage>> handleDuplicateLikeException(final RuntimeException ex) {
         log.error("{}", ex.getMessage());
         return errorResponseService.build(VALIDATION_ERROR);
     }

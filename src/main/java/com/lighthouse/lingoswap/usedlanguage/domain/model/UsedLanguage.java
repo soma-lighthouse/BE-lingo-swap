@@ -1,34 +1,48 @@
 package com.lighthouse.lingoswap.usedlanguage.domain.model;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
-import com.lighthouse.lingoswap.member.domain.model.Language;
+import com.lighthouse.lingoswap.language.domain.model.Language;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Entity
 public class UsedLanguage extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Member member;
+    @Embedded
+    private UsedLanguageMember member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Language language;
+    @Embedded
+    private LanguageInfo languageInfo;
 
     private Integer level;
     private Boolean isValid;
 
     public UsedLanguage(final Member member, final Language language, final Integer level) {
-        this.member = member;
-        this.language = language;
+        this.member = new UsedLanguageMember(member);
+        this.languageInfo = new LanguageInfo(language);
         this.level = level;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getCode() {
+        return languageInfo.getCode();
+    }
+
+    public String getName() {
+        return languageInfo.getName();
+    }
+
+    public Integer getLevel() {
+        return level;
     }
 
 }

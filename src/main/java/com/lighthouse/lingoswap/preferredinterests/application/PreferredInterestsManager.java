@@ -1,6 +1,7 @@
 package com.lighthouse.lingoswap.preferredinterests.application;
 
 import com.lighthouse.lingoswap.interests.domain.model.Interests;
+import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.preferredinterests.domain.model.PreferredInterests;
 import com.lighthouse.lingoswap.preferredinterests.domain.repository.PreferredInterestsRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,11 +19,11 @@ public class PreferredInterestsManager {
         preferredInterestsRepository.save(preferredInterests);
     }
 
-    public List<PreferredInterests> findAllByMemberIdWithInterestsAndCategory(Long id) {
-        return preferredInterestsRepository.findAllByMemberIdWithInterestsAndCategory(id);
+    public List<PreferredInterests> findAllByMemberWithInterestsAndCategory(final Member member) {
+        return preferredInterestsRepository.findAllByMemberWithInterestsAndCategory(member);
     }
 
-    public void deleteByInterestsNameIn(List<Interests> interests) {
+    public void deleteByInterestsNameIn(final List<Interests> interests) {
         preferredInterestsRepository.deleteAllByInterestsIn(interests);
     }
 

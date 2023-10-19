@@ -11,6 +11,6 @@ import java.util.List;
 public interface QuestionRepository extends JpaRepository<Question, Long> {
 
     @Query("select q from Question q join fetch q.questionCategory.category where q.questionCreatedMember.member = :member order by q.id desc")
-    List<Question> findByCreatedMember(@Param("member") Member member);
+    List<Question> findByCreatedMember(@Param("member") final Member member);
 
 }

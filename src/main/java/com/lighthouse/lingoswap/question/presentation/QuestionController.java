@@ -28,20 +28,23 @@ public class QuestionController {
     }
 
     @PostMapping("/api/v1/question")
-    public ResponseEntity<ResponseDto<Object>> post(@RequestBody @Valid final QuestionCreateRequest questionCreateRequest) {
-        return ResponseEntity.ok(questionManager.create(questionCreateRequest));
+    public ResponseEntity<ResponseDto<Void>> post(@RequestBody @Valid final QuestionCreateRequest questionCreateRequest) {
+        questionManager.create(questionCreateRequest);
+        return ResponseEntity.ok(ResponseDto.noData());
     }
 
     @PostMapping("/api/v1/{questionId}/like")
-    public ResponseEntity<ResponseDto<Object>> postLike(@PathVariable final Long questionId) {
+    public ResponseEntity<ResponseDto<Void>> postLike(@PathVariable final Long questionId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return ResponseEntity.ok().body(questionManager.updateLike((String) auth.getPrincipal(), questionId));
+        questionManager.updateLike((String) auth.getPrincipal(), questionId);
+        return ResponseEntity.ok(ResponseDto.noData());
     }
 
     @DeleteMapping("/api/v1/{questionId}/like")
-    public ResponseEntity<ResponseDto<Object>> deleteLike(@PathVariable final Long questionId) {
+    public ResponseEntity<ResponseDto<Void>> deleteLike(@PathVariable final Long questionId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return ResponseEntity.ok().body(questionManager.deleteLike((String) auth.getPrincipal(), questionId));
+        questionManager.deleteLike((String) auth.getPrincipal(), questionId);
+        return ResponseEntity.ok(ResponseDto.noData());
     }
 
     @GetMapping("/api/v1/question/recommendation")

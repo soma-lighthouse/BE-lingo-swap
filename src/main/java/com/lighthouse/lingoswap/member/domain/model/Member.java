@@ -1,7 +1,6 @@
 package com.lighthouse.lingoswap.member.domain.model;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
-import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -9,7 +8,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -23,15 +21,6 @@ public class Member extends BaseEntity {
 
     @Column(length = 2)
     private String region;
-
-    @Embedded
-    private MemberUsedLanguages memberUsedLanguages;
-
-    @Embedded
-    private MemberPreferredInterests memberPreferredInterests;
-
-    @Embedded
-    private MemberPreferredCountries memberPreferredCountries;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
@@ -76,26 +65,6 @@ public class Member extends BaseEntity {
         return region;
     }
 
-    public List<UsedLanguage> getMemberUsedLanguages() {
-        return memberUsedLanguages.getUsedLanguages();
-    }
-
-    public MemberPreferredInterests getMemberPreferredInterests() {
-        return memberPreferredInterests;
-    }
-
-    public MemberPreferredCountries getMemberPreferredCountries() {
-        return memberPreferredCountries;
-    }
-
-    public Gender getGender() {
-        return gender;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -108,8 +77,8 @@ public class Member extends BaseEntity {
         return profileImageUrl;
     }
 
-    public int calculateAge(final LocalDate currentDateTime) {
-        return Period.between(birthday, currentDateTime).getYears();
+    public int calculateAge(final LocalDate currentDate) {
+        return Period.between(birthday, currentDate).getYears();
     }
 
     public void changeDescription(final String description) {

@@ -6,16 +6,16 @@ import com.lighthouse.lingoswap.common.message.MessageSourceManager;
 import com.lighthouse.lingoswap.infra.service.CloudFrontService;
 import com.lighthouse.lingoswap.match.dto.MatchedMemberProfilesResponse;
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
-import com.lighthouse.lingoswap.member.application.PreferredCountryService;
-import com.lighthouse.lingoswap.member.application.UsedLanguageService;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
 import com.lighthouse.lingoswap.member.dto.CodeNameDto;
 import com.lighthouse.lingoswap.member.dto.MemberSimpleProfile;
 import com.lighthouse.lingoswap.preferredcountry.domain.model.PreferredCountry;
+import com.lighthouse.lingoswap.preferredcountry.domain.repository.PreferredCountryRepository;
 import com.lighthouse.lingoswap.preferredinterests.application.PreferredInterestsManager;
 import com.lighthouse.lingoswap.preferredinterests.domain.model.PreferredInterests;
 import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
+import com.lighthouse.lingoswap.usedlanguage.domain.repository.UsedLanguageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,8 +28,8 @@ public class MatchManager {
 
     private final MatchService matchService;
     private final MemberRepository memberRepository;
-    private final PreferredCountryService preferredCountryService;
-    private final UsedLanguageService usedLanguageService;
+    private final PreferredCountryRepository preferredCountryRepository;
+    private final UsedLanguageRepository usedLanguageRepository;
     private final PreferredInterestsManager preferredInterestsManager;
     private final CloudFrontService cloudFrontService;
     private final MessageSourceManager messageSourceManager;
@@ -38,17 +38,17 @@ public class MatchManager {
     public ResponseDto<MatchedMemberProfilesResponse> read(final String uuid, final Long nextId, final int pageSize) {
         Member fromMember = memberRepository.getByUuid(uuid);
         if (nextId == null) {
-            List<Long> usedLanguageIds = usedLanguageService.findByMember(fromMember)
+            List<Long> usedLanguageIds = usedLanguageRepository.findAllByMember(fromMember)
                     .stream()
                     .map(UsedLanguage::getId)
                     .toList();
 
-            List<Long> preferredCountryIds = preferredCountryService.findByMember(fromMember)
+            List<Long> preferredCountryIds = preferredCountryRepository.findAllByMember(fromMember)
                     .stream()
                     .map(PreferredCountry::getId)
                     .toList();
 
-            List<Long> categoryIds = preferredInterestsManager.findAllByMemberIdWithInterestsAndCategory(fromMember.getId())
+            List<Long> categoryIds = preferredInterestsManager.findAllByMemberWithInterestsAndCategory(fromMember)
                     .stream()
                     .map(PreferredInterests::getInterestsCategoryId)
                     .toList();
@@ -57,14 +57,17 @@ public class MatchManager {
                     fromMember.getId(), preferredCountryIds, usedLanguageIds, categoryIds);
         }
 
-        SliceDto<MatchedMember> matchedMembers = matchService.findFilteredMembers(fromMember.getId(), nextId, pageSize);
-        List<MemberSimpleProfile> results = matchedMembers.content().stream().map(MatchedMember::getToMember)
+        SliceDto<MatchedMember> sliceDto = matchService.findFilteredMembers(fromMember.getId(), nextId, pageSize);
+        List<MemberSimpleProfile> results = sliceDto.content().stream()
+                .map(MatchedMember::getToMember)
                 .map(m -> MemberSimpleProfile.of(
                         m,
+                        cloudFrontService.addEndpoint(m.getProfileImageUrl()),
                         new CodeNameDto(m.getRegion(), messageSourceManager.translate(m.getRegion())),
-                        cloudFrontService.addEndpoint(m.getProfileImageUrl())))
+                        usedLanguageRepository.findAllByMember(m)
+                ))
                 .toList();
-        return ResponseDto.success(new MatchedMemberProfilesResponse(matchedMembers.nextId(), results));
+        return ResponseDto.success(new MatchedMemberProfilesResponse(sliceDto.nextId(), results));
     }
 
 }
