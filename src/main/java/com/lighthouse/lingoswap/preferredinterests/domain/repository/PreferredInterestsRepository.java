@@ -13,8 +13,7 @@ import java.util.List;
 
 public interface PreferredInterestsRepository extends JpaRepository<PreferredInterests, Long> {
 
-    @Query("select p from PreferredInterests p join fetch p.interests i join fetch i.interestsCategory where p.member = :member")
-    List<PreferredInterests> findAllByMemberWithInterestsAndCategory(@Param("member") final Member member);
+    List<PreferredInterests> findAllByMember(final Member member);
 
     @Modifying
     @Transactional

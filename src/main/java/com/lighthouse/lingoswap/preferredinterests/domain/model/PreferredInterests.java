@@ -5,6 +5,7 @@ import com.lighthouse.lingoswap.interests.domain.model.Interests;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -24,6 +25,7 @@ public class PreferredInterests extends BaseEntity {
 
     private Boolean isValid;
 
+    @Builder
     public PreferredInterests(Member member, Interests interests) {
         this.member = member;
         this.interests = interests;

@@ -2,7 +2,10 @@ package com.lighthouse.lingoswap.member.presentation;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.member.application.MemberManager;
-import com.lighthouse.lingoswap.member.dto.*;
+import com.lighthouse.lingoswap.member.dto.MemberPreferenceRequest;
+import com.lighthouse.lingoswap.member.dto.MemberPreferenceResponse;
+import com.lighthouse.lingoswap.member.dto.MemberProfileResponse;
+import com.lighthouse.lingoswap.member.dto.MemberUpdateProfileRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,11 +40,6 @@ public class MemberController {
                                                              @RequestBody final MemberPreferenceRequest memberRequest) {
         memberManager.updatePreference(uuid, memberRequest);
         return ResponseEntity.ok(ResponseDto.noData());
-    }
-
-    @PostMapping("/upload/profile")
-    public ResponseEntity<ResponseDto<MemberPreSignedUrlResponse>> getPreSignedUrl(@RequestBody final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
-        return ResponseEntity.ok(ResponseDto.success(memberManager.createPreSignedUrl(memberPreSignedUrlRequest)));
     }
 
 }

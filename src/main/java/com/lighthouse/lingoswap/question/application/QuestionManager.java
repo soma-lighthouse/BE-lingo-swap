@@ -2,7 +2,6 @@ package com.lighthouse.lingoswap.question.application;
 
 import com.lighthouse.lingoswap.category.domain.model.Category;
 import com.lighthouse.lingoswap.category.domain.repository.CategoryRepository;
-import com.lighthouse.lingoswap.category.exception.CategoryNotFoundException;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
 import com.lighthouse.lingoswap.infra.service.CloudFrontService;
@@ -34,17 +33,15 @@ public class QuestionManager {
     private final LikeMemberRepository likeMemberRepository;
     private final CloudFrontService cloudFrontService;
 
-    public ResponseDto<Void> create(final QuestionCreateRequest questionCreateRequest) {
+    public void create(final QuestionCreateRequest questionCreateRequest) {
         Member member = memberRepository.getByUuid(questionCreateRequest.uuid());
-        Category category = categoryRepository.findById(questionCreateRequest.categoryId())
-                .orElseThrow(() -> new CategoryNotFoundException(questionCreateRequest.categoryId()));
+        Category category = categoryRepository.getByReferenceId(questionCreateRequest.categoryId());
         Question question = Question.builder()
                 .member(member)
                 .category(category)
                 .contents(questionCreateRequest.content())
                 .build();
         questionRepository.save(question);
-        return ResponseDto.noData();
     }
 
     public ResponseDto<QuestionListResponse> read(final String memberUuid, final Long categoryId, final Long nextId, final int pageSize) {
@@ -60,7 +57,7 @@ public class QuestionManager {
         return ResponseDto.success(new QuestionListResponse(questions.nextId(), results));
     }
 
-    public ResponseDto<Void> updateLike(final String memberUuid, final Long questionId) {
+    public void updateLike(final String memberUuid, final Long questionId) {
         Question question = questionRepository.findById(questionId).orElseThrow(() -> new QuestionNotFoundException(questionId));
         Member member = memberRepository.getByUuid(memberUuid);
 
@@ -69,10 +66,9 @@ public class QuestionManager {
 
         question.addOneLike();
         questionRepository.save(question);
-        return ResponseDto.noData();
     }
 
-    public ResponseDto<Void> deleteLike(final String memberUuid, final Long questionId) {
+    public void deleteLike(final String memberUuid, final Long questionId) {
         Question question = questionRepository.findById(questionId)
                 .orElseThrow(() -> new QuestionNotFoundException(questionId));
         Member member = memberRepository.getByUuid(memberUuid);
@@ -82,7 +78,6 @@ public class QuestionManager {
 
         question.subtractOneLike();
         questionRepository.save(question);
-        return ResponseDto.noData();
     }
 
     public ResponseDto<QuestionRecommendationListResponse> readRecommendation(final Long categoryId, final Long nextId, final int pageSize) {

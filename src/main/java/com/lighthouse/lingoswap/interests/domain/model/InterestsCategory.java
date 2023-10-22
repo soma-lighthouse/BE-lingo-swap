@@ -16,12 +16,16 @@ class InterestsCategory {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    String getName() {
-        return category.getName();
+    InterestsCategory(final Category category) {
+        this.category = category;
     }
 
     Long getId() {
         return category.getId();
+    }
+
+    String getName() {
+        return category.getName();
     }
 
 }

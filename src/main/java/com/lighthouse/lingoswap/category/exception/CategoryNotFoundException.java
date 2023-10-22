@@ -2,10 +2,10 @@ package com.lighthouse.lingoswap.category.exception;
 
 public class CategoryNotFoundException extends RuntimeException {
 
-    private static final String MESSAGE = "Couldn't find category with id: %d";
+    private static final String MESSAGE = "Couldn't find category";
 
-    public CategoryNotFoundException(final Long id) {
-        super(MESSAGE.formatted(id));
+    public CategoryNotFoundException() {
+        super(MESSAGE);
     }
 
 }

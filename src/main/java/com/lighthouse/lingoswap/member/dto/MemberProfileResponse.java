@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.dto;
 
+import com.lighthouse.lingoswap.common.dto.CodeNameDto;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
 import lombok.Builder;

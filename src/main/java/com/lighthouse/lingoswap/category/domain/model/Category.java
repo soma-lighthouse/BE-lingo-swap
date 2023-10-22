@@ -1,17 +1,15 @@
 package com.lighthouse.lingoswap.category.domain.model;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
-import com.lighthouse.lingoswap.interests.domain.model.Interests;
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Entity
 public class Category extends BaseEntity {
 
@@ -20,7 +18,17 @@ public class Category extends BaseEntity {
 
     private String name;
 
-    @OneToMany(mappedBy = "interestsCategory")
-    private List<Interests> interests = new ArrayList<>();
+    @Builder
+    public Category(final String name) {
+        this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
 
 }

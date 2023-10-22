@@ -20,7 +20,7 @@ public class PreferredInterestsManager {
     }
 
     public List<PreferredInterests> findAllByMemberWithInterestsAndCategory(final Member member) {
-        return preferredInterestsRepository.findAllByMemberWithInterestsAndCategory(member);
+        return preferredInterestsRepository.findAllByMember(member);
     }
 
     public void deleteByInterestsNameIn(final List<Interests> interests) {

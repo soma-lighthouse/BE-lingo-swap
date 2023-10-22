@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.member.fixture;
+package com.lighthouse.lingoswap.common.fixture;
 
 import com.lighthouse.lingoswap.member.domain.model.Gender;
 import com.lighthouse.lingoswap.member.domain.model.Member;
@@ -9,9 +9,11 @@ import java.time.LocalDate;
 public class MemberFixture {
 
     public static final LocalDate USER_BIRTHDAY = LocalDate.of(1997, 3, 28);
+    public static final int USER_AGE = 26;
     public static final String USER_NAME = "Lee";
     public static final String USER_DESCRIPTION = "Hello";
     public static final String USER_PROFILE_IMAGE_URL = "/a142abb1-050a-4178-9564-9984109eded1/test.webp";
+    public static final String USER_PROFILE_ENDPOINT = "https://123.abcd.com/profiles/a142abb1-050a-4178-9564-9984109eded1/test.webp";
     public static final Gender USER_GENDER = Gender.MALE;
     public static final String USER_USERNAME = "abc123@naver.com";
     public static final String USER_UUID = "a142abb1-050a-4178-9564-9984109eded1";

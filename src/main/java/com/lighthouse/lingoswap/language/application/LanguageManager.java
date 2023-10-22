@@ -1,9 +1,9 @@
 package com.lighthouse.lingoswap.language.application;
 
+import com.lighthouse.lingoswap.common.dto.CodeNameDto;
 import com.lighthouse.lingoswap.language.domain.model.Language;
 import com.lighthouse.lingoswap.language.domain.repository.LanguageRepository;
 import com.lighthouse.lingoswap.language.dto.LanguageFormResponse;
-import com.lighthouse.lingoswap.member.dto.CodeNameDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

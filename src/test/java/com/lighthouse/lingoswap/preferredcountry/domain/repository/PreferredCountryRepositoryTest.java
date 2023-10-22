@@ -13,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.lighthouse.lingoswap.member.fixture.MemberFixture.user;
-import static com.lighthouse.lingoswap.preferredcountry.fixture.CountryFixture.korea;
-import static com.lighthouse.lingoswap.preferredcountry.fixture.CountryFixture.us;
+import static com.lighthouse.lingoswap.common.fixture.CountryType.KOREA;
+import static com.lighthouse.lingoswap.common.fixture.CountryType.US;
+import static com.lighthouse.lingoswap.common.fixture.MemberFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Transactional
@@ -35,8 +35,8 @@ class PreferredCountryRepositoryTest extends IntegrationTestSupport {
     void findAllByMember() {
         // given
         Member member = memberRepository.save(user());
-        Country korea = countryRepository.save(korea());
-        Country us = countryRepository.save(us());
+        Country korea = countryRepository.getByCode(KOREA.getCode());
+        Country us = countryRepository.getByCode(US.getCode());
         PreferredCountry preferredKorea = PreferredCountry.builder()
                 .member(member)
                 .country(korea)
@@ -59,8 +59,8 @@ class PreferredCountryRepositoryTest extends IntegrationTestSupport {
     void deleteAllByCountryIn() {
         // given
         Member member = memberRepository.save(user());
-        Country korea = countryRepository.save(korea());
-        Country us = countryRepository.save(us());
+        Country korea = countryRepository.getByCode(KOREA.getCode());
+        Country us = countryRepository.getByCode(US.getCode());
         PreferredCountry preferredKorea = PreferredCountry.builder()
                 .member(member)
                 .country(korea)

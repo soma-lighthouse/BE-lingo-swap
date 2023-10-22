@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.country.dto;
 
-import com.lighthouse.lingoswap.member.dto.CodeNameDto;
+import com.lighthouse.lingoswap.common.dto.CodeNameDto;
 
 import java.util.List;
 

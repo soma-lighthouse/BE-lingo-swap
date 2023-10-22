@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import static com.lighthouse.lingoswap.member.fixture.MemberFixture.*;
+import static com.lighthouse.lingoswap.common.fixture.MemberFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -55,8 +55,8 @@ class MemberRepositoryTest extends IntegrationTestSupport {
     @DisplayName("아이디로 유저를 조회 시 존재하지 않으면 예외가 발생한다.")
     @Test
     void failedToGetByUsername() {
+        // given & when & then
         String username = "test";
-
         assertThatThrownBy(() -> memberRepository.getByUsername(username))
                 .isInstanceOf(MemberNotFoundException.class);
     }

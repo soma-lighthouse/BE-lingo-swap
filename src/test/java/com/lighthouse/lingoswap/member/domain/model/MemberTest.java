@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static com.lighthouse.lingoswap.member.fixture.MemberFixture.user;
+import static com.lighthouse.lingoswap.common.fixture.MemberFixture.user;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class MemberTest {

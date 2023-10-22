@@ -2,13 +2,12 @@ package com.lighthouse.lingoswap.match.service;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
-import com.lighthouse.lingoswap.common.message.MessageSourceManager;
+import com.lighthouse.lingoswap.common.service.MessageService;
 import com.lighthouse.lingoswap.infra.service.CloudFrontService;
 import com.lighthouse.lingoswap.match.dto.MatchedMemberProfilesResponse;
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
-import com.lighthouse.lingoswap.member.dto.CodeNameDto;
 import com.lighthouse.lingoswap.member.dto.MemberSimpleProfile;
 import com.lighthouse.lingoswap.preferredcountry.domain.model.PreferredCountry;
 import com.lighthouse.lingoswap.preferredcountry.domain.repository.PreferredCountryRepository;
@@ -32,7 +31,7 @@ public class MatchManager {
     private final UsedLanguageRepository usedLanguageRepository;
     private final PreferredInterestsManager preferredInterestsManager;
     private final CloudFrontService cloudFrontService;
-    private final MessageSourceManager messageSourceManager;
+    private final MessageService messageService;
 
     @Transactional
     public ResponseDto<MatchedMemberProfilesResponse> read(final String uuid, final Long nextId, final int pageSize) {
@@ -63,7 +62,7 @@ public class MatchManager {
                 .map(m -> MemberSimpleProfile.of(
                         m,
                         cloudFrontService.addEndpoint(m.getProfileImageUrl()),
-                        new CodeNameDto(m.getRegion(), messageSourceManager.translate(m.getRegion())),
+                        messageService.toTranslatedCodeNameDto(m.getRegion()),
                         usedLanguageRepository.findAllByMember(m)
                 ))
                 .toList();

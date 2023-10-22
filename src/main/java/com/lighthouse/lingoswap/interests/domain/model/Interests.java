@@ -1,8 +1,10 @@
 package com.lighthouse.lingoswap.interests.domain.model;
 
+import com.lighthouse.lingoswap.category.domain.model.Category;
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -16,6 +18,12 @@ public class Interests extends BaseEntity {
     private InterestsCategory interestsCategory;
 
     private String name;
+
+    @Builder
+    public Interests(final Category category, final String name) {
+        this.interestsCategory = new InterestsCategory(category);
+        this.name = name;
+    }
 
     public String getInterestsCategory() {
         return interestsCategory.getName();

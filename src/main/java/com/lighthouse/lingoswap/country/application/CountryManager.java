@@ -1,12 +1,9 @@
 package com.lighthouse.lingoswap.country.application;
 
-import com.lighthouse.lingoswap.country.domain.model.Country;
+import com.lighthouse.lingoswap.common.service.MessageService;
 import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
 import com.lighthouse.lingoswap.country.dto.CountryFormResponse;
-import com.lighthouse.lingoswap.member.dto.CodeNameDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -14,18 +11,11 @@ import org.springframework.stereotype.Service;
 public class CountryManager {
 
     private final CountryRepository countryRepository;
-    private final MessageSource messageSource;
+    private final MessageService messageService;
 
     public CountryFormResponse readCountryForm() {
         return CountryFormResponse.from(
-                countryRepository.findAll().stream().map(this::toTranslatedCodeDto).toList());
-    }
-
-    private CodeNameDto toTranslatedCodeDto(final Country country) {
-        return CodeNameDto.builder()
-                .code(country.getCode())
-                .name(messageSource.getMessage(country.getCode(), null, LocaleContextHolder.getLocale()))
-                .build();
+                countryRepository.findAll().stream().map(c -> messageService.toTranslatedCodeNameDto(c.getCode())).toList());
     }
 
 }

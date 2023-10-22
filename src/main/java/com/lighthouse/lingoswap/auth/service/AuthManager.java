@@ -92,7 +92,7 @@ public class AuthManager {
     private void saveUsedLanguages(Member member, List<UsedLanguageInfoDto> usedLanguageInfoDtos) {
         usedLanguageInfoDtos.stream()
                 .map(dto -> {
-                    Language language = languageRepository.getLanguageByCode(dto.code());
+                    Language language = languageRepository.getByCode(dto.code());
                     return new UsedLanguage(member, language, dto.level());
                 })
                 .forEach(usedLanguageRepository::save);

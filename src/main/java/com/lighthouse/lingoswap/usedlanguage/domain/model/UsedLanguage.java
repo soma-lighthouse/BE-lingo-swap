@@ -5,6 +5,7 @@ import com.lighthouse.lingoswap.language.domain.model.Language;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -23,6 +24,7 @@ public class UsedLanguage extends BaseEntity {
     private Integer level;
     private Boolean isValid;
 
+    @Builder
     public UsedLanguage(final Member member, final Language language, final Integer level) {
         this.member = new UsedLanguageMember(member);
         this.languageInfo = new LanguageInfo(language);

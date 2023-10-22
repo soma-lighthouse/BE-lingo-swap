@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.member.dto;
+package com.lighthouse.lingoswap.common.dto;
 
 import lombok.Builder;
 

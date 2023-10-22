@@ -1,12 +1,11 @@
 package com.lighthouse.lingoswap.interests.application;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
-import com.lighthouse.lingoswap.common.message.MessageSourceManager;
+import com.lighthouse.lingoswap.common.service.MessageService;
 import com.lighthouse.lingoswap.interests.domain.model.Interests;
 import com.lighthouse.lingoswap.interests.domain.repository.InterestsRepository;
 import com.lighthouse.lingoswap.interests.dto.InterestsFormResponse;
 import com.lighthouse.lingoswap.member.dto.CategoryInterestsMapDto;
-import com.lighthouse.lingoswap.member.dto.CodeNameDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,7 @@ import static java.util.stream.Collectors.*;
 public class InterestsManager {
 
     private final InterestsRepository interestsRepository;
-    private final MessageSourceManager messageSourceManager;
+    private final MessageService messageService;
 
     public ResponseDto<InterestsFormResponse> readInterestsForm() {
         List<Interests> interests = interestsRepository.findAll();
@@ -29,10 +28,10 @@ public class InterestsManager {
                                 mapping(Interests::getName, toList())
                         ))
                         .entrySet().stream()
-                        .map(e -> new CategoryInterestsMapDto(
-                                new CodeNameDto(e.getKey(), messageSourceManager.translate(e.getKey())),
-                                e.getValue().stream().map(v -> new CodeNameDto(v, messageSourceManager.translate(v))).toList())
-                        )
+                        .map(e -> CategoryInterestsMapDto.builder()
+                                .category(messageService.toTranslatedCodeNameDto(e.getKey()))
+                                .interests(e.getValue().stream().map(messageService::toTranslatedCodeNameDto).toList())
+                                .build())
                         .toList());
         return ResponseDto.success(interestsFormResponse);
     }

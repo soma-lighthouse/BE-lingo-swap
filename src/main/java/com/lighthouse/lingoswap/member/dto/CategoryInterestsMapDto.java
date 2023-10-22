@@ -1,5 +1,6 @@
 package com.lighthouse.lingoswap.member.dto;
 
+import com.lighthouse.lingoswap.common.dto.CodeNameDto;
 import lombok.Builder;
 
 import java.util.List;
