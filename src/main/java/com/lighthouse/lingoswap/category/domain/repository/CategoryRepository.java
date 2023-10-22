@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
-    default Category getByReferenceId(final Long categoryId) {
+    default Category getByCategoryId(final Long categoryId) {
         return findById(categoryId)
                 .orElseThrow(CategoryNotFoundException::new);
     }

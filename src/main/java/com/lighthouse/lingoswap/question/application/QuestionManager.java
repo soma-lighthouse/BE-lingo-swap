@@ -35,7 +35,7 @@ public class QuestionManager {
 
     public void create(final QuestionCreateRequest questionCreateRequest) {
         Member member = memberRepository.getByUuid(questionCreateRequest.uuid());
-        Category category = categoryRepository.getByReferenceId(questionCreateRequest.categoryId());
+        Category category = categoryRepository.getByCategoryId(questionCreateRequest.categoryId());
         Question question = Question.builder()
                 .member(member)
                 .category(category)
