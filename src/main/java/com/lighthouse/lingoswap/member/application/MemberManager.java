@@ -47,12 +47,14 @@ public class MemberManager {
         List<UsedLanguage> usedLanguages = usedLanguageRepository.findAllByMember(member);
         List<CategoryInterestsMapDto> preferredInterests = toTranslatedPreferredInterestsDto(preferredInterestsRepository.findAllByMember(member));
         return MemberProfileResponse.builder()
-                .member(member)
+                .uuid(member.getUuid())
                 .profileImageUrl(cloudFrontService.addEndpoint(member.getProfileImageUrl()))
-                .currentDate(dateHolder.now())
+                .name(member.getName())
+                .age(member.calculateAge(dateHolder.now()))
+                .description(member.getDescription())
                 .region(messageService.toTranslatedCodeNameDto(member.getRegion()))
                 .preferredCountries(preferredCountries)
-                .usedLanguages(usedLanguages)
+                .usedLanguages(usedLanguages.stream().map(UsedLanguageDto::from).toList())
                 .preferredInterests(preferredInterests)
                 .build();
     }
@@ -86,13 +88,20 @@ public class MemberManager {
         List<CategoryInterestsMapDto> preferredInterests = toTranslatedPreferredInterestsDto(preferredInterestsRepository.findAllByMember(member));
         return MemberPreferenceResponse.builder()
                 .preferredCountries(preferredCountries)
-                .usedLanguages(usedLanguages)
+                .usedLanguages(usedLanguages.stream().map(UsedLanguageDto::from).toList())
                 .preferredInterests(preferredInterests)
                 .build();
     }
 
     @Transactional
-    public void updatePreference(final String uuid, final MemberPreferenceRequest memberRequest) {
+    public void updateProfile(final String uuid, final MemberUpdateProfileRequest memberUpdateProfileRequest) {
+        Member member = memberRepository.getByUuid(uuid);
+        member.changeDescription(memberUpdateProfileRequest.description());
+        member.changeProfileImageUrl(memberUpdateProfileRequest.profileImageUrl());
+    }
+
+    @Transactional
+    public void updatePreference(final String uuid, final MemberUpdatePreferenceRequest memberRequest) {
         Member member = memberRepository.getByUuid(uuid);
         updatePreferredCountries(member, memberRequest.preferredCountries());
         updateUsedLanguages(member, memberRequest.usedLanguages());
@@ -168,13 +177,6 @@ public class MemberManager {
                     .map(name -> new PreferredInterests(member, interestsRepository.getByName(name))).toList();
             preferredInterestsRepository.saveAll(additionalPreferredInterests);
         }
-    }
-
-    @Transactional
-    public void updateProfile(final String uuid, final MemberUpdateProfileRequest memberUpdateProfileRequest) {
-        Member member = memberRepository.getByUuid(uuid);
-        member.changeDescription(memberUpdateProfileRequest.description());
-        member.changeProfileImageUrl(memberUpdateProfileRequest.profileImageUrl());
     }
 
 }

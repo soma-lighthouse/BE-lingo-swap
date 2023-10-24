@@ -1,36 +1,258 @@
 package com.lighthouse.lingoswap.member.presentation;
 
-import com.lighthouse.lingoswap.common.support.IntegrationTestSupport;
+import com.lighthouse.lingoswap.ControllerTestSupport;
+import com.lighthouse.lingoswap.common.dto.CodeNameDto;
+import com.lighthouse.lingoswap.common.security.WithAuthorizedUser;
+import com.lighthouse.lingoswap.member.application.MemberManager;
+import com.lighthouse.lingoswap.member.dto.*;
+import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 
-class MemberControllerTest extends IntegrationTestSupport {
+import java.util.List;
 
+import static com.lighthouse.lingoswap.common.fixture.CategoryType.FOOD;
+import static com.lighthouse.lingoswap.common.fixture.CategoryType.GAME;
+import static com.lighthouse.lingoswap.common.fixture.CountryType.JAPAN;
+import static com.lighthouse.lingoswap.common.fixture.CountryType.KOREA;
+import static com.lighthouse.lingoswap.common.fixture.InterestsType.*;
+import static com.lighthouse.lingoswap.common.fixture.LanguageType.ENGLISH;
+import static com.lighthouse.lingoswap.common.fixture.LanguageType.KOREAN;
+import static com.lighthouse.lingoswap.common.fixture.MemberFixture.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+class MemberControllerTest extends ControllerTestSupport {
+
+    @MockBean
+    MemberManager memberManager;
+
+    @DisplayName("유저의 프로필을 조회하면 상태 코드 200을 반환한다.")
+    @WithAuthorizedUser
     @Test
-    void getPreference() {
+    void getProfile() throws Exception {
+        // given
+        MemberProfileResponse response = MemberProfileResponse.builder()
+                .uuid(USER_UUID)
+                .profileImageUrl(USER_PROFILE_IMAGE_URL)
+                .name(USER_NAME)
+                .age(USER_AGE)
+                .description(USER_DESCRIPTION)
+                .region(CodeNameDto.of(KOREA.getCode(), KOREA.getKoreanName()))
+                .preferredCountries(
+                        List.of(CodeNameDto.of(KOREA.getCode(), KOREA.getKoreanName())))
+                .usedLanguages(
+                        List.of(UsedLanguageDto.builder().code(KOREAN.getCode()).name(KOREAN.getName()).level(5).build()))
+                .preferredInterests(
+                        List.of(CategoryInterestsMapDto.builder()
+                                .category(CodeNameDto.of(FOOD.getName(), FOOD.getKoreanName()))
+                                .interests(List.of(
+                                        CodeNameDto.of(JAPANESE_FOOD.getName(), JAPANESE_FOOD.getKoreanName()),
+                                        CodeNameDto.of(CHINESE_FOOD.getName(), CHINESE_FOOD.getKoreanName())))
+                                .build()))
+                .build();
+        given(memberManager.readProfile(any())).willReturn(response);
+
+        // when & then
+        mockMvc.perform(
+                        get("/api/v1/user/{uuid}/profile", USER_UUID)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("20000"))
+                .andExpect(jsonPath("$.message").value("Request sent successfully"))
+                .andExpect(jsonPath("$.data").exists());
     }
 
+    @DisplayName("존재하지 않는 유저의 UUID로 프로필을 조회하면 상태 코드 404를 반환한다.")
+    @WithAuthorizedUser
     @Test
-    void get() {
+    void getProfileWithNotExistedMemberUuid() throws Exception {
+        // given
+        given(memberManager.readProfile(any())).willThrow(new MemberNotFoundException());
+
+        // when & then
+        mockMvc.perform(
+                        get("/api/v1/user/{uuid}/profile", USER_UUID)
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("40401"))
+                .andExpect(jsonPath("$.message").value("Couldn't find user."))
+                .andExpect(jsonPath("$.data.message").isEmpty());
     }
 
+    @DisplayName("유저의 선호 내용을 조회하면 상태 코드 200을 반환한다.")
+    @WithAuthorizedUser
     @Test
-    void patch() {
+    void getPreference() throws Exception {
+        // given
+        MemberPreferenceResponse response = MemberPreferenceResponse.builder()
+                .preferredCountries(List.of(CodeNameDto.of(KOREA.getCode(), KOREA.getKoreanName())))
+                .usedLanguages(List.of(UsedLanguageDto.builder().code(KOREAN.getCode()).name(KOREAN.getName()).level(5).build()))
+                .preferredInterests(List.of(CategoryInterestsMapDto.builder()
+                        .category(CodeNameDto.of(FOOD.getName(), FOOD.getKoreanName()))
+                        .interests(List.of(
+                                CodeNameDto.of(JAPANESE_FOOD.getName(), JAPANESE_FOOD.getKoreanName()),
+                                CodeNameDto.of(CHINESE_FOOD.getName(), CHINESE_FOOD.getKoreanName())))
+                        .build()))
+                .build();
+        given(memberManager.readPreference(any())).willReturn(response);
+
+        // when & then
+        mockMvc.perform(
+                        get("/api/v1/user/{uuid}/preference", USER_UUID)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("20000"))
+                .andExpect(jsonPath("$.message").value("Request sent successfully"))
+                .andExpect(jsonPath("$.data").exists());
     }
 
+    @DisplayName("존재하지 않는 유저의 UUID로 선호 내용을 조회하면 상태 코드 404를 반환한다.")
+    @WithAuthorizedUser
     @Test
-    void patchPreference() {
+    void getPreferenceWithNotExistedMemberUuid() throws Exception {
+        // given
+        given(memberManager.readPreference(any())).willThrow(new MemberNotFoundException());
+
+        // when & then
+        mockMvc.perform(
+                        get("/api/v1/user/{uuid}/preference", USER_UUID)
+                )
+                .andDo(print())
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code").value("40401"))
+                .andExpect(jsonPath("$.message").value("Couldn't find user."))
+                .andExpect(jsonPath("$.data.message").isEmpty());
     }
 
+    @DisplayName("유저의 프로필을 성공적으로 수정하면 상태 코드 200을 반환한다.")
+    @WithAuthorizedUser
     @Test
-    void readCountryForm() {
+    void patchProfile() throws Exception {
+        // given
+        willDoNothing()
+                .given(memberManager)
+                .updateProfile(any(), any());
+
+        MemberUpdateProfileRequest request = MemberUpdateProfileRequest.builder()
+                .description(USER_DESCRIPTION)
+                .profileImageUrl(USER_PROFILE_IMAGE_URL)
+                .build();
+
+        // when & then
+        mockMvc.perform(
+                        patch("/api/v1/user/{uuid}/profile", USER_UUID)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("20000"))
+                .andExpect(jsonPath("$.message").value("Request sent successfully"))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 
+    @DisplayName("잘못된 형식으로 유저의 프로필을 수정하면 상태 코드 400을 반환한다.")
+    @WithAuthorizedUser
     @Test
-    void readLanguageForm() {
+    void patchProfileWithWrongRequest() throws Exception {
+        // given
+        willDoNothing()
+                .given(memberManager)
+                .updateProfile(any(), any());
+
+        MemberUpdateProfileRequest request = MemberUpdateProfileRequest.builder()
+                .description(null)
+                .profileImageUrl(null)
+                .build();
+
+        // when & then
+        mockMvc.perform(
+                        patch("/api/v1/user/{uuid}/profile", USER_UUID)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
+    @DisplayName("유저의 선호 분야를 성공적으로 수정하면 상태 코드 200을 반환한다.")
+    @WithAuthorizedUser
     @Test
-    void getPreSignedUrl() {
+    void patchPreference() throws Exception {
+        // given
+        willDoNothing()
+                .given(memberManager)
+                .updatePreference(any(), any());
+
+        MemberUpdatePreferenceRequest request = MemberUpdatePreferenceRequest.builder()
+                .preferredCountries(List.of(KOREA.getCode(), JAPAN.getCode()))
+                .usedLanguages(List.of(
+                        UsedLanguageInfoDto.of(ENGLISH.getCode(), 5),
+                        UsedLanguageInfoDto.of(KOREAN.getCode(), 1)))
+                .preferredInterests(List.of(
+                        PreferredInterestsInfoDto.builder()
+                                .category(FOOD.getName())
+                                .interests(List.of(KOREAN_FOOD.getName(), CHINESE_FOOD.getName()))
+                                .build(),
+                        PreferredInterestsInfoDto.builder()
+                                .category(GAME.getName())
+                                .interests(List.of(RPG_GAME.getName(), SPORTS_GAME.getName()))
+                                .build()))
+                .build();
+
+        // when & then
+        mockMvc.perform(
+                        patch("/api/v1/user/{uuid}/preference", USER_UUID)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("20000"))
+                .andExpect(jsonPath("$.message").value("Request sent successfully"))
+                .andExpect(jsonPath("$.data").isEmpty());
+    }
+
+    @DisplayName("잘못된 형식으로 유저의 선호 분야를 수정하면 상태 코드 400을 반환한다.")
+    @WithAuthorizedUser
+    @Test
+    void patchPreferenceWithWrongRequest() throws Exception {
+        // given
+        willDoNothing()
+                .given(memberManager)
+                .updateProfile(any(), any());
+
+        MemberUpdatePreferenceRequest request = MemberUpdatePreferenceRequest.builder()
+                .preferredCountries(null)
+                .usedLanguages(null)
+                .preferredInterests(null)
+                .build();
+
+        // when & then
+        mockMvc.perform(
+                        patch("/api/v1/user/{uuid}/preference", USER_UUID)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request))
+                )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
 }

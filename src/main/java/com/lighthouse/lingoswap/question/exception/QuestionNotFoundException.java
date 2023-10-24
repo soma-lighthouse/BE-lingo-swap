@@ -2,10 +2,10 @@ package com.lighthouse.lingoswap.question.exception;
 
 public class QuestionNotFoundException extends RuntimeException {
 
-    private static final String MESSAGE = "Question not found. ID: %d";
+    private static final String MESSAGE = "Couldn't find question.";
 
-    public QuestionNotFoundException(final Long id) {
-        super(MESSAGE.formatted(id));
+    public QuestionNotFoundException() {
+        super(MESSAGE);
     }
 
 }

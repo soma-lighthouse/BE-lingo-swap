@@ -1,7 +1,8 @@
 package com.lighthouse.lingoswap.member.application;
 
+import com.lighthouse.lingoswap.IntegrationTestSupport;
 import com.lighthouse.lingoswap.common.dto.CodeNameDto;
-import com.lighthouse.lingoswap.common.support.IntegrationTestSupport;
+import com.lighthouse.lingoswap.common.util.DateHolder;
 import com.lighthouse.lingoswap.country.domain.model.Country;
 import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
 import com.lighthouse.lingoswap.interests.domain.model.Interests;
@@ -63,6 +64,9 @@ class MemberManagerTest extends IntegrationTestSupport {
     @Autowired
     private PreferredInterestsRepository preferredInterestsRepository;
 
+    @Autowired
+    private DateHolder dateHolder;
+
     @DisplayName("UUID로 유저의 프로필을 조회하면 한국어로 출력한다.")
     @Test
     void readProfile() {
@@ -83,7 +87,7 @@ class MemberManagerTest extends IntegrationTestSupport {
             softly.assertThat(actual.uuid()).isEqualTo(USER_UUID);
             softly.assertThat(actual.profileImageUrl()).isEqualTo(USER_PROFILE_ENDPOINT);
             softly.assertThat(actual.name()).isEqualTo(USER_NAME);
-            softly.assertThat(actual.age()).isEqualTo(USER_AGE);
+            softly.assertThat(actual.age()).isEqualTo(member.calculateAge(dateHolder.now()));
             softly.assertThat(actual.description()).isEqualTo(USER_DESCRIPTION);
             softly.assertThat(actual.region().code()).isEqualTo(KOREA.getCode());
             softly.assertThat(actual.region().name()).isEqualTo(KOREA.getKoreanName());
@@ -185,13 +189,33 @@ class MemberManagerTest extends IntegrationTestSupport {
         });
     }
 
+    @DisplayName("UUID로 조회한 유저의 자기 소개와 프로필 이미지 주소를 변경한다.")
+    @Test
+    void updateProfile() {
+        // given
+        memberRepository.save(user());
+
+        MemberUpdateProfileRequest request = MemberUpdateProfileRequest.builder()
+                .description("Hi")
+                .profileImageUrl("/123/abc.png")
+                .build();
+
+        // when
+        memberManager.updateProfile(USER_UUID, request);
+
+        // then
+        Member actual = memberRepository.getByUuid(USER_UUID);
+        assertThat(actual.getDescription()).isEqualTo("Hi");
+        assertThat(actual.getProfileImageUrl()).isEqualTo("/123/abc.png");
+    }
+
     @DisplayName("UUID로 조회한 유저의 선호 내용을 수정한다.")
     @Test
     void updatePreference() {
         // given
         memberRepository.save(user());
 
-        MemberPreferenceRequest request = MemberPreferenceRequest.builder()
+        MemberUpdatePreferenceRequest request = MemberUpdatePreferenceRequest.builder()
                 .preferredCountries(List.of(KOREA.getCode(), JAPAN.getCode()))
                 .usedLanguages(List.of(
                         UsedLanguageInfoDto.of(ENGLISH.getCode(), 5),
@@ -226,26 +250,6 @@ class MemberManagerTest extends IntegrationTestSupport {
                     tuple(RPG_GAME.getName(), GAME.getName()),
                     tuple(SPORTS_GAME.getName(), GAME.getName()));
         });
-    }
-
-    @DisplayName("UUID로 조회한 유저의 자기 소개와 프로필 이미지 주소를 변경한다.")
-    @Test
-    void updateProfile() {
-        // given
-        memberRepository.save(user());
-
-        MemberUpdateProfileRequest request = MemberUpdateProfileRequest.builder()
-                .description("Hi")
-                .profileImageUrl("/123/abc.png")
-                .build();
-
-        // when
-        memberManager.updateProfile(USER_UUID, request);
-
-        // then
-        Member actual = memberRepository.getByUuid(USER_UUID);
-        assertThat(actual.getDescription()).isEqualTo("Hi");
-        assertThat(actual.getProfileImageUrl()).isEqualTo("/123/abc.png");
     }
 
 }

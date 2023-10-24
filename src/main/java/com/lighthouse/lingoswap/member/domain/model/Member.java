@@ -19,7 +19,7 @@ public class Member extends BaseEntity {
     @Embedded
     private AuthDetails authDetails;
 
-    @Column(length = 2)
+    @Column(name = "region_id")
     private String region;
 
     @Enumerated(EnumType.STRING)
@@ -28,6 +28,8 @@ public class Member extends BaseEntity {
     private LocalDate birthday;
     private String description;
     private String name;
+
+    @Column(name = "profile_image_uri")
     private String profileImageUrl;
 
     @Builder

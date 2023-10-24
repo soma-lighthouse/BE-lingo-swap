@@ -1,9 +1,12 @@
 package com.lighthouse.lingoswap.member.dto;
 
 import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
+import org.hibernate.validator.constraints.Range;
 
-public record UsedLanguageInfoDto(String code, Integer level) {
+public record UsedLanguageInfoDto(@NotBlank String code,
+                                  @Range(min = 1, max = 5) Integer level) {
 
     @Builder
     public static UsedLanguageInfoDto of(final String code, final Integer level) {

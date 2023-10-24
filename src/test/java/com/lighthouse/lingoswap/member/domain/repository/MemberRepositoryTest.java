@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.member.domain.repository;
 
-import com.lighthouse.lingoswap.common.support.IntegrationTestSupport;
+import com.lighthouse.lingoswap.IntegrationTestSupport;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
@@ -33,9 +33,9 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("UUID로 유저를 조회 시 존재하지 않으면 예외가 발생한다.")
     @Test
-    void failedToGetByUuid() {
+    void getByUuidWithNotExistedUuid() {
         // given & when & then
-        assertThatThrownBy(() -> memberRepository.getByUuid("1"))
+        assertThatThrownBy(() -> memberRepository.getByUuid(USER_UUID))
                 .isInstanceOf(MemberNotFoundException.class);
     }
 
@@ -54,10 +54,9 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("아이디로 유저를 조회 시 존재하지 않으면 예외가 발생한다.")
     @Test
-    void failedToGetByUsername() {
+    void getByUsernameWithNotExistedUuid() {
         // given & when & then
-        String username = "test";
-        assertThatThrownBy(() -> memberRepository.getByUsername(username))
+        assertThatThrownBy(() -> memberRepository.getByUsername(USER_USERNAME))
                 .isInstanceOf(MemberNotFoundException.class);
     }
 

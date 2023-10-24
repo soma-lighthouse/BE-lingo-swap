@@ -14,12 +14,12 @@ public class ErrorResponseService {
 
     private final MessageService messageService;
 
-    public ResponseEntity<ResponseDto<ErrorMessage>> build(ErrorCode errorCode) {
+    public ResponseEntity<ResponseDto<ErrorMessage>> buildResponse(final String message, final ErrorCode errorCode) {
         HttpStatus status = errorCode.getStatus();
         String code = errorCode.getCode();
         String key = errorCode.getKey();
         return ResponseEntity.status(status)
-                .body(ResponseDto.error(code, null, ErrorMessage.of(messageService.translate(key))));
+                .body(ResponseDto.error(code, message, ErrorMessage.of(messageService.translate(key))));
     }
 
 }

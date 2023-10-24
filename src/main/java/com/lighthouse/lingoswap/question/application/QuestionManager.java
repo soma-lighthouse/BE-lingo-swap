@@ -13,8 +13,6 @@ import com.lighthouse.lingoswap.question.domain.model.Question;
 import com.lighthouse.lingoswap.question.domain.repository.QuestionQueryRepository;
 import com.lighthouse.lingoswap.question.domain.repository.QuestionRepository;
 import com.lighthouse.lingoswap.question.dto.*;
-import com.lighthouse.lingoswap.question.exception.LikeMemberNotFoundException;
-import com.lighthouse.lingoswap.question.exception.QuestionNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 @Service
 public class QuestionManager {
 
@@ -33,6 +31,7 @@ public class QuestionManager {
     private final LikeMemberRepository likeMemberRepository;
     private final CloudFrontService cloudFrontService;
 
+    @Transactional
     public void create(final QuestionCreateRequest questionCreateRequest) {
         Member member = memberRepository.getByUuid(questionCreateRequest.uuid());
         Category category = categoryRepository.getByCategoryId(questionCreateRequest.categoryId());
@@ -57,8 +56,9 @@ public class QuestionManager {
         return ResponseDto.success(new QuestionListResponse(questions.nextId(), results));
     }
 
+    @Transactional
     public void updateLike(final String memberUuid, final Long questionId) {
-        Question question = questionRepository.findById(questionId).orElseThrow(() -> new QuestionNotFoundException(questionId));
+        Question question = questionRepository.getByQuestionId(questionId);
         Member member = memberRepository.getByUuid(memberUuid);
 
         LikeMember likeMember = LikeMember.of(member, question);
@@ -67,13 +67,12 @@ public class QuestionManager {
         question.addOneLike();
         questionRepository.save(question);
     }
-
+    
+    @Transactional
     public void deleteLike(final String memberUuid, final Long questionId) {
-        Question question = questionRepository.findById(questionId)
-                .orElseThrow(() -> new QuestionNotFoundException(questionId));
+        Question question = questionRepository.getByQuestionId(questionId);
         Member member = memberRepository.getByUuid(memberUuid);
-        LikeMember likeMember = likeMemberRepository.findByMemberAndQuestion(member, question)
-                .orElseThrow(() -> new LikeMemberNotFoundException(member.getUsername(), question.getId()));
+        LikeMember likeMember = likeMemberRepository.getByMemberAndQuestion(member, question);
         likeMemberRepository.delete(likeMember);
 
         question.subtractOneLike();

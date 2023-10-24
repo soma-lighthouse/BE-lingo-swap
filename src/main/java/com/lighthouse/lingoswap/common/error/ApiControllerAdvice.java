@@ -31,13 +31,13 @@ public class ApiControllerAdvice {
     @ExceptionHandler(AuthenticationException.class)
     private ResponseEntity<ResponseDto<ErrorMessage>> handleAuthenticationException(final RuntimeException ex) {
         log.error("{}", ex.getMessage());
-        return errorResponseService.build(FORBIDDEN_ERROR);
+        return errorResponseService.buildResponse(ex.getMessage(), FORBIDDEN_ERROR);
     }
 
     @ExceptionHandler(DuplicateMemberException.class)
     private ResponseEntity<ResponseDto<ErrorMessage>> handleDuplicateMemberException(final RuntimeException ex) {
         log.error("{}", ex.getMessage());
-        return errorResponseService.build(DUPLICATE_USER_ERROR);
+        return errorResponseService.buildResponse(ex.getMessage(), DUPLICATE_USER_ERROR);
     }
 
     @ExceptionHandler({
@@ -47,7 +47,7 @@ public class ApiControllerAdvice {
     })
     private ResponseEntity<ResponseDto<ErrorMessage>> handleLoginUserNotFoundException(final RuntimeException ex) {
         log.error("{}", ex.getMessage());
-        return errorResponseService.build(NOT_FOUND_ERROR);
+        return errorResponseService.buildResponse(ex.getMessage(), NOT_FOUND_ERROR);
     }
 
     @ExceptionHandler({
@@ -56,7 +56,7 @@ public class ApiControllerAdvice {
     })
     private ResponseEntity<ResponseDto<ErrorMessage>> handleDuplicateLikeException(final RuntimeException ex) {
         log.error("{}", ex.getMessage());
-        return errorResponseService.build(VALIDATION_ERROR);
+        return errorResponseService.buildResponse(ex.getMessage(), VALIDATION_ERROR);
     }
 
 }

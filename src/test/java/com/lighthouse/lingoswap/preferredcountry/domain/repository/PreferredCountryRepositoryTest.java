@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.preferredcountry.domain.repository;
 
-import com.lighthouse.lingoswap.common.support.IntegrationTestSupport;
+import com.lighthouse.lingoswap.IntegrationTestSupport;
 import com.lighthouse.lingoswap.country.domain.model.Country;
 import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
 import com.lighthouse.lingoswap.member.domain.model.Member;

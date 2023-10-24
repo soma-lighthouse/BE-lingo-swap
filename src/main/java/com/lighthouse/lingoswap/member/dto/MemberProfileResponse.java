@@ -1,11 +1,8 @@
 package com.lighthouse.lingoswap.member.dto;
 
 import com.lighthouse.lingoswap.common.dto.CodeNameDto;
-import com.lighthouse.lingoswap.member.domain.model.Member;
-import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
 import lombok.Builder;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public record MemberProfileResponse(String uuid,
@@ -19,22 +16,24 @@ public record MemberProfileResponse(String uuid,
                                     List<CategoryInterestsMapDto> preferredInterests) {
 
     @Builder
-    public static MemberProfileResponse of(final Member member,
+    public static MemberProfileResponse of(final String uuid,
                                            final String profileImageUrl,
-                                           final LocalDate currentDate,
+                                           final String name,
+                                           final int age,
+                                           final String description,
                                            final CodeNameDto region,
                                            final List<CodeNameDto> preferredCountries,
-                                           final List<UsedLanguage> usedLanguages,
+                                           final List<UsedLanguageDto> usedLanguages,
                                            final List<CategoryInterestsMapDto> preferredInterests) {
         return new MemberProfileResponse(
-                member.getUuid(),
+                uuid,
                 profileImageUrl,
-                member.getName(),
-                member.calculateAge(currentDate),
-                member.getDescription(),
+                name,
+                age,
+                description,
                 region,
                 preferredCountries,
-                usedLanguages.stream().map(UsedLanguageDto::from).toList(),
+                usedLanguages,
                 preferredInterests
         );
     }

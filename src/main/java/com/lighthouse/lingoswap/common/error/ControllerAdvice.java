@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -27,7 +28,7 @@ public class ControllerAdvice {
     @ExceptionHandler(Exception.class)
     private ResponseEntity<ResponseDto<ErrorMessage>> handleUnexpectedException(final Exception ex) {
         log.error("{}", ex.getMessage());
-        return errorResponseService.build(SERVER_ERROR);
+        return errorResponseService.buildResponse(null, SERVER_ERROR);
     }
 
     @ExceptionHandler({
@@ -36,7 +37,7 @@ public class ControllerAdvice {
     })
     private ResponseEntity<ResponseDto<ErrorMessage>> handleForbiddenException(final Exception ex) {
         log.error("{}", ex.getMessage());
-        return errorResponseService.build(FORBIDDEN_ERROR);
+        return errorResponseService.buildResponse(null, FORBIDDEN_ERROR);
     }
 
     @ExceptionHandler({
@@ -45,7 +46,13 @@ public class ControllerAdvice {
     })
     private ResponseEntity<ResponseDto<ErrorMessage>> handleMethodArgumentNotValidException(final Exception ex) {
         log.error("{}", ex.getMessage());
-        return errorResponseService.build(VALIDATION_ERROR);
+        return errorResponseService.buildResponse(null, VALIDATION_ERROR);
+    }
+
+    @ExceptionHandler(BindException.class)
+    private ResponseEntity<ResponseDto<ErrorMessage>> handleBindException(final BindException ex) {
+        log.error("{}", ex.getAllErrors().get(0));
+        return errorResponseService.buildResponse(ex.getAllErrors().get(0).getDefaultMessage(), VALIDATION_ERROR);
     }
 
 }
