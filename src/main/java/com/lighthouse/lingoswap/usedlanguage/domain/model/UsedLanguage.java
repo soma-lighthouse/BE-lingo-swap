@@ -22,7 +22,6 @@ public class UsedLanguage extends BaseEntity {
     private LanguageInfo languageInfo;
 
     private Integer level;
-    private Boolean isValid;
 
     @Builder
     public UsedLanguage(final Member member, final Language language, final Integer level) {

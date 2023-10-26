@@ -7,11 +7,16 @@ import java.time.LocalDate;
 
 @Profile({"local", "dev"})
 @Component
-public class LocalDateHolder implements DateHolder {
+public class LocalTimeHolder implements TimeHolder {
 
     @Override
     public LocalDate now() {
         return LocalDate.now();
+    }
+
+    @Override
+    public long currentTimeMillis() {
+        return System.currentTimeMillis();
     }
 
 }

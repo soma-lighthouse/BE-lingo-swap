@@ -16,10 +16,10 @@ public class ErrorResponseService {
 
     public ResponseEntity<ResponseDto<ErrorMessage>> buildResponse(final String message, final ErrorCode errorCode) {
         HttpStatus status = errorCode.getStatus();
-        String code = errorCode.getCode();
-        String key = errorCode.getKey();
+        String statusCode = errorCode.getStatusCode();
+        String messageCode = errorCode.getMessageCode();
         return ResponseEntity.status(status)
-                .body(ResponseDto.error(code, message, ErrorMessage.of(messageService.translate(key))));
+                .body(ResponseDto.error(statusCode, message, ErrorMessage.of(messageService.translate(messageCode))));
     }
 
 }

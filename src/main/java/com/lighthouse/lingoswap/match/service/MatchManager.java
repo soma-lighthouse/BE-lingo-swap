@@ -62,7 +62,7 @@ public class MatchManager {
                 .map(m -> MemberSimpleProfile.of(
                         m,
                         cloudFrontService.addEndpoint(m.getProfileImageUrl()),
-                        messageService.toTranslatedCodeNameDto(m.getRegion()),
+                        messageService.toTranslatedCountryCodeNameDto(m.getRegion()),
                         usedLanguageRepository.findAllByMember(m)
                 ))
                 .toList();

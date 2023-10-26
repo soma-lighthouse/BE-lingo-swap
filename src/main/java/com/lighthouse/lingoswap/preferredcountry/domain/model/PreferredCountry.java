@@ -21,8 +21,6 @@ public class PreferredCountry extends BaseEntity {
     @Embedded
     private CountryInfo country;
 
-    private Boolean isValid;
-
     @Builder
     public PreferredCountry(final Member member, final Country country) {
         this.member = new PreferredCountryMember(member);

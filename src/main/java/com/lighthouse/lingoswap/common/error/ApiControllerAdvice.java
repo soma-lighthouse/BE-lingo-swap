@@ -6,7 +6,7 @@ import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.service.ErrorResponseService;
 import com.lighthouse.lingoswap.member.exception.DuplicateMemberException;
 import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
-import com.lighthouse.lingoswap.question.exception.DuplicateLikeException;
+import com.lighthouse.lingoswap.question.exception.DuplicateLikeMemberException;
 import com.lighthouse.lingoswap.question.exception.LikeMemberNotFoundException;
 import com.lighthouse.lingoswap.question.exception.QuestionNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +51,7 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler({
-            DuplicateLikeException.class,
+            DuplicateLikeMemberException.class,
             LikeMemberNotFoundException.class
     })
     private ResponseEntity<ResponseDto<ErrorMessage>> handleDuplicateLikeException(final RuntimeException ex) {

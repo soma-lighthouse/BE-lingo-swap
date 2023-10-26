@@ -23,8 +23,6 @@ public class MatchedMember extends BaseEntity {
     @JoinColumn(name = "to_member_id")
     private Member toMember;
 
-    private Boolean isValid;
-
     public MatchedMember(Member fromMember, Member toMember) {
         this.fromMember = fromMember;
         this.toMember = toMember;

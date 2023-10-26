@@ -23,13 +23,13 @@ public enum ErrorCode {
     QUESTION_LIST_ERROR("50005", INTERNAL_SERVER_ERROR),
     PROFILE_ERROR("50006", INTERNAL_SERVER_ERROR);
 
-    private static final String ERROR_MESSAGE_KEY_FORMAT = "error.%s.message";
+    private static final String ERROR_MESSAGE_CODE_FORMAT = "error.%s.message";
 
-    private final String code;
+    private final String statusCode;
     private final HttpStatus status;
 
-    public String getKey() {
-        return ERROR_MESSAGE_KEY_FORMAT.formatted(code);
+    public String getMessageCode() {
+        return ERROR_MESSAGE_CODE_FORMAT.formatted(statusCode);
     }
 
 }

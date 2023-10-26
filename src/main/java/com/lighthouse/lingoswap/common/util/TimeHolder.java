@@ -2,8 +2,10 @@ package com.lighthouse.lingoswap.common.util;
 
 import java.time.LocalDate;
 
-public interface DateHolder {
+public interface TimeHolder {
 
     LocalDate now();
+
+    long currentTimeMillis();
 
 }

@@ -18,7 +18,7 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    private static final long ONE_WEEK_IN_MS = 604800000;
+    private static final long ONE_WEEK_IN_MS = 604_800_000;
 
     private final JwtParser jwtParser;
     private final String secretKey;

@@ -3,12 +3,10 @@ package com.lighthouse.lingoswap.member.presentation;
 import com.lighthouse.lingoswap.ControllerTestSupport;
 import com.lighthouse.lingoswap.common.dto.CodeNameDto;
 import com.lighthouse.lingoswap.common.security.WithAuthorizedUser;
-import com.lighthouse.lingoswap.member.application.MemberManager;
 import com.lighthouse.lingoswap.member.dto.*;
 import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
 import java.util.List;
@@ -22,6 +20,7 @@ import static com.lighthouse.lingoswap.common.fixture.LanguageType.ENGLISH;
 import static com.lighthouse.lingoswap.common.fixture.LanguageType.KOREAN;
 import static com.lighthouse.lingoswap.common.fixture.MemberFixture.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -32,9 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 class MemberControllerTest extends ControllerTestSupport {
-
-    @MockBean
-    MemberManager memberManager;
 
     @DisplayName("유저의 프로필을 조회하면 상태 코드 200을 반환한다.")
     @WithAuthorizedUser
@@ -60,7 +56,7 @@ class MemberControllerTest extends ControllerTestSupport {
                                         CodeNameDto.of(CHINESE_FOOD.getName(), CHINESE_FOOD.getKoreanName())))
                                 .build()))
                 .build();
-        given(memberManager.readProfile(any())).willReturn(response);
+        given(memberManager.readProfile(anyString())).willReturn(response);
 
         // when & then
         mockMvc.perform(
@@ -78,7 +74,7 @@ class MemberControllerTest extends ControllerTestSupport {
     @Test
     void getProfileWithNotExistedMemberUuid() throws Exception {
         // given
-        given(memberManager.readProfile(any())).willThrow(new MemberNotFoundException());
+        given(memberManager.readProfile(anyString())).willThrow(new MemberNotFoundException());
 
         // when & then
         mockMvc.perform(
@@ -106,7 +102,7 @@ class MemberControllerTest extends ControllerTestSupport {
                                 CodeNameDto.of(CHINESE_FOOD.getName(), CHINESE_FOOD.getKoreanName())))
                         .build()))
                 .build();
-        given(memberManager.readPreference(any())).willReturn(response);
+        given(memberManager.readPreference(anyString())).willReturn(response);
 
         // when & then
         mockMvc.perform(
@@ -124,7 +120,7 @@ class MemberControllerTest extends ControllerTestSupport {
     @Test
     void getPreferenceWithNotExistedMemberUuid() throws Exception {
         // given
-        given(memberManager.readPreference(any())).willThrow(new MemberNotFoundException());
+        given(memberManager.readPreference(anyString())).willThrow(new MemberNotFoundException());
 
         // when & then
         mockMvc.perform(
@@ -144,7 +140,7 @@ class MemberControllerTest extends ControllerTestSupport {
         // given
         willDoNothing()
                 .given(memberManager)
-                .updateProfile(any(), any());
+                .updateProfile(anyString(), any(MemberUpdateProfileRequest.class));
 
         MemberUpdateProfileRequest request = MemberUpdateProfileRequest.builder()
                 .description(USER_DESCRIPTION)
@@ -154,7 +150,6 @@ class MemberControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         patch("/api/v1/user/{uuid}/profile", USER_UUID)
-                                .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -168,11 +163,11 @@ class MemberControllerTest extends ControllerTestSupport {
     @DisplayName("잘못된 형식으로 유저의 프로필을 수정하면 상태 코드 400을 반환한다.")
     @WithAuthorizedUser
     @Test
-    void patchProfileWithWrongRequest() throws Exception {
+    void patchProfileWithBadRequest() throws Exception {
         // given
         willDoNothing()
                 .given(memberManager)
-                .updateProfile(any(), any());
+                .updateProfile(anyString(), any(MemberUpdateProfileRequest.class));
 
         MemberUpdateProfileRequest request = MemberUpdateProfileRequest.builder()
                 .description(null)
@@ -182,7 +177,6 @@ class MemberControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         patch("/api/v1/user/{uuid}/profile", USER_UUID)
-                                .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -197,7 +191,7 @@ class MemberControllerTest extends ControllerTestSupport {
         // given
         willDoNothing()
                 .given(memberManager)
-                .updatePreference(any(), any());
+                .updatePreference(anyString(), any(MemberUpdatePreferenceRequest.class));
 
         MemberUpdatePreferenceRequest request = MemberUpdatePreferenceRequest.builder()
                 .preferredCountries(List.of(KOREA.getCode(), JAPAN.getCode()))
@@ -218,7 +212,6 @@ class MemberControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         patch("/api/v1/user/{uuid}/preference", USER_UUID)
-                                .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )
@@ -232,11 +225,11 @@ class MemberControllerTest extends ControllerTestSupport {
     @DisplayName("잘못된 형식으로 유저의 선호 분야를 수정하면 상태 코드 400을 반환한다.")
     @WithAuthorizedUser
     @Test
-    void patchPreferenceWithWrongRequest() throws Exception {
+    void patchPreferenceWithBadRequest() throws Exception {
         // given
         willDoNothing()
                 .given(memberManager)
-                .updateProfile(any(), any());
+                .updatePreference(anyString(), any(MemberUpdatePreferenceRequest.class));
 
         MemberUpdatePreferenceRequest request = MemberUpdatePreferenceRequest.builder()
                 .preferredCountries(null)
@@ -247,7 +240,6 @@ class MemberControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         patch("/api/v1/user/{uuid}/preference", USER_UUID)
-                                .accept(MediaType.APPLICATION_JSON)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 )

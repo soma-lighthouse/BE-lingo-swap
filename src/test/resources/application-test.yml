@@ -45,10 +45,10 @@ sendbird:
 
 aws:
   credentials:
-    access-key:
-    secret-key:
+    access-key: 1234
+    secret-key: 1234
   region:
-    static:
+    static: abcd
   s3:
     bucket-name: images
     profile:

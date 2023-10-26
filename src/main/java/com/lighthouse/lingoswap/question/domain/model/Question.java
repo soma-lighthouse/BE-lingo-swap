@@ -25,17 +25,13 @@ public class Question extends BaseEntity {
     private Like like;
 
     private String contents;
-    private Boolean isValid;
-    private Boolean isRecommended;
 
     @Builder
-    public Question(final Member member, final Category category, final String contents) {
+    public Question(final Member member, final Category category, final Long like, final String contents) {
         this.questionCreatedMember = new QuestionCreatedMember(member);
         this.questionCategory = new QuestionCategory(category);
         this.contents = contents;
-        this.like = new Like();
-        this.isValid = true;
-        this.isRecommended = false;
+        this.like = new Like(like);
     }
 
     public Long getId() {

@@ -23,8 +23,6 @@ public class PreferredInterests extends BaseEntity {
     @JoinColumn(name = "interests_id")
     private Interests interests;
 
-    private Boolean isValid;
-
     @Builder
     public PreferredInterests(Member member, Interests interests) {
         this.member = member;

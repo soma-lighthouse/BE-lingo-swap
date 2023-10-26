@@ -2,7 +2,7 @@ package com.lighthouse.lingoswap.member.application;
 
 import com.lighthouse.lingoswap.common.dto.CodeNameDto;
 import com.lighthouse.lingoswap.common.service.MessageService;
-import com.lighthouse.lingoswap.common.util.DateHolder;
+import com.lighthouse.lingoswap.common.util.TimeHolder;
 import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
 import com.lighthouse.lingoswap.infra.service.CloudFrontService;
 import com.lighthouse.lingoswap.interests.domain.repository.InterestsRepository;
@@ -39,7 +39,7 @@ public class MemberManager {
     private final InterestsRepository interestsRepository;
     private final CloudFrontService cloudFrontService;
     private final MessageService messageService;
-    private final DateHolder dateHolder;
+    private final TimeHolder timeHolder;
 
     public MemberProfileResponse readProfile(final String uuid) {
         Member member = memberRepository.getByUuid(uuid);
@@ -50,9 +50,9 @@ public class MemberManager {
                 .uuid(member.getUuid())
                 .profileImageUrl(cloudFrontService.addEndpoint(member.getProfileImageUrl()))
                 .name(member.getName())
-                .age(member.calculateAge(dateHolder.now()))
+                .age(member.calculateAge(timeHolder.now()))
                 .description(member.getDescription())
-                .region(messageService.toTranslatedCodeNameDto(member.getRegion()))
+                .region(messageService.toTranslatedCountryCodeNameDto(member.getRegion()))
                 .preferredCountries(preferredCountries)
                 .usedLanguages(usedLanguages.stream().map(UsedLanguageDto::from).toList())
                 .preferredInterests(preferredInterests)
@@ -61,7 +61,7 @@ public class MemberManager {
 
     private List<CodeNameDto> toTranslatedPreferredCountryDto(final List<PreferredCountry> preferredCountries) {
         return preferredCountries.stream()
-                .map(c -> messageService.toTranslatedCodeNameDto(c.getCode()))
+                .map(c -> messageService.toTranslatedCountryCodeNameDto(c.getCode()))
                 .toList();
     }
 
@@ -72,10 +72,10 @@ public class MemberManager {
         return interestsMap.entrySet()
                 .stream()
                 .map(entry -> CategoryInterestsMapDto.builder()
-                        .category(messageService.toTranslatedCodeNameDto(entry.getKey()))
+                        .category(messageService.toTranslatedCategoryCodeNameDto(entry.getKey()))
                         .interests(entry.getValue()
                                 .stream()
-                                .map(messageService::toTranslatedCodeNameDto)
+                                .map(messageService::toTranslatedInterestsCodeNameDto)
                                 .toList())
                         .build())
                 .toList();

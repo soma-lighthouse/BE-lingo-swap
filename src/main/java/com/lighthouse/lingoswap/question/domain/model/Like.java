@@ -13,7 +13,7 @@ class Like {
     @Column(name = "likes")
     private Long value = 0L;
 
-    private Like(final Long value) {
+    Like(final Long value) {
         this.value = value;
     }
 
@@ -22,12 +22,12 @@ class Like {
     }
 
     Like addOneLike() {
-        return new Like(value++);
+        return new Like(value + 1);
     }
 
     Like subtractOneLike() {
         validateRange();
-        return new Like(value--);
+        return new Like(value - 1);
     }
 
     private void validateRange() {

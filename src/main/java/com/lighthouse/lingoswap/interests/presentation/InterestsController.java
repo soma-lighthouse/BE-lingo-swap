@@ -14,9 +14,9 @@ public class InterestsController {
 
     private final InterestsManager interestsManager;
 
-    @GetMapping("/form/interests")
-    public ResponseEntity<ResponseDto<InterestsFormResponse>> getInterestsForm() {
-        return ResponseEntity.ok(interestsManager.readInterestsForm());
+    @GetMapping("/api/v1/user/form/interests")
+    public ResponseEntity<ResponseDto<InterestsFormResponse>> getForm() {
+        return ResponseEntity.ok(ResponseDto.success((interestsManager.readForm())));
     }
 
 }

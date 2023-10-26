@@ -15,9 +15,9 @@ public class LanguageManager {
 
     private final LanguageRepository languageRepository;
 
-    public LanguageFormResponse readLanguageForm() {
+    public LanguageFormResponse readForm() {
         List<Language> languages = languageRepository.findAll();
-        List<CodeNameDto> dto = languages.stream().map(l -> new CodeNameDto(l.getCode(), l.getName())).toList();
+        List<CodeNameDto> dto = languages.stream().map(l -> CodeNameDto.of(l.getCode(), l.getName())).toList();
         return LanguageFormResponse.from(dto);
     }
 

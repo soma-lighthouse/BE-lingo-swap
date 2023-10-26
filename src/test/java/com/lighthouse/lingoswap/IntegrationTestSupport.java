@@ -1,8 +1,7 @@
 package com.lighthouse.lingoswap;
 
 import com.lighthouse.lingoswap.chat.service.SendbirdService;
-import com.lighthouse.lingoswap.common.util.DateHolder;
-import com.lighthouse.lingoswap.infra.service.S3Service;
+import com.lighthouse.lingoswap.common.util.TimeHolder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -12,13 +11,10 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 public abstract class IntegrationTestSupport {
 
-    @Autowired
-    protected DateHolder dateHolder;
-
     @MockBean
     protected SendbirdService sendbirdService;
 
-    @MockBean
-    protected S3Service s3Service;
+    @Autowired
+    protected TimeHolder timeHolder;
 
 }

@@ -6,4 +6,8 @@ import java.util.List;
 
 public record InterestsFormResponse(List<CategoryInterestsMapDto> categoryInterestsMapDtos) {
 
+    public static InterestsFormResponse from(final List<CategoryInterestsMapDto> categoryInterestsMapDtos) {
+        return new InterestsFormResponse(categoryInterestsMapDtos);
+    }
+
 }

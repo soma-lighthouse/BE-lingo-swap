@@ -2,7 +2,7 @@ package com.lighthouse.lingoswap.member.application;
 
 import com.lighthouse.lingoswap.IntegrationTestSupport;
 import com.lighthouse.lingoswap.common.dto.CodeNameDto;
-import com.lighthouse.lingoswap.common.util.DateHolder;
+import com.lighthouse.lingoswap.common.util.TimeHolder;
 import com.lighthouse.lingoswap.country.domain.model.Country;
 import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
 import com.lighthouse.lingoswap.interests.domain.model.Interests;
@@ -21,6 +21,7 @@ import com.lighthouse.lingoswap.usedlanguage.domain.repository.UsedLanguageRepos
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -65,13 +66,13 @@ class MemberManagerTest extends IntegrationTestSupport {
     private PreferredInterestsRepository preferredInterestsRepository;
 
     @Autowired
-    private DateHolder dateHolder;
+    private TimeHolder timeHolder;
 
     @DisplayName("UUID로 유저의 프로필을 조회하면 한국어로 출력한다.")
     @Test
     void readProfile() {
         // given
-        Locale.setDefault(Locale.KOREAN);
+        LocaleContextHolder.setLocale(Locale.KOREAN);
 
         Member member = memberRepository.save(user());
         savePreferredCountries(member);
@@ -83,11 +84,10 @@ class MemberManagerTest extends IntegrationTestSupport {
 
         // then
         assertSoftly(softly -> {
-            softly.assertThat(actual).isInstanceOf(MemberProfileResponse.class);
             softly.assertThat(actual.uuid()).isEqualTo(USER_UUID);
             softly.assertThat(actual.profileImageUrl()).isEqualTo(USER_PROFILE_ENDPOINT);
             softly.assertThat(actual.name()).isEqualTo(USER_NAME);
-            softly.assertThat(actual.age()).isEqualTo(member.calculateAge(dateHolder.now()));
+            softly.assertThat(actual.age()).isEqualTo(member.calculateAge(timeHolder.now()));
             softly.assertThat(actual.description()).isEqualTo(USER_DESCRIPTION);
             softly.assertThat(actual.region().code()).isEqualTo(KOREA.getCode());
             softly.assertThat(actual.region().name()).isEqualTo(KOREA.getKoreanName());
@@ -150,7 +150,7 @@ class MemberManagerTest extends IntegrationTestSupport {
     @Test
     void readPreference() {
         // given
-        Locale.setDefault(Locale.KOREAN);
+        LocaleContextHolder.setLocale(Locale.KOREAN);
 
         Member member = memberRepository.save(user());
         savePreferredCountries(member);
@@ -162,7 +162,6 @@ class MemberManagerTest extends IntegrationTestSupport {
 
         // then
         assertSoftly(softly -> {
-            softly.assertThat(actual).isInstanceOf(MemberPreferenceResponse.class);
             softly.assertThat(actual.preferredCountries())
                     .extracting("code", "name")
                     .containsExactlyInAnyOrder(

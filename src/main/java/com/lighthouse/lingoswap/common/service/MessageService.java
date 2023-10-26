@@ -11,16 +11,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class MessageService {
 
+    private static final String COUNTRY_MESSAGE_CODE_FORMAT = "country.%s";
+    private static final String CATEGORY_MESSAGE_CODE_FORMAT = "category.%s";
+    private static final String INTERESTS_MESSAGE_CODE_FORMAT = "interests.%s";
+
     private final MessageSource messageSource;
 
-    public String translate(final String key) {
-        return messageSource.getMessage(key, null, LocaleContextHolder.getLocale());
+    public String translate(final String code) {
+        return messageSource.getMessage(code, null, LocaleContextHolder.getLocale());
     }
 
-    public CodeNameDto toTranslatedCodeNameDto(final String code) {
+    public CodeNameDto toTranslatedCountryCodeNameDto(final String code) {
         return CodeNameDto.builder()
                 .code(code)
-                .name(translate(code))
+                .name(translate(COUNTRY_MESSAGE_CODE_FORMAT.formatted(code)))
+                .build();
+    }
+
+    public CodeNameDto toTranslatedCategoryCodeNameDto(final String code) {
+        return CodeNameDto.builder()
+                .code(code)
+                .name(translate(CATEGORY_MESSAGE_CODE_FORMAT.formatted(code)))
+                .build();
+    }
+
+    public CodeNameDto toTranslatedInterestsCodeNameDto(final String code) {
+        return CodeNameDto.builder()
+                .code(code)
+                .name(translate(INTERESTS_MESSAGE_CODE_FORMAT.formatted(code)))
                 .build();
     }
 

@@ -5,35 +5,34 @@ import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.question.domain.model.Question;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Getter;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Getter
 @Entity
 public class LikeMember extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Embedded
+    private LikedMember member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "question_id")
-    private Question question;
+    @Embedded
+    private LikedQuestion question;
 
-    private Boolean isValid;
-
-    private LikeMember(final Member member, final Question question) {
-        this.member = member;
-        this.question = question;
-        this.isValid = Boolean.FALSE;
+    @Builder
+    public LikeMember(final Member member, final Question question) {
+        this.member = new LikedMember(member);
+        this.question = new LikedQuestion(question);
     }
 
-    public static LikeMember of(final Member member, final Question question) {
-        return new LikeMember(member, question);
+    public Long getMemberId() {
+        return member.getMemberId();
+    }
+
+    public Long getQuestionId() {
+        return question.getQuestionId();
     }
 
 }
