@@ -39,7 +39,6 @@ public class MemberController {
     @PatchMapping("/{uuid}/preference")
     public ResponseEntity<ResponseDto<Void>> patchPreference(@PathVariable final String uuid,
                                                              @Valid @RequestBody final MemberUpdatePreferenceRequest memberUpdatePreferenceRequest) {
-        System.out.println(memberUpdatePreferenceRequest);
         memberManager.updatePreference(uuid, memberUpdatePreferenceRequest);
         return ResponseEntity.ok(ResponseDto.noData());
     }

@@ -1,8 +1,8 @@
 package com.lighthouse.lingoswap.auth.config;
 
-import com.lighthouse.lingoswap.auth.entity.TokenPair;
-import com.lighthouse.lingoswap.auth.service.AuthService;
-import com.lighthouse.lingoswap.auth.service.TokenPairService;
+import com.lighthouse.lingoswap.auth.application.AuthService;
+import com.lighthouse.lingoswap.auth.application.TokenPairService;
+import com.lighthouse.lingoswap.auth.domain.model.TokenPair;
 import com.lighthouse.lingoswap.member.domain.model.AuthDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;

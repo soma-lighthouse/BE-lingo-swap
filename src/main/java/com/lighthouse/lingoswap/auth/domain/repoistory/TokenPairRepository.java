@@ -1,6 +1,6 @@
-package com.lighthouse.lingoswap.auth.repoistory;
+package com.lighthouse.lingoswap.auth.domain.repoistory;
 
-import com.lighthouse.lingoswap.auth.entity.TokenPair;
+import com.lighthouse.lingoswap.auth.domain.model.TokenPair;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

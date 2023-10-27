@@ -1,5 +1,7 @@
 package com.lighthouse.lingoswap.auth.dto;
 
+import lombok.Builder;
+
 import java.io.Serializable;
 
 public record TokenPairInfoResponse(String accessToken,
@@ -7,6 +9,7 @@ public record TokenPairInfoResponse(String accessToken,
                                     String refreshToken,
                                     Long refreshTokenExpiresIn) implements Serializable {
 
+    @Builder
     public static TokenPairInfoResponse of(final String accessToken, final Long expiresIn, final String refreshToken, final Long refreshTokenExpiresIn) {
         return new TokenPairInfoResponse(accessToken, convertToSeconds(expiresIn), refreshToken, convertToSeconds(refreshTokenExpiresIn));
     }

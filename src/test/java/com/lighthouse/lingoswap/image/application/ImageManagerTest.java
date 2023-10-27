@@ -31,7 +31,6 @@ class ImageManagerTest extends IntegrationTestSupport {
 
         // then
         assertThat(actual.url()).isEqualTo(s3Service.generatePresignedUrl(IMAGE_KEY));
-
     }
 
 }

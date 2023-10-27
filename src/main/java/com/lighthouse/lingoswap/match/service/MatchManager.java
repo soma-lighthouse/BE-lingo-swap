@@ -11,8 +11,8 @@ import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
 import com.lighthouse.lingoswap.member.dto.MemberSimpleProfile;
 import com.lighthouse.lingoswap.preferredcountry.domain.model.PreferredCountry;
 import com.lighthouse.lingoswap.preferredcountry.domain.repository.PreferredCountryRepository;
-import com.lighthouse.lingoswap.preferredinterests.application.PreferredInterestsManager;
 import com.lighthouse.lingoswap.preferredinterests.domain.model.PreferredInterests;
+import com.lighthouse.lingoswap.preferredinterests.domain.repository.PreferredInterestsRepository;
 import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
 import com.lighthouse.lingoswap.usedlanguage.domain.repository.UsedLanguageRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class MatchManager {
     private final MemberRepository memberRepository;
     private final PreferredCountryRepository preferredCountryRepository;
     private final UsedLanguageRepository usedLanguageRepository;
-    private final PreferredInterestsManager preferredInterestsManager;
+    private final PreferredInterestsRepository preferredInterestsRepository;
     private final CloudFrontService cloudFrontService;
     private final MessageService messageService;
 
@@ -47,7 +47,7 @@ public class MatchManager {
                     .map(PreferredCountry::getId)
                     .toList();
 
-            List<Long> categoryIds = preferredInterestsManager.findAllByMemberWithInterestsAndCategory(fromMember)
+            List<Long> categoryIds = preferredInterestsRepository.findAllByMemberWithInterestsAndCategory(fromMember)
                     .stream()
                     .map(PreferredInterests::getInterestsCategoryId)
                     .toList();

@@ -1,6 +1,7 @@
 package com.lighthouse.lingoswap;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lighthouse.lingoswap.auth.application.AuthManager;
 import com.lighthouse.lingoswap.chat.service.SendbirdService;
 import com.lighthouse.lingoswap.country.application.CountryManager;
 import com.lighthouse.lingoswap.image.application.ImageManager;
@@ -56,5 +57,8 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected ImageManager imageManager;
+
+    @MockBean
+    protected AuthManager authManager;
 
 }

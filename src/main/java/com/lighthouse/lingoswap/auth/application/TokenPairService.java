@@ -1,10 +1,10 @@
-package com.lighthouse.lingoswap.auth.service;
+package com.lighthouse.lingoswap.auth.application;
 
+import com.lighthouse.lingoswap.auth.domain.model.TokenPair;
+import com.lighthouse.lingoswap.auth.domain.repoistory.TokenPairRepository;
 import com.lighthouse.lingoswap.auth.dto.TokenPairInfoResponse;
-import com.lighthouse.lingoswap.auth.entity.TokenPair;
 import com.lighthouse.lingoswap.auth.exception.InvalidTokenException;
 import com.lighthouse.lingoswap.auth.exception.InvalidUserException;
-import com.lighthouse.lingoswap.auth.repoistory.TokenPairRepository;
 import com.lighthouse.lingoswap.auth.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

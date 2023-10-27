@@ -4,7 +4,6 @@ import com.lighthouse.lingoswap.category.exception.CategoryNotFoundException;
 import com.lighthouse.lingoswap.common.dto.ErrorMessage;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.service.ErrorResponseService;
-import com.lighthouse.lingoswap.member.exception.DuplicateMemberException;
 import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
 import com.lighthouse.lingoswap.question.exception.DuplicateLikeMemberException;
 import com.lighthouse.lingoswap.question.exception.LikeMemberNotFoundException;
@@ -29,15 +28,9 @@ public class ApiControllerAdvice {
     private final ErrorResponseService errorResponseService;
 
     @ExceptionHandler(AuthenticationException.class)
-    private ResponseEntity<ResponseDto<ErrorMessage>> handleAuthenticationException(final RuntimeException ex) {
+    private ResponseEntity<ResponseDto<ErrorMessage>> handleAuthenticationException(final AuthenticationException ex) {
         log.error("{}", ex.getMessage());
         return errorResponseService.buildResponse(ex.getMessage(), FORBIDDEN_ERROR);
-    }
-
-    @ExceptionHandler(DuplicateMemberException.class)
-    private ResponseEntity<ResponseDto<ErrorMessage>> handleDuplicateMemberException(final RuntimeException ex) {
-        log.error("{}", ex.getMessage());
-        return errorResponseService.buildResponse(ex.getMessage(), DUPLICATE_USER_ERROR);
     }
 
     @ExceptionHandler({

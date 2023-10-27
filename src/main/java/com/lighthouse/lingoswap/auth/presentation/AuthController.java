@@ -1,10 +1,10 @@
-package com.lighthouse.lingoswap.auth.api;
+package com.lighthouse.lingoswap.auth.presentation;
 
+import com.lighthouse.lingoswap.auth.application.AuthManager;
 import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairInfoResponse;
-import com.lighthouse.lingoswap.auth.service.AuthManager;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,18 +22,18 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ResponseDto<LoginResponse>> login(@RequestParam(ID_TOKEN_PARAMETER_NAME) String idToken) {
-        return ResponseEntity.ok(authManager.login(idToken));
+        return ResponseEntity.ok(ResponseDto.success(authManager.login(idToken)));
     }
 
     @PostMapping("/signup")
     public ResponseEntity<ResponseDto<LoginResponse>> signup(@RequestParam(ID_TOKEN_PARAMETER_NAME) String idToken,
                                                              @RequestBody @Valid final MemberCreateRequest memberCreateRequest) {
-        return ResponseEntity.ok(authManager.signup(idToken, memberCreateRequest));
+        return ResponseEntity.ok(ResponseDto.success(authManager.signup(idToken, memberCreateRequest)));
     }
 
     @PostMapping("/token")
     public ResponseEntity<ResponseDto<TokenPairInfoResponse>> reissue(@RequestBody @Valid final ReissueRequest reissueRequest) {
-        return ResponseEntity.ok(authManager.reissue(reissueRequest));
+        return ResponseEntity.ok(ResponseDto.success(authManager.reissue(reissueRequest)));
     }
 
 }

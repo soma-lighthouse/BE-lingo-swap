@@ -1,11 +1,10 @@
-package com.lighthouse.lingoswap.auth.service;
+package com.lighthouse.lingoswap.auth.application;
 
 import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairInfoResponse;
 import com.lighthouse.lingoswap.chat.service.SendbirdService;
-import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
 import com.lighthouse.lingoswap.interests.domain.repository.InterestsRepository;
 import com.lighthouse.lingoswap.language.domain.model.Language;
@@ -45,15 +44,15 @@ public class AuthManager {
     private final SendbirdService sendbirdService;
 
     @Transactional
-    public ResponseDto<LoginResponse> login(final String idToken) {
+    public LoginResponse login(final String idToken) {
         String email = idTokenService.parseIdToken(idToken);
         AuthDetails authDetails = authService.loadUserByUsername(email);
         TokenPairInfoResponse tokenPairInfoResponse = tokenPairService.generateTokenPairDetailsByUsername(email);
-        return ResponseDto.success(LoginResponse.of(authDetails.getUuid(), authDetails.getUsername(), tokenPairInfoResponse));
+        return LoginResponse.of(authDetails.getUuid(), authDetails.getUsername(), tokenPairInfoResponse);
     }
 
     @Transactional
-    public ResponseDto<LoginResponse> signup(final String idToken, final MemberCreateRequest memberCreateRequest) {
+    public LoginResponse signup(final String idToken, final MemberCreateRequest memberCreateRequest) {
         String email = idTokenService.parseIdToken(idToken);
         String uuid = memberCreateRequest.uuid();
 
@@ -79,7 +78,7 @@ public class AuthManager {
         sendbirdService.createUser(member.getUuid(), member.getName(), member.getProfileImageUrl());
 
         TokenPairInfoResponse tokenPairInfoResponse = tokenPairService.generateTokenPairDetailsByUsername(email);
-        return ResponseDto.success(LoginResponse.of(uuid, member.getUsername(), tokenPairInfoResponse));
+        return LoginResponse.of(uuid, member.getUsername(), tokenPairInfoResponse);
     }
 
     private void savePreferredCountries(Member member, List<String> codes) {
@@ -107,9 +106,9 @@ public class AuthManager {
     }
 
     @Transactional
-    public ResponseDto<TokenPairInfoResponse> reissue(final ReissueRequest reissueRequest) {
+    public TokenPairInfoResponse reissue(final ReissueRequest reissueRequest) {
         String refreshToken = reissueRequest.refreshToken();
-        return ResponseDto.success(tokenPairService.reissue(refreshToken));
+        return tokenPairService.reissue(refreshToken);
     }
 
 }

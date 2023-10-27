@@ -33,7 +33,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("UUID로 유저를 조회 시 존재하지 않으면 예외가 발생한다.")
     @Test
-    void getByUuidWithNotExistedUuid() {
+    void getByUuidWithNotExistedMemberUuid() {
         // given & when & then
         assertThatThrownBy(() -> memberRepository.getByUuid(USER_UUID))
                 .isInstanceOf(MemberNotFoundException.class);
@@ -54,7 +54,7 @@ class MemberRepositoryTest extends IntegrationTestSupport {
 
     @DisplayName("아이디로 유저를 조회 시 존재하지 않으면 예외가 발생한다.")
     @Test
-    void getByUsernameWithNotExistedUuid() {
+    void getByUsernameWithNotExistedMemberUuid() {
         // given & when & then
         assertThatThrownBy(() -> memberRepository.getByUsername(USER_USERNAME))
                 .isInstanceOf(MemberNotFoundException.class);
