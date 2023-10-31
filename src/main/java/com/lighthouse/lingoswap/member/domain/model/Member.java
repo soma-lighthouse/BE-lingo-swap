@@ -19,7 +19,7 @@ public class Member extends BaseEntity {
     @Embedded
     private AuthDetails authDetails;
 
-    @Column(name = "region_id")
+    @Column(name = "region")
     private String region;
 
     @Enumerated(EnumType.STRING)
