@@ -11,13 +11,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record MemberCreateRequest(@NotBlank String uuid,
-                                  @NotBlank String profileImageUrl,
+                                  String profileImageUrl,
                                   @NotNull LocalDate birthday,
                                   @NotBlank String name,
                                   @NotNull @Email String email,
                                   @NotNull Gender gender,
-                                  @NotNull Integer age,
-                                  @NotBlank String description,
+                                  Integer age,
+                                  String description,
                                   @NotBlank String region,
                                   @NotEmpty @Size(max = 5) List<@NotBlank String> preferredCountries,
                                   @NotEmpty @Size(max = 5) List<@Valid UsedLanguageInfoDto> usedLanguages,
