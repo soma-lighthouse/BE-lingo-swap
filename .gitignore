@@ -70,9 +70,6 @@ Temporary Items
 # Avoid ignore Gradle wrappper properties
 !gradle-wrapper.properties
 
-# SQL
-*.sql
-
 ### Gradle Patch ###
 # Java heap dump
 *.hprof
