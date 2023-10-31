@@ -29,6 +29,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/**", "/api/v1/user/upload/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/user/form/**", "/actuator/health").permitAll()
+                .requestMatchers(HttpMethod.GET, "/.well-known/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

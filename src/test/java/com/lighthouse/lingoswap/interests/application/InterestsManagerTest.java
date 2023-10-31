@@ -36,7 +36,7 @@ class InterestsManagerTest extends IntegrationTestSupport {
         InterestsFormResponse actual = interestsManager.readForm();
 
         // then
-        assertThat(actual.interestsFrom())
+        assertThat(actual.interestsForm())
                 .containsExactlyInAnyOrder(
                         CategoryInterestsMapDto.builder()
                                 .category(CodeNameDto.of(FOOD.getName(), FOOD.getKoreanName()))
