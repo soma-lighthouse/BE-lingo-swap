@@ -1,11 +1,12 @@
 package com.lighthouse.lingoswap.match.service;
 
-import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
 import com.lighthouse.lingoswap.common.service.MessageService;
 import com.lighthouse.lingoswap.infra.service.CloudFrontService;
 import com.lighthouse.lingoswap.match.dto.MatchedMemberProfilesResponse;
 import com.lighthouse.lingoswap.match.entity.MatchedMember;
+import com.lighthouse.lingoswap.match.repository.MatchedMemberQueryRepository;
+import com.lighthouse.lingoswap.match.repository.MatchedMemberRepository;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
 import com.lighthouse.lingoswap.member.dto.MemberSimpleProfile;
@@ -25,7 +26,8 @@ import java.util.List;
 @Service
 public class MatchManager {
 
-    private final MatchService matchService;
+    private final MatchedMemberRepository matchedMemberRepository;
+    private final MatchedMemberQueryRepository matchedMemberQueryRepository;
     private final MemberRepository memberRepository;
     private final PreferredCountryRepository preferredCountryRepository;
     private final UsedLanguageRepository usedLanguageRepository;
@@ -34,7 +36,7 @@ public class MatchManager {
     private final MessageService messageService;
 
     @Transactional
-    public ResponseDto<MatchedMemberProfilesResponse> read(final String uuid, final Long nextId, final int pageSize) {
+    public MatchedMemberProfilesResponse read(final String uuid, final Long nextId, final int pageSize) {
         Member fromMember = memberRepository.getByUuid(uuid);
         if (nextId == null) {
             List<Long> usedLanguageIds = usedLanguageRepository.findAllByMember(fromMember)
@@ -47,16 +49,16 @@ public class MatchManager {
                     .map(PreferredCountry::getId)
                     .toList();
 
-            List<Long> categoryIds = preferredInterestsRepository.findAllByMemberWithInterestsAndCategory(fromMember)
+            List<Long> categoryIds = preferredInterestsRepository.findAllByMember(fromMember)
                     .stream()
                     .map(PreferredInterests::getInterestsCategoryId)
                     .toList();
 
-            matchService.saveMatchedMembersWithPreferences(
-                    fromMember.getId(), preferredCountryIds, usedLanguageIds, categoryIds);
+            matchedMemberRepository.deletePreviousMatchedMember(fromMember.getId());
+            matchedMemberRepository.saveMatchedMembersWithPreferences(fromMember.getId(), preferredCountryIds, usedLanguageIds, categoryIds);
         }
 
-        SliceDto<MatchedMember> sliceDto = matchService.findFilteredMembers(fromMember.getId(), nextId, pageSize);
+        SliceDto<MatchedMember> sliceDto = matchedMemberQueryRepository.findAllByFromMemberId(fromMember.getId(), nextId, pageSize);
         List<MemberSimpleProfile> results = sliceDto.content().stream()
                 .map(MatchedMember::getToMember)
                 .map(m -> MemberSimpleProfile.of(
@@ -66,7 +68,7 @@ public class MatchManager {
                         usedLanguageRepository.findAllByMember(m)
                 ))
                 .toList();
-        return ResponseDto.success(new MatchedMemberProfilesResponse(sliceDto.nextId(), results));
+        return new MatchedMemberProfilesResponse(sliceDto.nextId(), results);
     }
 
 }

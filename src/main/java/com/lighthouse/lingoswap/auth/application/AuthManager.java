@@ -28,12 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class AuthManager {
 
     private final AuthService authService;
     private final TokenPairService tokenPairService;
-    private final GoogleIdTokenService idTokenService;
+    private final IdTokenService idTokenService;
     private final MemberRepository memberRepository;
     private final LanguageRepository languageRepository;
     private final UsedLanguageRepository usedLanguageRepository;

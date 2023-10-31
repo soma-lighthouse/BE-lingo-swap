@@ -8,6 +8,7 @@ public class TokenPairFixture {
 
     public static final String ACCESS_TOKEN = "abcd";
     public static final String REFRESH_TOKEN = "abcd";
+    public static final String ID_TOKEN = "abcd";
 
     public static TokenPair tokenPair() {
         return TokenPair.builder()

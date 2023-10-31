@@ -3,6 +3,7 @@ package com.lighthouse.lingoswap.auth.presentation;
 import com.lighthouse.lingoswap.ControllerTestSupport;
 import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
+import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairInfoResponse;
 import com.lighthouse.lingoswap.auth.exception.InvalidIdTokenException;
 import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfoDto;
@@ -22,8 +23,7 @@ import static com.lighthouse.lingoswap.common.fixture.InterestsType.KOREAN_FOOD;
 import static com.lighthouse.lingoswap.common.fixture.LanguageType.ENGLISH;
 import static com.lighthouse.lingoswap.common.fixture.LanguageType.KOREAN;
 import static com.lighthouse.lingoswap.common.fixture.MemberFixture.*;
-import static com.lighthouse.lingoswap.common.fixture.TokenPairFixture.ACCESS_TOKEN;
-import static com.lighthouse.lingoswap.common.fixture.TokenPairFixture.REFRESH_TOKEN;
+import static com.lighthouse.lingoswap.common.fixture.TokenPairFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -45,7 +45,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/login")
-                                .param("id_token", "abcd"))
+                                .param("id_token", ID_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("20000"))
@@ -57,12 +57,16 @@ class AuthControllerTest extends ControllerTestSupport {
         return LoginResponse.builder()
                 .uuid(USER_UUID)
                 .username(USER_USERNAME)
-                .tokens(TokenPairInfoResponse.builder()
-                        .accessToken(ACCESS_TOKEN)
-                        .expiresIn(1L)
-                        .refreshToken(REFRESH_TOKEN)
-                        .refreshTokenExpiresIn(1L)
-                        .build())
+                .tokens(buildTokenPairInfo())
+                .build();
+    }
+
+    private TokenPairInfoResponse buildTokenPairInfo() {
+        return TokenPairInfoResponse.builder()
+                .accessToken(ACCESS_TOKEN)
+                .expiresIn(1L)
+                .refreshToken(REFRESH_TOKEN)
+                .refreshTokenExpiresIn(1L)
                 .build();
     }
 
@@ -77,7 +81,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/login")
-                                .param("id_token", "abcd"))
+                                .param("id_token", ID_TOKEN))
                 .andDo(print())
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("40300"))
@@ -96,7 +100,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/login")
-                                .param("id_token", "abcd"))
+                                .param("id_token", ID_TOKEN))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("40401"))
@@ -116,7 +120,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/signup")
-                                .param("id_token", "abcd")
+                                .param("id_token", ID_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -158,12 +162,12 @@ class AuthControllerTest extends ControllerTestSupport {
 
         willThrow(InvalidIdTokenException.class)
                 .given(authManager)
-                .signup("abcd", request);
+                .signup(ID_TOKEN, request);
 
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/signup")
-                                .param("id_token", "abcd")
+                                .param("id_token", ID_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -202,16 +206,54 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/signup")
-                                .param("id_token", "abcd")
+                                .param("id_token", ID_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
                 .andExpect(status().isBadRequest());
     }
 
-    @DisplayName("")
+    @DisplayName("refresh token으로 재발급하면 상태 코드 200을 반환한다.")
     @Test
-    void reissue() {
+    void reissue() throws Exception {
+        // given
+        TokenPairInfoResponse response = buildTokenPairInfo();
+        given(authManager.reissue(any(ReissueRequest.class))).willReturn(response);
+
+        ReissueRequest request = ReissueRequest.from(REFRESH_TOKEN);
+
+        // when & then
+        mockMvc.perform(
+                        post("/api/v1/auth/token")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("20000"))
+                .andExpect(jsonPath("$.message").value("Request sent successfully"))
+                .andExpect(jsonPath("$.data").exists());
+    }
+
+    @DisplayName("잘못된 refresh token으로 재발급하면 상태 코드 403을 반환한다.")
+    @Test
+    void reissueWithBadRefreshToken() throws Exception {
+        // given
+        ReissueRequest request = ReissueRequest.from(REFRESH_TOKEN);
+
+        willThrow(InvalidIdTokenException.class)
+                .given(authManager)
+                .reissue(request);
+
+        // when & then
+        mockMvc.perform(
+                        post("/api/v1/auth/token")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(objectMapper.writeValueAsString(request)))
+                .andDo(print())
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.code").value("40300"))
+                .andExpect(jsonPath("$.message").isEmpty())
+                .andExpect(jsonPath("$.data.message").value("Unauthorized access."));
     }
 
 }

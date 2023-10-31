@@ -4,18 +4,21 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.lighthouse.lingoswap.auth.exception.InvalidIdTokenException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Objects;
 
+@Profile({"local", "dev"})
 @RequiredArgsConstructor
 @Service
-public class GoogleIdTokenService {
+public class GoogleIdTokenService implements IdTokenService {
 
     private final GoogleIdTokenVerifier verifier;
 
+    @Override
     public String parseIdToken(final String idTokenString) {
         try {
             GoogleIdToken idToken = verifier.verify(idTokenString);

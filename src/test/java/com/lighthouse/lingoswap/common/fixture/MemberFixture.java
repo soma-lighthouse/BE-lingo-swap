@@ -19,6 +19,7 @@ public class MemberFixture {
     public static final String USER_UUID = "a142abb1-050a-4178-9564-9984109eded1";
     public static final Role USER_ROLE = Role.USER;
     public static final String USER_REGION = "kr";
+    public static final String USER_ID_TOKEN = "abcd";
 
     public static Member user() {
         return Member.builder()

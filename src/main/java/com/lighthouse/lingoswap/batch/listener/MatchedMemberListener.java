@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.batch.listener;
 
-import com.lighthouse.lingoswap.match.service.MatchService;
+import com.lighthouse.lingoswap.match.repository.MatchedMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +16,12 @@ public class MatchedMemberListener implements JobExecutionListener {
 
     private static final Logger log = LoggerFactory.getLogger(MatchedMemberListener.class);
     private final JdbcTemplate jdbcTemplate;
-    private final MatchService matchService;
+    private final MatchedMemberRepository matchedMemberRepository;
 
     @Override
     public void beforeJob(JobExecution jobExecution) {
         log.info(">>> Clearing 'matched_member' table");
-        matchService.delete();
+        matchedMemberRepository.deleteAll();
     }
 
     @Override

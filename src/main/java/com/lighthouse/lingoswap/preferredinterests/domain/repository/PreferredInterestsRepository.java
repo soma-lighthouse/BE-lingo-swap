@@ -13,11 +13,12 @@ import java.util.List;
 
 public interface PreferredInterestsRepository extends JpaRepository<PreferredInterests, Long> {
 
-    List<PreferredInterests> findAllByMember(final Member member);
+    @Query("select p from PreferredInterests p where p.member.member = :member")
+    List<PreferredInterests> findAllByMember(@Param("member") final Member member);
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM PreferredInterests p WHERE p.interests IN :interests")
+    @Query("delete from PreferredInterests p where p.interests in :interests")
     void deleteAllByInterestsIn(@Param("interests") final List<Interests> interests);
 
 }

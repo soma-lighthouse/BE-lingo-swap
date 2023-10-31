@@ -15,18 +15,16 @@ public class PreferredInterests extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private Member member;
+    @Embedded
+    private PreferredInterestsMember member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "interests_id")
-    private Interests interests;
+    @Embedded
+    private InterestsInfo interests;
 
     @Builder
     public PreferredInterests(Member member, Interests interests) {
-        this.member = member;
-        this.interests = interests;
+        this.member = new PreferredInterestsMember(member);
+        this.interests = new InterestsInfo(interests);
     }
 
     public String getInterestsName() {
@@ -34,7 +32,7 @@ public class PreferredInterests extends BaseEntity {
     }
 
     public String getInterestsCategory() {
-        return interests.getInterestsCategory();
+        return interests.getCategory();
     }
 
     public Long getInterestsCategoryId() {

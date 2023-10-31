@@ -18,7 +18,7 @@ public class MatchController {
     public ResponseEntity<ResponseDto<MatchedMemberProfilesResponse>> get(@PathVariable final String uuid,
                                                                           @RequestParam(required = false) final Long next,
                                                                           @RequestParam(defaultValue = "10") final int pageSize) {
-        return ResponseEntity.ok(matchManager.read(uuid, next, pageSize));
+        return ResponseEntity.ok(ResponseDto.success(matchManager.read(uuid, next, pageSize)));
     }
 
 }
