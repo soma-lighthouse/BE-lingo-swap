@@ -13,14 +13,14 @@ public interface CountryRepository extends JpaRepository<Country, Integer> {
 
     default Country getByCode(final String code) {
         return findByCode(code)
-                .orElseThrow(CountryNotFoundException::new);
+                .orElseThrow(() -> new CountryNotFoundException(code));
     }
 
     boolean existsByCode(final String code);
 
     default void validateExistsByCode(final String code) {
-        if (existsByCode(code)) {
-            throw new CountryNotFoundException();
+        if (!existsByCode(code)) {
+            throw new CountryNotFoundException(code);
         }
     }
 
