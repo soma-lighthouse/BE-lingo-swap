@@ -48,7 +48,7 @@ public class MemberManager {
         List<CategoryInterestsMapDto> preferredInterests = toTranslatedPreferredInterestsDto(preferredInterestsRepository.findAllByMember(member));
         return MemberProfileResponse.builder()
                 .uuid(member.getUuid())
-                .profileImageUrl(cloudFrontService.addEndpoint(member.getProfileImageUrl()))
+                .profileImageUri(cloudFrontService.addEndpoint(member.getProfileImageUri()))
                 .name(member.getName())
                 .age(member.calculateAge(timeHolder.now()))
                 .description(member.getDescription())
@@ -97,7 +97,7 @@ public class MemberManager {
     public void updateProfile(final String uuid, final MemberUpdateProfileRequest memberUpdateProfileRequest) {
         Member member = memberRepository.getByUuid(uuid);
         member.changeDescription(memberUpdateProfileRequest.description());
-        member.changeProfileImageUrl(memberUpdateProfileRequest.profileImageUrl());
+        member.changeProfileImageUri(memberUpdateProfileRequest.profileImageUri());
     }
 
     @Transactional

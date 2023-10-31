@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.util.List;
 
 public record MemberProfileResponse(String uuid,
-                                    String profileImageUrl,
+                                    String profileImageUri,
                                     String name,
                                     int age,
                                     String description,
@@ -17,7 +17,7 @@ public record MemberProfileResponse(String uuid,
 
     @Builder
     public static MemberProfileResponse of(final String uuid,
-                                           final String profileImageUrl,
+                                           final String profileImageUri,
                                            final String name,
                                            final int age,
                                            final String description,
@@ -27,7 +27,7 @@ public record MemberProfileResponse(String uuid,
                                            final List<CategoryInterestsMapDto> preferredInterests) {
         return new MemberProfileResponse(
                 uuid,
-                profileImageUrl,
+                profileImageUri,
                 name,
                 age,
                 description,

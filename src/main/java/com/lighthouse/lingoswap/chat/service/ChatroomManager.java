@@ -18,7 +18,7 @@ public class ChatroomManager {
     public void create(ChatUserRequest chatUserRequest) {
         chatUserRequest.memberUuids().stream()
                 .map(memberRepository::getByUuid)
-                .forEach(m -> sendbirdService.createUser(m.getUuid(), m.getName(), m.getProfileImageUrl()));
+                .forEach(m -> sendbirdService.createUser(m.getUuid(), m.getName(), m.getProfileImageUri()));
     }
 
     public ResponseDto<Void> delete(ChatUserRequest chatUserRequest) {

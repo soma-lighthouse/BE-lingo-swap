@@ -133,7 +133,7 @@ class AuthControllerTest extends ControllerTestSupport {
     private MemberCreateRequest buildMemberCreateRequest() {
         return MemberCreateRequest.builder()
                 .uuid(USER_UUID)
-                .profileImageUrl(USER_PROFILE_IMAGE_URL)
+                .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .birthday(USER_BIRTHDAY)
                 .name(USER_NAME)
                 .email(USER_USERNAME)
@@ -183,7 +183,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // given
         MemberCreateRequest request = MemberCreateRequest.builder()
                 .uuid(USER_UUID)
-                .profileImageUrl(USER_PROFILE_IMAGE_URL)
+                .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .birthday(USER_BIRTHDAY)
                 .name(null)
                 .email(USER_USERNAME)

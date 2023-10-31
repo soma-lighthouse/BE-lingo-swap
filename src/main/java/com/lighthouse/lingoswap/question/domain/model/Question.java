@@ -55,7 +55,7 @@ public class Question extends BaseEntity {
     }
 
     public String getCreatedMemberProfileImageUrl() {
-        return questionCreatedMember.getProfileImageUrl();
+        return questionCreatedMember.getProfileImageUri();
     }
 
     public Long getLike() {

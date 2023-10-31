@@ -32,8 +32,8 @@ class QuestionCreatedMember {
         return member.getRegion();
     }
 
-    String getProfileImageUrl() {
-        return member.getProfileImageUrl();
+    String getProfileImageUri() {
+        return member.getProfileImageUri();
     }
 
 }

@@ -24,7 +24,7 @@ public interface MatchedMemberRepository extends JpaRepository<MatchedMember, Lo
                 (
                          SELECT
                             m.id AS mm_id,
-                            IF(m.region_id in (:preferredCountryIds), 20,0) AS score
+                            IF(m.region in (:preferredCountryCodes), 20, 0) AS score
                         FROM member m
                         LEFT JOIN preferred_country pc ON m.id = pc.member_id
                         WHERE m.id != :memberId
@@ -55,7 +55,7 @@ public interface MatchedMemberRepository extends JpaRepository<MatchedMember, Lo
             """, nativeQuery = true)
     void saveMatchedMembersWithPreferences(
             @Param("memberId") final Long memberId,
-            @Param("preferredCountryIds") final List<Long> preferredCountryIds,
+            @Param("preferredCountryCodes") final List<String> preferredCountryCodes,
             @Param("languageIds") final List<Long> preferredLanguages,
             @Param("categoryIds") final List<Long> preferredInterests);
 

@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 public record MemberCreateRequest(@NotBlank String uuid,
-                                  String profileImageUrl,
+                                  String profileImageUri,
                                   @NotNull LocalDate birthday,
                                   @NotBlank String name,
                                   @NotNull @Email String email,
@@ -25,7 +25,7 @@ public record MemberCreateRequest(@NotBlank String uuid,
 
     @Builder
     public static MemberCreateRequest of(final String uuid,
-                                         final String profileImageUrl,
+                                         final String profileImageUri,
                                          final LocalDate birthday,
                                          final String name,
                                          final String email,
@@ -37,7 +37,7 @@ public record MemberCreateRequest(@NotBlank String uuid,
                                          final List<UsedLanguageInfoDto> usedLanguages,
                                          final List<PreferredInterestsInfoDto> preferredInterests) {
         return new MemberCreateRequest(uuid,
-                profileImageUrl,
+                profileImageUri,
                 birthday,
                 name,
                 email,

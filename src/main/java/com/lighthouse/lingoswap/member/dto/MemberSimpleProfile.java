@@ -7,19 +7,19 @@ import com.lighthouse.lingoswap.usedlanguage.domain.model.UsedLanguage;
 import java.util.List;
 
 public record MemberSimpleProfile(String uuid,
-                                  String profileImageUrl,
+                                  String profileImageUri,
                                   String name,
                                   String description,
                                   CodeNameDto region,
                                   List<UsedLanguageDto> usedLanguages) {
 
     public static MemberSimpleProfile of(final Member member,
-                                         final String profileImageUrl,
+                                         final String profileImageUri,
                                          final CodeNameDto region,
                                          final List<UsedLanguage> usedLanguages) {
         return new MemberSimpleProfile(
                 member.getUuid(),
-                profileImageUrl,
+                profileImageUri,
                 member.getName(),
                 member.getDescription(),
                 region,

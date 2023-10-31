@@ -63,7 +63,7 @@ public class AuthManager {
                 memberCreateRequest.birthday(),
                 memberCreateRequest.name(),
                 memberCreateRequest.description(),
-                memberCreateRequest.profileImageUrl(),
+                memberCreateRequest.profileImageUri(),
                 memberCreateRequest.gender(),
                 email,
                 uuid,
@@ -76,7 +76,7 @@ public class AuthManager {
         saveUsedLanguages(member, memberCreateRequest.usedLanguages());
         savePreferredInterests(member, memberCreateRequest.preferredInterests());
 
-        sendbirdService.createUser(member.getUuid(), member.getName(), member.getProfileImageUrl());
+        sendbirdService.createUser(member.getUuid(), member.getName(), member.getProfileImageUri());
 
         TokenPairInfoResponse tokenPairInfoResponse = tokenPairService.generateTokenPairDetailsByUsername(email);
         return LoginResponse.of(uuid, member.getUsername(), tokenPairInfoResponse);

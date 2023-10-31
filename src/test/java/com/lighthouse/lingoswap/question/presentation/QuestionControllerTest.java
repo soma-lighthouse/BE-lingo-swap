@@ -36,7 +36,7 @@ class QuestionControllerTest extends ControllerTestSupport {
                         .uuid(USER_UUID)
                         .name(USER_NAME)
                         .region(USER_REGION)
-                        .profileImageUri(USER_PROFILE_IMAGE_URL)
+                        .profileImageUri(USER_PROFILE_IMAGE_URI)
                         .liked(true)
                         .build()));
         given(questionManager.read(anyString(), anyLong(), anyLong(), anyInt())).willReturn(response);

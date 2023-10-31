@@ -39,7 +39,7 @@ class MemberControllerTest extends ControllerTestSupport {
         // given
         MemberProfileResponse response = MemberProfileResponse.builder()
                 .uuid(USER_UUID)
-                .profileImageUrl(USER_PROFILE_IMAGE_URL)
+                .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .name(USER_NAME)
                 .age(USER_AGE)
                 .description(USER_DESCRIPTION)
@@ -144,7 +144,7 @@ class MemberControllerTest extends ControllerTestSupport {
 
         MemberUpdateProfileRequest request = MemberUpdateProfileRequest.builder()
                 .description(USER_DESCRIPTION)
-                .profileImageUrl(USER_PROFILE_IMAGE_URL)
+                .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .build();
 
         // when & then
@@ -171,7 +171,7 @@ class MemberControllerTest extends ControllerTestSupport {
 
         MemberUpdateProfileRequest request = MemberUpdateProfileRequest.builder()
                 .description(null)
-                .profileImageUrl(null)
+                .profileImageUri(null)
                 .build();
 
         // when & then

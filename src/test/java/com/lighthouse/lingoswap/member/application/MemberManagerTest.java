@@ -85,7 +85,7 @@ class MemberManagerTest extends IntegrationTestSupport {
         // then
         assertSoftly(softly -> {
             softly.assertThat(actual.uuid()).isEqualTo(USER_UUID);
-            softly.assertThat(actual.profileImageUrl()).isEqualTo(USER_PROFILE_ENDPOINT);
+            softly.assertThat(actual.profileImageUri()).isEqualTo(USER_PROFILE_ENDPOINT);
             softly.assertThat(actual.name()).isEqualTo(USER_NAME);
             softly.assertThat(actual.age()).isEqualTo(member.calculateAge(timeHolder.now()));
             softly.assertThat(actual.description()).isEqualTo(USER_DESCRIPTION);
@@ -196,7 +196,7 @@ class MemberManagerTest extends IntegrationTestSupport {
 
         MemberUpdateProfileRequest request = MemberUpdateProfileRequest.builder()
                 .description("Hi")
-                .profileImageUrl("/123/abc.png")
+                .profileImageUri("/123/abc.png")
                 .build();
 
         // when
@@ -205,7 +205,7 @@ class MemberManagerTest extends IntegrationTestSupport {
         // then
         Member actual = memberRepository.getByUuid(USER_UUID);
         assertThat(actual.getDescription()).isEqualTo("Hi");
-        assertThat(actual.getProfileImageUrl()).isEqualTo("/123/abc.png");
+        assertThat(actual.getProfileImageUri()).isEqualTo("/123/abc.png");
     }
 
     @DisplayName("UUID로 조회한 유저의 선호 내용을 수정한다.")

@@ -28,16 +28,14 @@ public class Member extends BaseEntity {
     private LocalDate birthday;
     private String description;
     private String name;
-
-    @Column(name = "profile_image_uri")
-    private String profileImageUrl;
+    private String profileImageUri;
 
     @Builder
-    public Member(final LocalDate birthday, final String name, final String description, final String profileImageUrl, final Gender gender, final String username, final String uuid, final Role role, final String region) {
+    public Member(final LocalDate birthday, final String name, final String description, final String profileImageUri, final Gender gender, final String username, final String uuid, final Role role, final String region) {
         this.birthday = birthday;
         this.name = name;
         this.description = description;
-        this.profileImageUrl = profileImageUrl;
+        this.profileImageUri = profileImageUri;
         this.gender = gender;
         this.authDetails = AuthDetails.builder()
                 .username(username)
@@ -75,8 +73,8 @@ public class Member extends BaseEntity {
         return name;
     }
 
-    public String getProfileImageUrl() {
-        return profileImageUrl;
+    public String getProfileImageUri() {
+        return profileImageUri;
     }
 
     public int calculateAge(final LocalDate currentDate) {
@@ -87,8 +85,8 @@ public class Member extends BaseEntity {
         this.description = description;
     }
 
-    public void changeProfileImageUrl(final String profileImageUrl) {
-        this.profileImageUrl = profileImageUrl;
+    public void changeProfileImageUri(final String profileImageUri) {
+        this.profileImageUri = profileImageUri;
     }
 
 }

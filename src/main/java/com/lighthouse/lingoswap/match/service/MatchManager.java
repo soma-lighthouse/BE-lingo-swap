@@ -44,9 +44,9 @@ public class MatchManager {
                     .map(UsedLanguage::getId)
                     .toList();
 
-            List<Long> preferredCountryIds = preferredCountryRepository.findAllByMember(fromMember)
+            List<String> preferredCountryCodes = preferredCountryRepository.findAllByMember(fromMember)
                     .stream()
-                    .map(PreferredCountry::getId)
+                    .map(PreferredCountry::getCode)
                     .toList();
 
             List<Long> categoryIds = preferredInterestsRepository.findAllByMember(fromMember)
@@ -55,7 +55,7 @@ public class MatchManager {
                     .toList();
 
             matchedMemberRepository.deletePreviousMatchedMember(fromMember.getId());
-            matchedMemberRepository.saveMatchedMembersWithPreferences(fromMember.getId(), preferredCountryIds, usedLanguageIds, categoryIds);
+            matchedMemberRepository.saveMatchedMembersWithPreferences(fromMember.getId(), preferredCountryCodes, usedLanguageIds, categoryIds);
         }
 
         SliceDto<MatchedMember> sliceDto = matchedMemberQueryRepository.findAllByFromMemberId(fromMember.getId(), nextId, pageSize);
@@ -63,7 +63,7 @@ public class MatchManager {
                 .map(MatchedMember::getToMember)
                 .map(m -> MemberSimpleProfile.of(
                         m,
-                        cloudFrontService.addEndpoint(m.getProfileImageUrl()),
+                        cloudFrontService.addEndpoint(m.getProfileImageUri()),
                         messageService.toTranslatedCountryCodeNameDto(m.getRegion()),
                         usedLanguageRepository.findAllByMember(m)
                 ))

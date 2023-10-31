@@ -44,11 +44,11 @@ class MemberTest {
         Member member = user();
 
         // when
-        String profileImageUrl = "/profile.png";
-        member.changeProfileImageUrl(profileImageUrl);
+        String profileImageUri = "/profile.png";
+        member.changeProfileImageUri(profileImageUri);
 
         // then
-        assertThat(member.getProfileImageUrl()).isEqualTo(profileImageUrl);
+        assertThat(member.getProfileImageUri()).isEqualTo(profileImageUri);
     }
 
 }
