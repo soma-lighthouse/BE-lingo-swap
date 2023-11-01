@@ -40,7 +40,7 @@ public class QuestionController {
         return ResponseEntity.ok(ResponseDto.success(questionManager.readRecommendation(categoryId, next, pageSize)));
     }
 
-    @GetMapping("/api/v1/member/{uuid}/question")
+    @GetMapping("/api/v1/user/{uuid}/question")
     public ResponseEntity<ResponseDto<MyQuestionsResponse>> getMyQuestion(@PathVariable final String uuid) {
         return ResponseEntity.ok(ResponseDto.success(questionManager.readByCreatedMember(uuid)));
     }

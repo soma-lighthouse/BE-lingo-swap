@@ -145,7 +145,7 @@ class QuestionControllerTest extends ControllerTestSupport {
 
         // when & then
         mockMvc.perform(
-                        get("/api/v1/member/{uuid}/question", USER_UUID)
+                        get("/api/v1/user/{uuid}/question", USER_UUID)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
