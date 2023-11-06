@@ -1,6 +1,5 @@
 package com.lighthouse.lingoswap.preferredinterests.domain.repository;
 
-import com.lighthouse.lingoswap.interests.domain.model.Interests;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.preferredinterests.domain.model.PreferredInterests;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,7 +17,7 @@ public interface PreferredInterestsRepository extends JpaRepository<PreferredInt
 
     @Modifying
     @Transactional
-    @Query("delete from PreferredInterests p where p.interests in :interests")
-    void deleteAllByInterestsIn(@Param("interests") final List<Interests> interests);
+    @Query("delete from PreferredInterests p where p.member.member = :member")
+    void deleteAllByMember(@Param("member") final Member member);
 
 }

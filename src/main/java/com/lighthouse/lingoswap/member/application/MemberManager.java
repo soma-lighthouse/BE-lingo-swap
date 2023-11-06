@@ -5,6 +5,7 @@ import com.lighthouse.lingoswap.common.service.MessageService;
 import com.lighthouse.lingoswap.common.util.TimeHolder;
 import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
 import com.lighthouse.lingoswap.infra.service.CloudFrontService;
+import com.lighthouse.lingoswap.interests.domain.model.Interests;
 import com.lighthouse.lingoswap.interests.domain.repository.InterestsRepository;
 import com.lighthouse.lingoswap.language.domain.repository.LanguageRepository;
 import com.lighthouse.lingoswap.member.domain.model.Member;
@@ -153,30 +154,11 @@ public class MemberManager {
     }
 
     private void updatePreferredInterests(final Member member, final List<PreferredInterestsInfoDto> preferredInterestsInfos) {
-        List<String> currentInterests = preferredInterestsRepository.findAllByMember(member).stream().map(PreferredInterests::getInterestsName).toList();
-
-        List<String> requestInterests = preferredInterestsInfos.stream()
-                .flatMap(p -> p.interests().stream())
-                .filter(r -> !currentInterests.contains(r))
-                .toList();
-
-        List<String> additionalPreferredInterestNames = requestInterests.stream()
-                .filter(r -> !currentInterests.contains(r))
-                .toList();
-
-        List<String> deletedPreferredInterestNames = currentInterests.stream()
-                .filter(c -> !requestInterests.contains(c))
-                .toList();
-
-        if (!deletedPreferredInterestNames.isEmpty()) {
-            preferredInterestsRepository.deleteAllByInterestsIn(interestsRepository.findAllByNameIn(deletedPreferredInterestNames));
-        }
-
-        if (!additionalPreferredInterestNames.isEmpty()) {
-            List<PreferredInterests> additionalPreferredInterests = additionalPreferredInterestNames.stream()
-                    .map(name -> new PreferredInterests(member, interestsRepository.getByName(name))).toList();
-            preferredInterestsRepository.saveAll(additionalPreferredInterests);
-        }
+        preferredInterestsRepository.deleteAllByMember(member);
+        List<String> names = preferredInterestsInfos.stream().flatMap(p -> p.interests().stream()).toList();
+        List<Interests> interests = interestsRepository.findAllByNameIn(names);
+        List<PreferredInterests> preferredInterests = interests.stream().map(i -> new PreferredInterests(member, i)).toList();
+        preferredInterestsRepository.saveAll(preferredInterests);
     }
 
 }

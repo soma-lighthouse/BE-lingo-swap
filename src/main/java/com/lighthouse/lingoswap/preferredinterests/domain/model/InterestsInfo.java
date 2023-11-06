@@ -14,7 +14,7 @@ class InterestsInfo {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "interests_id")
-    Interests interests;
+    private Interests interests;
 
     InterestsInfo(final Interests interests) {
         this.interests = interests;
