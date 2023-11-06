@@ -36,6 +36,7 @@ public class QuestionManager {
         Question question = Question.builder()
                 .member(member)
                 .category(category)
+                .like(0L)
                 .contents(questionCreateRequest.content())
                 .build();
         questionRepository.save(question);
