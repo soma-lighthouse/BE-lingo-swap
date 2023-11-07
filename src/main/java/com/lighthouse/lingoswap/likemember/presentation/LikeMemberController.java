@@ -17,14 +17,14 @@ public class LikeMemberController {
 
     private final LikeMemberManager likeMemberManager;
 
-    @PostMapping("/api/v1/{questionId}/like")
+    @PostMapping("/api/v1/question/{questionId}/like")
     public ResponseEntity<ResponseDto<Void>> postLike(@PathVariable final Long questionId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         likeMemberManager.createLikeMember((String) auth.getPrincipal(), questionId);
         return ResponseEntity.ok(ResponseDto.noData());
     }
 
-    @DeleteMapping("/api/v1/{questionId}/like")
+    @DeleteMapping("/api/v1/question/{questionId}/like")
     public ResponseEntity<ResponseDto<Void>> deleteLike(@PathVariable final Long questionId) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         likeMemberManager.deleteLikeMember((String) auth.getPrincipal(), questionId);
