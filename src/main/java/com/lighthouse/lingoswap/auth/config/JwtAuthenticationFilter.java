@@ -23,7 +23,8 @@ import java.util.List;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final List<String> excludedPatterns = List.of("/api/v1/auth/**",
+    private final List<String> excludedPatterns = List.of(
+            "/api/v1/auth/**",
             "/api/v1/user/upload/**",
             "/api/v1/admin/**",
             "/api/v1/user/form/**",

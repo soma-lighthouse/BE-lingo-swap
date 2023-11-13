@@ -6,6 +6,7 @@ import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairInfoResponse;
 import com.lighthouse.lingoswap.chat.service.SendbirdService;
 import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
+import com.lighthouse.lingoswap.infra.service.CloudFrontService;
 import com.lighthouse.lingoswap.interests.domain.repository.InterestsRepository;
 import com.lighthouse.lingoswap.language.domain.model.Language;
 import com.lighthouse.lingoswap.language.domain.repository.LanguageRepository;
@@ -43,6 +44,7 @@ public class AuthManager {
     private final PreferredCountryRepository preferredCountryRepository;
     private final PreferredInterestsRepository preferredInterestsRepository;
     private final SendbirdService sendbirdService;
+    private final CloudFrontService cloudFrontService;
 
     @Transactional
     public LoginResponse login(final String idToken) {
@@ -76,7 +78,7 @@ public class AuthManager {
         saveUsedLanguages(member, memberCreateRequest.usedLanguages());
         savePreferredInterests(member, memberCreateRequest.preferredInterests());
 
-        sendbirdService.createUser(member.getUuid(), member.getName(), member.getProfileImageUri());
+        sendbirdService.createUser(member.getUuid(), member.getName(), cloudFrontService.addEndpoint(member.getProfileImageUri()));
 
         TokenPairInfoResponse tokenPairInfoResponse = tokenPairService.generateTokenPairDetailsByUsername(email);
         return LoginResponse.of(uuid, member.getUsername(), tokenPairInfoResponse);

@@ -5,13 +5,15 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
 import com.lighthouse.lingoswap.common.util.TimeHolder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.net.URL;
 import java.util.Date;
 
+@Profile({"local", "dev"})
 @Service
-public class S3Service {
+public class S3Service implements ImageService {
 
     private static final long ONE_HOUR_IN_MS = 3_600_000;
 
@@ -30,6 +32,7 @@ public class S3Service {
         this.timeHolder = timeHolder;
     }
 
+    @Override
     public URL generatePresignedUrl(final String key) {
         GeneratePresignedUrlRequest req = new GeneratePresignedUrlRequest(bucketName, profileKeyPrefix + key, HttpMethod.PUT);
         req.setExpiration(new Date(timeHolder.currentTimeMillis() + ONE_HOUR_IN_MS));

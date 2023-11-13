@@ -7,17 +7,14 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
-import java.lang.annotation.Annotation;
 import java.util.Collections;
 
-import static com.lighthouse.lingoswap.common.fixture.MemberFixture.USER_UUID;
-
-public class WithAuthorizedUserSecurityContextFactory implements WithSecurityContextFactory<Annotation> {
+public class WithAuthorizedUserSecurityContextFactory implements WithSecurityContextFactory<WithAuthorizedUser> {
 
     @Override
-    public SecurityContext createSecurityContext(final Annotation annotation) {
+    public SecurityContext createSecurityContext(final WithAuthorizedUser user) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication auth = new JwtAuthenticationToken(USER_UUID, "dummyAccessToken", Collections.singletonList(Role.USER));
+        Authentication auth = new JwtAuthenticationToken(user.uuid(), user.token(), Collections.singletonList(Role.USER));
         context.setAuthentication(auth);
         return context;
     }

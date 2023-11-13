@@ -30,7 +30,7 @@ class LikeMemberControllerTest extends ControllerTestSupport {
 
         // when & then
         mockMvc.perform(
-                        post("/api/v1/{questionId}/like", 1L)
+                        post("/api/v1/question/{questionId}/like", 1L)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -50,7 +50,7 @@ class LikeMemberControllerTest extends ControllerTestSupport {
 
         // when & then
         mockMvc.perform(
-                        post("/api/v1/{questionId}/like", 1L)
+                        post("/api/v1/question/{questionId}/like", 1L)
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest());
@@ -67,7 +67,7 @@ class LikeMemberControllerTest extends ControllerTestSupport {
 
         // when & then
         mockMvc.perform(
-                        delete("/api/v1/{questionId}/like", 1L)
+                        delete("/api/v1/question/{questionId}/like", 1L)
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -87,7 +87,7 @@ class LikeMemberControllerTest extends ControllerTestSupport {
 
         // when & then
         mockMvc.perform(
-                        delete("/api/v1/{questionId}/like", 1L)
+                        delete("/api/v1/question/{questionId}/like", 1L)
                 )
                 .andDo(print())
                 .andExpect(status().isBadRequest());

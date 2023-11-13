@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.image.application;
 
-import com.lighthouse.lingoswap.infra.service.S3Service;
+import com.lighthouse.lingoswap.infra.service.ImageService;
 import com.lighthouse.lingoswap.member.dto.MemberPreSignedUrlRequest;
 import com.lighthouse.lingoswap.member.dto.MemberPreSignedUrlResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +12,10 @@ import java.net.URL;
 @Service
 public class ImageManager {
 
-    private final S3Service s3Service;
+    private final ImageService imageService;
 
     public MemberPreSignedUrlResponse createPreSignedUrl(final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
-        URL preSignedUrl = s3Service.generatePresignedUrl(memberPreSignedUrlRequest.key());
+        URL preSignedUrl = imageService.generatePresignedUrl(memberPreSignedUrlRequest.key());
         return MemberPreSignedUrlResponse.from(preSignedUrl);
     }
 
