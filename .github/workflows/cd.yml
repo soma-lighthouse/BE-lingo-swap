@@ -62,7 +62,7 @@ jobs:
           zip -r -qq -j ./build.zip ./build/libs/*.jar ./appspec.yml ./execute-deploy.sh
 
       - name: Configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ env.ARN }}
           aws-region: ${{ env.AWS_REGION }}
