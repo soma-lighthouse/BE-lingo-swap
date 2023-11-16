@@ -76,14 +76,14 @@ public class AuthManager {
         return LoginResponse.of(uuid, member.getUsername(), tokenPairInfoResponse);
     }
 
-    private void savePreferredCountries(Member member, List<String> codes) {
+    private void savePreferredCountries(final Member member, final List<String> codes) {
         codes.stream()
                 .map(countryRepository::getByCode)
                 .map(c -> new PreferredCountry(member, c))
                 .forEach(preferredCountryRepository::save);
     }
 
-    private void savePreferredInterests(Member member, List<String> names) {
+    private void savePreferredInterests(final Member member, final List<String> names) {
         List<Interests> interests = interestsRepository.findAllByNameIn(names);
         List<PreferredInterests> preferredInterests = interests.stream().map(i -> new PreferredInterests(member, i)).toList();
         preferredInterestsRepository.saveAll(preferredInterests);

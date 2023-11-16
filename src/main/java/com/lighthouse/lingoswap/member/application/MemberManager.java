@@ -51,11 +51,9 @@ public class MemberManager {
                 .uuid(member.getUuid())
                 .profileImageUri(cloudFrontService.addEndpoint(member.getProfileImageUri()))
                 .name(member.getName())
-                .age(member.calculateAge(timeHolder.now()))
                 .description(member.getDescription())
                 .region(messageService.toTranslatedCountryCodeNameDto(member.getRegion()))
                 .preferredCountries(preferredCountries)
-                .usedLanguages(usedLanguages.stream().map(UsedLanguageDto::from).toList())
                 .preferredInterests(preferredInterests)
                 .build();
     }
@@ -105,7 +103,6 @@ public class MemberManager {
     public void updatePreference(final String uuid, final MemberUpdatePreferenceRequest memberRequest) {
         Member member = memberRepository.getByUuid(uuid);
         updatePreferredCountries(member, memberRequest.preferredCountries());
-        updateUsedLanguages(member, memberRequest.usedLanguages());
         updatePreferredInterests(member, memberRequest.preferredInterests());
     }
 
@@ -153,9 +150,12 @@ public class MemberManager {
         }
     }
 
-    private void updatePreferredInterests(final Member member, final List<PreferredInterestsInfoDto> preferredInterestsInfos) {
+    private void updatePreferredInterests(final Member member, final List<String> names) {
         preferredInterestsRepository.deleteAllByMember(member);
-        List<String> names = preferredInterestsInfos.stream().flatMap(p -> p.interests().stream()).toList();
+        savePreferredInterests(member, names);
+    }
+
+    private void savePreferredInterests(final Member member, final List<String> names) {
         List<Interests> interests = interestsRepository.findAllByNameIn(names);
         List<PreferredInterests> preferredInterests = interests.stream().map(i -> new PreferredInterests(member, i)).toList();
         preferredInterestsRepository.saveAll(preferredInterests);

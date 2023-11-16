@@ -12,11 +12,9 @@ import org.springframework.http.MediaType;
 import java.util.List;
 
 import static com.lighthouse.lingoswap.common.fixture.CategoryType.FOOD;
-import static com.lighthouse.lingoswap.common.fixture.CategoryType.GAME;
 import static com.lighthouse.lingoswap.common.fixture.CountryType.JAPAN;
 import static com.lighthouse.lingoswap.common.fixture.CountryType.KOREA;
 import static com.lighthouse.lingoswap.common.fixture.InterestsType.*;
-import static com.lighthouse.lingoswap.common.fixture.LanguageType.ENGLISH;
 import static com.lighthouse.lingoswap.common.fixture.LanguageType.KOREAN;
 import static com.lighthouse.lingoswap.common.fixture.MemberFixture.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,13 +39,10 @@ class MemberControllerTest extends ControllerTestSupport {
                 .uuid(USER_UUID)
                 .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .name(USER_NAME)
-                .age(USER_AGE)
                 .description(USER_DESCRIPTION)
                 .region(CodeNameDto.of(KOREA.getCode(), KOREA.getKoreanName()))
                 .preferredCountries(
                         List.of(CodeNameDto.of(KOREA.getCode(), KOREA.getKoreanName())))
-                .usedLanguages(
-                        List.of(UsedLanguageDto.builder().code(KOREAN.getCode()).name(KOREAN.getName()).level(5).build()))
                 .preferredInterests(
                         List.of(CategoryInterestsMapDto.builder()
                                 .category(CodeNameDto.of(FOOD.getName(), FOOD.getKoreanName()))
@@ -195,18 +190,7 @@ class MemberControllerTest extends ControllerTestSupport {
 
         MemberUpdatePreferenceRequest request = MemberUpdatePreferenceRequest.builder()
                 .preferredCountries(List.of(KOREA.getCode(), JAPAN.getCode()))
-                .usedLanguages(List.of(
-                        UsedLanguageInfoDto.of(ENGLISH.getCode(), 5),
-                        UsedLanguageInfoDto.of(KOREAN.getCode(), 1)))
-                .preferredInterests(List.of(
-                        PreferredInterestsInfoDto.builder()
-                                .category(FOOD.getName())
-                                .interests(List.of(KOREAN_FOOD.getName(), CHINESE_FOOD.getName()))
-                                .build(),
-                        PreferredInterestsInfoDto.builder()
-                                .category(GAME.getName())
-                                .interests(List.of(RPG_GAME.getName(), SPORTS_GAME.getName()))
-                                .build()))
+                .preferredInterests(List.of(KOREAN_FOOD.getName(), CHINESE_FOOD.getName(), RPG_GAME.getName(), SPORTS_GAME.getName()))
                 .build();
 
         // when & then
@@ -233,7 +217,6 @@ class MemberControllerTest extends ControllerTestSupport {
 
         MemberUpdatePreferenceRequest request = MemberUpdatePreferenceRequest.builder()
                 .preferredCountries(null)
-                .usedLanguages(null)
                 .preferredInterests(null)
                 .build();
 

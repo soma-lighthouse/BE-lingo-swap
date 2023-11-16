@@ -8,7 +8,6 @@ import com.lighthouse.lingoswap.member.dto.MemberUpdatePreferenceRequest;
 import com.lighthouse.lingoswap.member.dto.MemberUpdateProfileRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.validator.constraints.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,7 @@ public class MemberController {
     private final MemberManager memberManager;
 
     @GetMapping("/{uuid}/profile")
-    public ResponseEntity<ResponseDto<MemberProfileResponse>> getProfile(@PathVariable @UUID final String uuid) {
+    public ResponseEntity<ResponseDto<MemberProfileResponse>> getProfile(@PathVariable final String uuid) {
         return ResponseEntity.ok(ResponseDto.success(memberManager.readProfile(uuid)));
     }
 

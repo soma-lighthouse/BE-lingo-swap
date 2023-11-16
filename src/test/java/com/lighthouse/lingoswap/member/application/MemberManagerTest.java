@@ -2,7 +2,6 @@ package com.lighthouse.lingoswap.member.application;
 
 import com.lighthouse.lingoswap.IntegrationTestSupport;
 import com.lighthouse.lingoswap.common.dto.CodeNameDto;
-import com.lighthouse.lingoswap.common.util.TimeHolder;
 import com.lighthouse.lingoswap.country.domain.model.Country;
 import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
 import com.lighthouse.lingoswap.interests.domain.model.Interests;
@@ -65,9 +64,6 @@ class MemberManagerTest extends IntegrationTestSupport {
     @Autowired
     private PreferredInterestsRepository preferredInterestsRepository;
 
-    @Autowired
-    private TimeHolder timeHolder;
-
     @DisplayName("UUID로 유저의 프로필을 조회하면 한국어로 출력한다.")
     @Test
     void readProfile() {
@@ -87,7 +83,6 @@ class MemberManagerTest extends IntegrationTestSupport {
             softly.assertThat(actual.uuid()).isEqualTo(USER_UUID);
             softly.assertThat(actual.profileImageUri()).isEqualTo(USER_PROFILE_ENDPOINT);
             softly.assertThat(actual.name()).isEqualTo(USER_NAME);
-            softly.assertThat(actual.age()).isEqualTo(member.calculateAge(timeHolder.now()));
             softly.assertThat(actual.description()).isEqualTo(USER_DESCRIPTION);
             softly.assertThat(actual.region().code()).isEqualTo(KOREA.getCode());
             softly.assertThat(actual.region().name()).isEqualTo(KOREA.getKoreanName());
@@ -96,11 +91,6 @@ class MemberManagerTest extends IntegrationTestSupport {
                     .containsExactlyInAnyOrder(
                             tuple(KOREA.getCode(), KOREA.getKoreanName()),
                             tuple(US.getCode(), US.getKoreanName()));
-            softly.assertThat(actual.usedLanguages())
-                    .extracting("code", "name", "level")
-                    .containsExactlyInAnyOrder(
-                            tuple(KOREAN.getCode(), KOREAN.getName(), 5),
-                            tuple(ENGLISH.getCode(), ENGLISH.getName(), 3));
             softly.assertThat(actual.preferredInterests())
                     .containsExactlyInAnyOrder(
                             CategoryInterestsMapDto.builder()
@@ -216,18 +206,7 @@ class MemberManagerTest extends IntegrationTestSupport {
 
         MemberUpdatePreferenceRequest request = MemberUpdatePreferenceRequest.builder()
                 .preferredCountries(List.of(KOREA.getCode(), JAPAN.getCode()))
-                .usedLanguages(List.of(
-                        UsedLanguageInfoDto.of(ENGLISH.getCode(), 5),
-                        UsedLanguageInfoDto.of(KOREAN.getCode(), 1)))
-                .preferredInterests(List.of(
-                        PreferredInterestsInfoDto.builder()
-                                .category(FOOD.getName())
-                                .interests(List.of(KOREAN_FOOD.getName(), CHINESE_FOOD.getName()))
-                                .build(),
-                        PreferredInterestsInfoDto.builder()
-                                .category(GAME.getName())
-                                .interests(List.of(RPG_GAME.getName(), SPORTS_GAME.getName()))
-                                .build()))
+                .preferredInterests(List.of(KOREAN_FOOD.getName(), CHINESE_FOOD.getName(), RPG_GAME.getName(), SPORTS_GAME.getName()))
                 .build();
 
         // when
@@ -236,13 +215,10 @@ class MemberManagerTest extends IntegrationTestSupport {
         // then
         Member member = memberRepository.getByUuid(USER_UUID);
         List<PreferredCountry> preferredCountries = preferredCountryRepository.findAllByMember(member);
-        List<UsedLanguage> usedLanguages = usedLanguageRepository.findAllByMember(member);
         List<PreferredInterests> preferredInterests = preferredInterestsRepository.findAllByMember(member);
         assertSoftly(softly -> {
             softly.assertThat(preferredCountries).map(PreferredCountry::getCode).containsExactlyInAnyOrder(
                     KOREA.getCode(), JAPAN.getCode());
-            softly.assertThat(usedLanguages).extracting(UsedLanguage::getCode, UsedLanguage::getLevel).containsExactlyInAnyOrder(
-                    tuple(ENGLISH.getCode(), 5), tuple(KOREAN.getCode(), 1));
             softly.assertThat(preferredInterests).extracting(PreferredInterests::getInterestsName, PreferredInterests::getInterestsCategory).containsExactlyInAnyOrder(
                     tuple(KOREAN_FOOD.getName(), FOOD.getName()),
                     tuple(CHINESE_FOOD.getName(), FOOD.getName()),
