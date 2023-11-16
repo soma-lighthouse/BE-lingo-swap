@@ -15,15 +15,7 @@ public interface CountryRepository extends JpaRepository<Country, Integer> {
         return findByCode(code)
                 .orElseThrow(() -> new CountryNotFoundException(code));
     }
-
-    boolean existsByCode(final String code);
-
-    default void validateExistsByCode(final String code) {
-        if (!existsByCode(code)) {
-            throw new CountryNotFoundException(code);
-        }
-    }
-
+    
     List<Country> findAllByCodeIn(final List<String> codes);
 
 }

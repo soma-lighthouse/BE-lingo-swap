@@ -24,7 +24,7 @@ public class ExceptionAuthenticationFailureHandler implements AuthenticationFail
 
     @Override
     public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException ex) throws IOException {
-        log.error("", ex);
+        log.warn("", ex);
 
         HttpStatus status;
         String code;

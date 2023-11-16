@@ -36,7 +36,7 @@ public class ControllerAdvice {
             HttpMessageNotReadableException.class,
     })
     private ResponseEntity<ResponseDto<ErrorMessage>> handleForbiddenException(final Exception ex) {
-        log.error("{}", ex.getMessage());
+        log.warn("{}", ex.getMessage());
         return errorResponseService.buildResponse(null, FORBIDDEN_ERROR);
     }
 
@@ -45,13 +45,13 @@ public class ControllerAdvice {
             MethodArgumentTypeMismatchException.class
     })
     private ResponseEntity<ResponseDto<ErrorMessage>> handleMethodArgumentNotValidException(final Exception ex) {
-        log.error("{}", ex.getMessage());
+        log.warn("{}", ex.getMessage());
         return errorResponseService.buildResponse(null, VALIDATION_ERROR);
     }
 
     @ExceptionHandler(BindException.class)
     private ResponseEntity<ResponseDto<ErrorMessage>> handleBindException(final BindException ex) {
-        log.error("{}", ex.getAllErrors().get(0));
+        log.warn("{}", ex.getAllErrors().get(0));
         return errorResponseService.buildResponse(ex.getAllErrors().get(0).getDefaultMessage(), VALIDATION_ERROR);
     }
 

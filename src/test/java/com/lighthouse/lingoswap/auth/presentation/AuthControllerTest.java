@@ -6,8 +6,6 @@ import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairInfoResponse;
 import com.lighthouse.lingoswap.auth.exception.InvalidIdTokenException;
-import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfoDto;
-import com.lighthouse.lingoswap.member.dto.UsedLanguageInfoDto;
 import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,13 +13,10 @@ import org.springframework.http.MediaType;
 
 import java.util.List;
 
-import static com.lighthouse.lingoswap.common.fixture.CategoryType.FOOD;
 import static com.lighthouse.lingoswap.common.fixture.CountryType.KOREA;
 import static com.lighthouse.lingoswap.common.fixture.CountryType.US;
 import static com.lighthouse.lingoswap.common.fixture.InterestsType.CHINESE_FOOD;
 import static com.lighthouse.lingoswap.common.fixture.InterestsType.KOREAN_FOOD;
-import static com.lighthouse.lingoswap.common.fixture.LanguageType.ENGLISH;
-import static com.lighthouse.lingoswap.common.fixture.LanguageType.KOREAN;
 import static com.lighthouse.lingoswap.common.fixture.MemberFixture.*;
 import static com.lighthouse.lingoswap.common.fixture.TokenPairFixture.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -132,25 +127,15 @@ class AuthControllerTest extends ControllerTestSupport {
 
     private MemberCreateRequest buildMemberCreateRequest() {
         return MemberCreateRequest.builder()
-                .uuid(USER_UUID)
                 .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .birthday(USER_BIRTHDAY)
                 .name(USER_NAME)
                 .email(USER_USERNAME)
                 .gender(USER_GENDER)
-                .age(USER_AGE)
                 .description(USER_DESCRIPTION)
                 .region(USER_REGION)
                 .preferredCountries(List.of(KOREA.getCode(), US.getCode()))
-                .usedLanguages(List.of(
-                        UsedLanguageInfoDto.of(KOREAN.getCode(), 5),
-                        UsedLanguageInfoDto.of(ENGLISH.getCode(), 3)
-                ))
-                .preferredInterests(List.of(
-                        PreferredInterestsInfoDto.of(FOOD.getName(), List.of(
-                                KOREAN_FOOD.getName(), CHINESE_FOOD.getName()
-                        ))
-                ))
+                .preferredInterests(List.of(KOREAN_FOOD.getName(), CHINESE_FOOD.getName()))
                 .build();
     }
 
@@ -182,25 +167,15 @@ class AuthControllerTest extends ControllerTestSupport {
     void signupWithBadRequest() throws Exception {
         // given
         MemberCreateRequest request = MemberCreateRequest.builder()
-                .uuid(USER_UUID)
                 .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .birthday(USER_BIRTHDAY)
                 .name(null)
                 .email(USER_USERNAME)
                 .gender(USER_GENDER)
-                .age(USER_AGE)
                 .description(USER_DESCRIPTION)
                 .region(USER_REGION)
                 .preferredCountries(List.of(KOREA.getCode(), US.getCode()))
-                .usedLanguages(List.of(
-                        UsedLanguageInfoDto.of(KOREAN.getCode(), 5),
-                        UsedLanguageInfoDto.of(ENGLISH.getCode(), 3)
-                ))
-                .preferredInterests(List.of(
-                        PreferredInterestsInfoDto.of(FOOD.getName(), List.of(
-                                KOREAN_FOOD.getName(), CHINESE_FOOD.getName()
-                        ))
-                ))
+                .preferredInterests(List.of(KOREAN_FOOD.getName(), CHINESE_FOOD.getName()))
                 .build();
 
         // when & then

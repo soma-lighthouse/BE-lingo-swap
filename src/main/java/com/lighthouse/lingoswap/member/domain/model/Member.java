@@ -77,6 +77,10 @@ public class Member extends BaseEntity {
         return profileImageUri;
     }
 
+    public Gender getGender() {
+        return gender;
+    }
+
     public int calculateAge(final LocalDate currentDate) {
         return Period.between(birthday, currentDate).getYears();
     }

@@ -29,7 +29,7 @@ public class ApiControllerAdvice {
 
     @ExceptionHandler(AuthenticationException.class)
     private ResponseEntity<ResponseDto<ErrorMessage>> handleAuthenticationException(final AuthenticationException ex) {
-        log.error("{}", ex.getMessage());
+        log.warn("{}", ex.getMessage());
         return errorResponseService.buildResponse(ex.getMessage(), FORBIDDEN_ERROR);
     }
 
@@ -38,8 +38,8 @@ public class ApiControllerAdvice {
             QuestionNotFoundException.class,
             CategoryNotFoundException.class
     })
-    private ResponseEntity<ResponseDto<ErrorMessage>> handleLoginUserNotFoundException(final RuntimeException ex) {
-        log.error("{}", ex.getMessage());
+    private ResponseEntity<ResponseDto<ErrorMessage>> handleNotFoundException(final RuntimeException ex) {
+        log.warn("{}", ex.getMessage());
         return errorResponseService.buildResponse(ex.getMessage(), NOT_FOUND_ERROR);
     }
 
@@ -48,7 +48,7 @@ public class ApiControllerAdvice {
             LikeMemberNotFoundException.class
     })
     private ResponseEntity<ResponseDto<ErrorMessage>> handleDuplicateLikeException(final RuntimeException ex) {
-        log.error("{}", ex.getMessage());
+        log.warn("{}", ex.getMessage());
         return errorResponseService.buildResponse(ex.getMessage(), VALIDATION_ERROR);
     }
 

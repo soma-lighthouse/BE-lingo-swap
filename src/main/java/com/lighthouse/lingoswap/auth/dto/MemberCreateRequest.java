@@ -1,52 +1,41 @@
 package com.lighthouse.lingoswap.auth.dto;
 
 import com.lighthouse.lingoswap.member.domain.model.Gender;
-import com.lighthouse.lingoswap.member.dto.PreferredInterestsInfoDto;
-import com.lighthouse.lingoswap.member.dto.UsedLanguageInfoDto;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public record MemberCreateRequest(@NotBlank String uuid,
-                                  String profileImageUri,
+public record MemberCreateRequest(@NotBlank String profileImageUri,
                                   @NotNull LocalDate birthday,
                                   @NotBlank String name,
                                   @NotNull @Email String email,
                                   @NotNull Gender gender,
-                                  Integer age,
                                   String description,
                                   @NotBlank String region,
                                   @NotEmpty @Size(max = 5) List<@NotBlank String> preferredCountries,
-                                  @NotEmpty @Size(max = 5) List<@Valid UsedLanguageInfoDto> usedLanguages,
-                                  @NotEmpty List<@Valid PreferredInterestsInfoDto> preferredInterests) {
+                                  @NotEmpty List<@NotBlank String> preferredInterests) {
 
     @Builder
-    public static MemberCreateRequest of(final String uuid,
-                                         final String profileImageUri,
+    public static MemberCreateRequest of(final String profileImageUri,
                                          final LocalDate birthday,
                                          final String name,
                                          final String email,
                                          final Gender gender,
-                                         final Integer age,
                                          final String description,
                                          final String region,
                                          final List<String> preferredCountries,
-                                         final List<UsedLanguageInfoDto> usedLanguages,
-                                         final List<PreferredInterestsInfoDto> preferredInterests) {
-        return new MemberCreateRequest(uuid,
+                                         final List<String> preferredInterests) {
+        return new MemberCreateRequest(
                 profileImageUri,
                 birthday,
                 name,
                 email,
                 gender,
-                age,
                 description,
                 region,
                 preferredCountries,
-                usedLanguages,
                 preferredInterests);
     }
 
