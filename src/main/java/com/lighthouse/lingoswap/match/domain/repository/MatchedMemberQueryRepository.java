@@ -1,7 +1,7 @@
-package com.lighthouse.lingoswap.match.repository;
+package com.lighthouse.lingoswap.match.domain.repository;
 
 import com.lighthouse.lingoswap.common.dto.SliceDto;
-import com.lighthouse.lingoswap.match.entity.MatchedMember;
+import com.lighthouse.lingoswap.match.domain.model.MatchedMember;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.lighthouse.lingoswap.match.entity.QMatchedMember.matchedMember;
+import static com.lighthouse.lingoswap.match.domain.model.QMatchedMember.matchedMember;
 import static com.lighthouse.lingoswap.member.domain.model.QMember.member;
 
 @Repository

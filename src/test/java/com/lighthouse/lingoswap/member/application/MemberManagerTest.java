@@ -81,7 +81,7 @@ class MemberManagerTest extends IntegrationTestSupport {
         // then
         assertSoftly(softly -> {
             softly.assertThat(actual.uuid()).isEqualTo(USER_UUID);
-            softly.assertThat(actual.profileImageUri()).isEqualTo(USER_PROFILE_ENDPOINT);
+            softly.assertThat(actual.profileImageUri()).isEqualTo(USER_PROFILE_IMAGE_URI);
             softly.assertThat(actual.name()).isEqualTo(USER_NAME);
             softly.assertThat(actual.description()).isEqualTo(USER_DESCRIPTION);
             softly.assertThat(actual.region().code()).isEqualTo(KOREA.getCode());

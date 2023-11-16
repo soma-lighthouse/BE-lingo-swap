@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.batch.processing;
 
-import com.lighthouse.lingoswap.match.entity.MatchedMember;
+import com.lighthouse.lingoswap.match.domain.model.MatchedMember;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;

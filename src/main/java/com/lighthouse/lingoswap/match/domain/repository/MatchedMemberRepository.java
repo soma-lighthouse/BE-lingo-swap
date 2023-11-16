@@ -1,6 +1,6 @@
-package com.lighthouse.lingoswap.match.repository;
+package com.lighthouse.lingoswap.match.domain.repository;
 
-import com.lighthouse.lingoswap.match.entity.MatchedMember;
+import com.lighthouse.lingoswap.match.domain.model.MatchedMember;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -33,16 +33,7 @@ public interface MatchedMemberRepository extends JpaRepository<MatchedMember, Lo
 
                         SELECT
                             m.id AS mm_id,
-                            IF(ul.language_id IN (:languageIds), 5, 0) AS score
-                        FROM member m
-                        LEFT JOIN used_language ul ON m.id = ul.member_id
-                        WHERE m.id != :memberId
-
-                        UNION ALL
-
-                        SELECT
-                            m.id AS mm_id,
-                            IF(i.category_id IN (:categoryIds) ,1 ,0) AS score
+                            IF(i.category_id IN (:categoryIds) ,10 ,0) AS score
                         FROM member m
                         LEFT JOIN preferred_interests pi ON m.id = pi.member_id
                         LEFT JOIN interests i ON pi.interests_id = i.id
@@ -56,7 +47,6 @@ public interface MatchedMemberRepository extends JpaRepository<MatchedMember, Lo
     void saveMatchedMembersWithPreferences(
             @Param("memberId") final Long memberId,
             @Param("preferredCountryCodes") final List<String> preferredCountryCodes,
-            @Param("languageIds") final List<Long> preferredLanguages,
             @Param("categoryIds") final List<Long> preferredInterests);
 
 }

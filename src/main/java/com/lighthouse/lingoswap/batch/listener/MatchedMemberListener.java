@@ -1,6 +1,6 @@
 package com.lighthouse.lingoswap.batch.listener;
 
-import com.lighthouse.lingoswap.match.repository.MatchedMemberRepository;
+import com.lighthouse.lingoswap.match.domain.repository.MatchedMemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

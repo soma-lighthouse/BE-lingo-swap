@@ -1,8 +1,8 @@
-package com.lighthouse.lingoswap.match.api;
+package com.lighthouse.lingoswap.match.presentation;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
+import com.lighthouse.lingoswap.match.application.MatchManager;
 import com.lighthouse.lingoswap.match.dto.MatchedMemberProfilesResponse;
-import com.lighthouse.lingoswap.match.service.MatchManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

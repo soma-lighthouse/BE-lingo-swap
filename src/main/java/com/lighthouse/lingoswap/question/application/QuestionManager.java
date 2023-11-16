@@ -49,7 +49,7 @@ public class QuestionManager {
 
         List<QuestionDetail> results = questions.content().stream().map(q ->
                 new QuestionDetail(q.getId(), q.getContents(), q.getLike(),
-                        q.getCreatedMemberUuid(), q.getCreatedMemberName(), q.getCreatedMemberRegion(), cloudFrontService.addEndpoint(q.getCreatedMemberProfileImageUrl()),
+                        q.getCreatedMemberUuid(), q.getCreatedMemberName(), q.getCreatedMemberRegion(), q.getCreatedMemberProfileImageUrl(),
                         likeMembers.contains(q))).toList();
         return new QuestionListResponse(questions.nextId(), results);
     }

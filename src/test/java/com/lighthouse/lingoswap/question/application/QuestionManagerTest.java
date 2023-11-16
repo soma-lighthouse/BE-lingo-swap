@@ -102,9 +102,9 @@ class QuestionManagerTest extends IntegrationTestSupport {
             softly.assertThat(actual.questions())
                     .extracting("questionId", "contents", "likes", "uuid", "name", "region", "profileImageUri", "liked")
                     .containsExactly(
-                            tuple(question3.getId(), "Good", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_ENDPOINT, false),
-                            tuple(question2.getId(), "Hello", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_ENDPOINT, false),
-                            tuple(question1.getId(), "Hi", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_ENDPOINT, false)
+                            tuple(question3.getId(), "Good", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_IMAGE_URI, false),
+                            tuple(question2.getId(), "Hello", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_IMAGE_URI, false),
+                            tuple(question1.getId(), "Hi", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_IMAGE_URI, false)
                     );
         });
     }
@@ -145,7 +145,7 @@ class QuestionManagerTest extends IntegrationTestSupport {
             softly.assertThat(actual.questions())
                     .extracting("questionId", "contents", "likes", "uuid", "name", "region", "profileImageUri", "liked")
                     .containsExactly(
-                            tuple(question1.getId(), "Hi", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_ENDPOINT, false)
+                            tuple(question1.getId(), "Hi", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_IMAGE_URI, false)
                     );
         });
     }
@@ -186,8 +186,8 @@ class QuestionManagerTest extends IntegrationTestSupport {
             softly.assertThat(actual.questions())
                     .extracting("questionId", "contents", "likes", "uuid", "name", "region", "profileImageUri", "liked")
                     .containsExactly(
-                            tuple(question3.getId(), "Good", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_ENDPOINT, false),
-                            tuple(question2.getId(), "Hello", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_ENDPOINT, false)
+                            tuple(question3.getId(), "Good", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_IMAGE_URI, false),
+                            tuple(question2.getId(), "Hello", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_IMAGE_URI, false)
                     );
         });
     }
@@ -236,9 +236,9 @@ class QuestionManagerTest extends IntegrationTestSupport {
             softly.assertThat(actual.questions())
                     .extracting("questionId", "contents", "likes", "uuid", "name", "region", "profileImageUri", "liked")
                     .containsExactly(
-                            tuple(question3.getId(), "Good", 1L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_ENDPOINT, true),
-                            tuple(question2.getId(), "Hello", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_ENDPOINT, false),
-                            tuple(question1.getId(), "Hi", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_ENDPOINT, false)
+                            tuple(question3.getId(), "Good", 1L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_IMAGE_URI, true),
+                            tuple(question2.getId(), "Hello", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_IMAGE_URI, false),
+                            tuple(question1.getId(), "Hi", 0L, USER_UUID, USER_NAME, USER_REGION, USER_PROFILE_IMAGE_URI, false)
                     );
         });
     }

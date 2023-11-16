@@ -4,7 +4,6 @@ import com.lighthouse.lingoswap.chat.dto.ChannelUrlResponse;
 import com.lighthouse.lingoswap.chat.dto.ChatUserRequest;
 import com.lighthouse.lingoswap.chat.dto.ChatroomCreateRequest;
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
-import com.lighthouse.lingoswap.infra.service.CloudFrontService;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,12 +14,11 @@ public class ChatroomManager {
 
     private final MemberRepository memberRepository;
     private final SendbirdService sendbirdService;
-    private final CloudFrontService cloudFrontService;
 
     public void create(ChatUserRequest chatUserRequest) {
         chatUserRequest.memberUuids().stream()
                 .map(memberRepository::getByUuid)
-                .forEach(m -> sendbirdService.createUser(m.getUuid(), m.getName(), cloudFrontService.addEndpoint(m.getProfileImageUri())));
+                .forEach(m -> sendbirdService.createUser(m.getUuid(), m.getName(), m.getProfileImageUri()));
     }
 
     public ResponseDto<Void> delete(ChatUserRequest chatUserRequest) {

@@ -2,7 +2,7 @@ package com.lighthouse.lingoswap.batch.config;
 
 import com.lighthouse.lingoswap.batch.processing.MatchedMemberItemProcessor;
 import com.lighthouse.lingoswap.batch.processing.MatchedMemberItemWriter;
-import com.lighthouse.lingoswap.match.entity.MatchedMember;
+import com.lighthouse.lingoswap.match.domain.model.MatchedMember;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
 import jakarta.persistence.EntityManagerFactory;

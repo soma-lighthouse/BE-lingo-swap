@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.match.entity;
+package com.lighthouse.lingoswap.match.domain.model;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.member.domain.model.Member;

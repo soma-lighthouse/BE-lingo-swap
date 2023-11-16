@@ -19,5 +19,5 @@ public class CountryManager {
         return CountryFormResponse.from(
                 countryRepository.findAll().stream().map(c -> messageService.toTranslatedCountryCodeNameDto(c.getCode())).toList());
     }
-    
+
 }

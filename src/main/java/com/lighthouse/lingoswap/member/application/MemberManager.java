@@ -2,9 +2,7 @@ package com.lighthouse.lingoswap.member.application;
 
 import com.lighthouse.lingoswap.common.dto.CodeNameDto;
 import com.lighthouse.lingoswap.common.service.MessageService;
-import com.lighthouse.lingoswap.common.util.TimeHolder;
 import com.lighthouse.lingoswap.country.domain.repository.CountryRepository;
-import com.lighthouse.lingoswap.infra.service.CloudFrontService;
 import com.lighthouse.lingoswap.interests.domain.model.Interests;
 import com.lighthouse.lingoswap.interests.domain.repository.InterestsRepository;
 import com.lighthouse.lingoswap.language.domain.repository.LanguageRepository;
@@ -38,18 +36,15 @@ public class MemberManager {
     private final LanguageRepository languageRepository;
     private final UsedLanguageRepository usedLanguageRepository;
     private final InterestsRepository interestsRepository;
-    private final CloudFrontService cloudFrontService;
     private final MessageService messageService;
-    private final TimeHolder timeHolder;
 
     public MemberProfileResponse readProfile(final String uuid) {
         Member member = memberRepository.getByUuid(uuid);
         List<CodeNameDto> preferredCountries = toTranslatedPreferredCountryDto(preferredCountryRepository.findAllByMember(member));
-        List<UsedLanguage> usedLanguages = usedLanguageRepository.findAllByMember(member);
         List<CategoryInterestsMapDto> preferredInterests = toTranslatedPreferredInterestsDto(preferredInterestsRepository.findAllByMember(member));
         return MemberProfileResponse.builder()
                 .uuid(member.getUuid())
-                .profileImageUri(cloudFrontService.addEndpoint(member.getProfileImageUri()))
+                .profileImageUri(member.getProfileImageUri())
                 .name(member.getName())
                 .description(member.getDescription())
                 .region(messageService.toTranslatedCountryCodeNameDto(member.getRegion()))
