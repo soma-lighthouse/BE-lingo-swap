@@ -16,7 +16,7 @@ public class ImageController {
 
     private final ImageManager imageManager;
 
-    @PostMapping("/api/v1/user/upload/profile")
+    @PostMapping("/api/v1/admin/upload/profile")
     public ResponseEntity<ResponseDto<MemberPreSignedUrlResponse>> getPreSignedUrl(@RequestBody final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
         return ResponseEntity.ok(ResponseDto.success(imageManager.createPreSignedUrl(memberPreSignedUrlRequest)));
     }

@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .addFilterAt(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/**", "/api/v1/user/upload/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/user/form/**", "/actuator/health").permitAll()
                 .requestMatchers(HttpMethod.GET, "/.well-known/**").permitAll()

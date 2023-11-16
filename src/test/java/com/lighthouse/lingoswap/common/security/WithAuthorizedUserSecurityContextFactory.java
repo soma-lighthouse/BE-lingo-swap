@@ -14,7 +14,7 @@ public class WithAuthorizedUserSecurityContextFactory implements WithSecurityCon
     @Override
     public SecurityContext createSecurityContext(final WithAuthorizedUser user) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
-        Authentication auth = new JwtAuthenticationToken(user.uuid(), user.token(), Collections.singletonList(Role.USER));
+        Authentication auth = new JwtAuthenticationToken(user.uuid(), user.token(), Collections.singletonList(Role.ADMIN));
         context.setAuthentication(auth);
         return context;
     }
