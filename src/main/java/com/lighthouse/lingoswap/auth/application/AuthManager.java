@@ -57,7 +57,7 @@ public class AuthManager {
         Member member = new Member(
                 memberCreateRequest.birthday(),
                 memberCreateRequest.name(),
-                memberCreateRequest.description(),
+                memberCreateRequest.description().trim(),
                 memberCreateRequest.profileImageUri(),
                 memberCreateRequest.gender(),
                 email,

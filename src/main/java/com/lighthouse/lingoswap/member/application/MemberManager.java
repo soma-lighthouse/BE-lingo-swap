@@ -78,11 +78,9 @@ public class MemberManager {
     public MemberPreferenceResponse readPreference(final String uuid) {
         Member member = memberRepository.getByUuid(uuid);
         List<CodeNameDto> preferredCountries = toTranslatedPreferredCountryDto(preferredCountryRepository.findAllByMember(member));
-        List<UsedLanguage> usedLanguages = usedLanguageRepository.findAllByMember(member);
         List<CategoryInterestsMapDto> preferredInterests = toTranslatedPreferredInterestsDto(preferredInterestsRepository.findAllByMember(member));
         return MemberPreferenceResponse.builder()
                 .preferredCountries(preferredCountries)
-                .usedLanguages(usedLanguages.stream().map(UsedLanguageDto::from).toList())
                 .preferredInterests(preferredInterests)
                 .build();
     }

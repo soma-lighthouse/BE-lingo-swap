@@ -3,7 +3,6 @@ package com.lighthouse.lingoswap.question.application;
 import com.lighthouse.lingoswap.category.domain.model.Category;
 import com.lighthouse.lingoswap.category.domain.repository.CategoryRepository;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
-import com.lighthouse.lingoswap.infra.service.CloudFrontService;
 import com.lighthouse.lingoswap.likemember.domian.repository.LikeMemberRepository;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
@@ -27,7 +26,6 @@ public class QuestionManager {
     private final MemberRepository memberRepository;
     private final CategoryRepository categoryRepository;
     private final LikeMemberRepository likeMemberRepository;
-    private final CloudFrontService cloudFrontService;
 
     @Transactional
     public void create(final QuestionCreateRequest questionCreateRequest) {

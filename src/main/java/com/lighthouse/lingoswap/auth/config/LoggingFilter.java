@@ -36,8 +36,9 @@ public class LoggingFilter extends OncePerRequestFilter {
                                     @NotNull final HttpServletResponse response,
                                     @NotNull final FilterChain filterChain) throws ServletException, IOException {
         LogDto logDto = LogDto.from(request);
-        log.info("[REQUEST] {}", logDto);
+        log.info("{}", logDto);
         filterChain.doFilter(request, response);
+        log.info("[END]");
     }
 
     private record LogDto(String method,
@@ -61,7 +62,12 @@ public class LoggingFilter extends OncePerRequestFilter {
 
         @Override
         public String toString() {
-            return "%s %s%s%n headers=[X-Real-IP: %s, Region: %s, User-Agent: %s, Accept-Language: %s]%n"
+            return """
+                                        
+                    [REQUEST]
+                    %s %s%s
+                    headers=[X-Real-IP: %s, Region: %s, User-Agent: %s, Accept-Language: %s]
+                    """
                     .formatted(
                             method,
                             uri,
