@@ -2,6 +2,10 @@ package com.lighthouse.lingoswap.member.exception;
 
 public class MemberNotFoundException extends RuntimeException {
 
-    public MemberNotFoundException(final Long memberId) {
+    private static final String MESSAGE = "Couldn't find user.";
+
+    public MemberNotFoundException() {
+        super(MESSAGE);
     }
+
 }

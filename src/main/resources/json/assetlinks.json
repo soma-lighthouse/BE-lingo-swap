@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.lighthouse.lingo_talk",
+      "sha256_cert_fingerprints": [
+        "1F:E4:59:31:C2:73:C0:4F:0F:3A:6E:8A:A6:80:F8:84:CE:01:DD:AD:DF:A5:07:4D:B0:00:E0:8E:09:48:68:C9"
+      ]
+    }
+  }
+]

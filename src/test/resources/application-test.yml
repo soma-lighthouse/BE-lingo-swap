@@ -1,0 +1,57 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+
+    properties:
+      hibernate:
+        format_sql: true
+
+    defer-datasource-initialization: true
+
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MYSQL
+
+  security:
+    jwt:
+      secret-key: abcd
+      exp:
+        access: 10000
+        refresh: 10000
+      auth-scheme: "Bearer "
+    oauth:
+      google:
+        client-id:
+
+  messages:
+    basename: i18n/messages/country,i18n/messages/category,i18n/messages/interests,i18n/messages/error
+    use-code-as-default-message: true
+
+  output:
+    ansi:
+      enabled: always
+
+logging.level:
+  org.hibernate.SQL: debug
+
+sendbird:
+  api-url:
+  api-token:
+
+aws:
+  credentials:
+    access-key: 1234
+    secret-key: 1234
+  region:
+    static: abcd
+  s3:
+    bucket-name: images
+    profile:
+      prefix: profiles
+  distribution:
+    end-point: https://123.abcd.com/profiles
