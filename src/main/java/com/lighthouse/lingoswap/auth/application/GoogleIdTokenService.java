@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Objects;
 
-@Profile({"local", "dev"})
+@Profile("!test")
 @RequiredArgsConstructor
 @Service
 public class GoogleIdTokenService implements IdTokenService {

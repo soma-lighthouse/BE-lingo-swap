@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Profile({"local", "dev"})
+@Profile("!test")
 @Service
 public class RandomUuidHolder implements UuidHolder {
 

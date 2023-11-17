@@ -12,15 +12,13 @@ public record MemberSimpleProfile(String uuid,
                                   List<String> preferredInterests) {
 
     public static MemberSimpleProfile of(final Member member,
-                                         final String profileImageUri,
-                                         final String region,
                                          final List<String> preferredInterests) {
         return new MemberSimpleProfile(
                 member.getUuid(),
-                profileImageUri,
+                member.getProfileImageUri(),
                 member.getName(),
                 member.getDescription(),
-                region,
+                member.getRegion(),
                 preferredInterests
         );
     }

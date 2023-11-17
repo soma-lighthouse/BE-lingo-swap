@@ -40,7 +40,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/login")
-                                .param("id_token", ID_TOKEN))
+                                .queryParam("id_token", ID_TOKEN))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("20000"))
@@ -76,7 +76,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/login")
-                                .param("id_token", ID_TOKEN))
+                                .queryParam("id_token", ID_TOKEN))
                 .andDo(print())
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("40300"))
@@ -95,7 +95,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/login")
-                                .param("id_token", ID_TOKEN))
+                                .queryParam("id_token", ID_TOKEN))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("40401"))
@@ -115,7 +115,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/signup")
-                                .param("id_token", ID_TOKEN)
+                                .queryParam("id_token", ID_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -152,7 +152,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/signup")
-                                .param("id_token", ID_TOKEN)
+                                .queryParam("id_token", ID_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -181,7 +181,7 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/signup")
-                                .param("id_token", ID_TOKEN)
+                                .queryParam("id_token", ID_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())

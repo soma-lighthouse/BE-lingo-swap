@@ -12,18 +12,19 @@ import lombok.NoArgsConstructor;
 @Entity
 public class PreferredInterests extends BaseEntity {
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    Member member;
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Embedded
-    private PreferredInterestsMember member;
-
+    
     @Embedded
     private InterestsInfo interests;
 
     @Builder
     public PreferredInterests(Member member, Interests interests) {
-        this.member = new PreferredInterestsMember(member);
+        this.member = member;
         this.interests = new InterestsInfo(interests);
     }
 
@@ -37,6 +38,10 @@ public class PreferredInterests extends BaseEntity {
 
     public Long getInterestsCategoryId() {
         return interests.getCategoryId();
+    }
+
+    public Member getMember() {
+        return member;
     }
 
 }

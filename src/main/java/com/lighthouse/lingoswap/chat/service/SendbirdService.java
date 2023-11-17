@@ -17,7 +17,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Objects;
 
-@Profile({"local", "dev"})
+@Profile("!test")
 @Service
 public class SendbirdService {
 

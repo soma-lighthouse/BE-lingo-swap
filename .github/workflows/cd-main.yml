@@ -1,4 +1,4 @@
-name: cd
+name: cd-main
 on:
   workflow_run:
     workflows: [ ci ]

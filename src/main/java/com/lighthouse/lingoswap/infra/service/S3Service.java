@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.net.URL;
 import java.util.Date;
 
-@Profile({"local", "dev"})
+@Profile("!test")
 @Service
 public class S3Service implements ImageService {
 

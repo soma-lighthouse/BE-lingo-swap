@@ -44,9 +44,9 @@ class QuestionControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         get("/api/v1/question")
-                                .param("categoryId", "1")
-                                .param("next", "1")
-                                .param("pageSize", "1")
+                                .queryParam("categoryId", "1")
+                                .queryParam("next", "1")
+                                .queryParam("pageSize", "1")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())
@@ -117,9 +117,9 @@ class QuestionControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         get("/api/v1/question/recommendation")
-                                .param("categoryId", "1")
-                                .param("next", "1")
-                                .param("pageSize", "1")
+                                .queryParam("categoryId", "1")
+                                .queryParam("next", "1")
+                                .queryParam("pageSize", "1")
                 )
                 .andDo(print())
                 .andExpect(status().isOk())

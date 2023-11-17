@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.session.DisableEncodeUrlFilter;
 
 @RequiredArgsConstructor
 @Configuration
@@ -18,11 +19,13 @@ public class SecurityConfig {
 
     private final AuthenticationManager authenticationManager;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final LoggingFilter loggingFilter;
 
     @Bean
     SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
         http
                 .authenticationManager(authenticationManager)
+                .addFilterBefore(loggingFilter, DisableEncodeUrlFilter.class)
                 .addFilterAt(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
                 .csrf().disable()
                 .authorizeHttpRequests()

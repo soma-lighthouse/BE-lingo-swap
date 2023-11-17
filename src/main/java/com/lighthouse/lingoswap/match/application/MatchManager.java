@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
 @Service
@@ -47,14 +50,19 @@ public class MatchManager {
         }
 
         SliceDto<MatchedMember> sliceDto = matchedMemberQueryRepository.findAllByFromMemberId(fromMember.getId(), nextId, pageSize);
-        List<String> preferredInterests = preferredInterestsRepository.findAllByMember(fromMember).stream()
-                .map(PreferredInterests::getInterestsName)
-                .toList();
-        List<MemberSimpleProfile> results = sliceDto.content().stream()
-                .map(MatchedMember::getToMember)
-                .map(m -> MemberSimpleProfile.of(m, m.getProfileImageUri(), m.getRegion(), preferredInterests))
-                .toList();
+        List<MemberSimpleProfile> results = createSimpleProfiles(sliceDto.content());
         return new MatchedMemberProfilesResponse(sliceDto.nextId(), results);
+    }
+
+    private List<MemberSimpleProfile> createSimpleProfiles(final List<MatchedMember> matchedMembers) {
+        List<Member> toMembers = matchedMembers.stream()
+                .map(MatchedMember::getToMember)
+                .toList();
+        Map<Member, List<String>> map = preferredInterestsRepository.findAllByMemberIn(toMembers).stream()
+                .collect(groupingBy(PreferredInterests::getMember, mapping(PreferredInterests::getInterestsName, toList())));
+        return map.entrySet().stream()
+                .map(e -> MemberSimpleProfile.of(e.getKey(), e.getValue()))
+                .toList();
     }
 
 }
