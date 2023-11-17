@@ -15,7 +15,6 @@ import static com.lighthouse.lingoswap.common.fixture.CategoryType.FOOD;
 import static com.lighthouse.lingoswap.common.fixture.CountryType.JAPAN;
 import static com.lighthouse.lingoswap.common.fixture.CountryType.KOREA;
 import static com.lighthouse.lingoswap.common.fixture.InterestsType.*;
-import static com.lighthouse.lingoswap.common.fixture.LanguageType.KOREAN;
 import static com.lighthouse.lingoswap.common.fixture.MemberFixture.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -89,7 +88,6 @@ class MemberControllerTest extends ControllerTestSupport {
         // given
         MemberPreferenceResponse response = MemberPreferenceResponse.builder()
                 .preferredCountries(List.of(CodeNameDto.of(KOREA.getCode(), KOREA.getKoreanName())))
-                .usedLanguages(List.of(UsedLanguageDto.builder().code(KOREAN.getCode()).name(KOREAN.getName()).level(5).build()))
                 .preferredInterests(List.of(CategoryInterestsMapDto.builder()
                         .category(CodeNameDto.of(FOOD.getName(), FOOD.getKoreanName()))
                         .interests(List.of(

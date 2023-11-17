@@ -72,7 +72,6 @@ class MemberManagerTest extends IntegrationTestSupport {
 
         Member member = memberRepository.save(user());
         savePreferredCountries(member);
-        saveUsedLanguages(member);
         savePreferredInterests(member);
 
         // when
@@ -144,7 +143,6 @@ class MemberManagerTest extends IntegrationTestSupport {
 
         Member member = memberRepository.save(user());
         savePreferredCountries(member);
-        saveUsedLanguages(member);
         savePreferredInterests(member);
 
         // when
@@ -157,11 +155,6 @@ class MemberManagerTest extends IntegrationTestSupport {
                     .containsExactlyInAnyOrder(
                             tuple(KOREA.getCode(), KOREA.getKoreanName()),
                             tuple(US.getCode(), US.getKoreanName()));
-            softly.assertThat(actual.usedLanguages())
-                    .extracting("code", "name", "level")
-                    .containsExactlyInAnyOrder(
-                            tuple(KOREAN.getCode(), KOREAN.getName(), 5),
-                            tuple(ENGLISH.getCode(), ENGLISH.getName(), 3));
             softly.assertThat(actual.preferredInterests()).containsExactlyInAnyOrder(
                     CategoryInterestsMapDto.builder()
                             .category(CodeNameDto.of(FOOD.getName(), FOOD.getKoreanName()))
