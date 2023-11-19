@@ -9,7 +9,6 @@ import java.time.LocalDate;
 public class MemberFixture {
 
     public static final LocalDate USER_BIRTHDAY = LocalDate.of(1997, 3, 28);
-    public static final int USER_AGE = 26;
     public static final String USER_NAME = "Lee";
     public static final String USER_DESCRIPTION = "Hello";
     public static final String USER_PROFILE_IMAGE_URI = "/a142abb1-050a-4178-9564-9984109eded1/test.webp";
