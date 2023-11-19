@@ -22,6 +22,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.*;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class MatchManager {
 
@@ -31,37 +32,37 @@ public class MatchManager {
     private final PreferredCountryRepository preferredCountryRepository;
     private final PreferredInterestsRepository preferredInterestsRepository;
 
-    @Transactional
     public MatchedMemberProfilesResponse read(final String uuid, final Long nextId, final int pageSize) {
         Member fromMember = memberRepository.getByUuid(uuid);
-        if (nextId == null) {
-            List<String> preferredCountryCodes = preferredCountryRepository.findAllByMember(fromMember)
-                    .stream()
-                    .map(PreferredCountry::getCode)
-                    .toList();
-
-            List<Long> categoryIds = preferredInterestsRepository.findAllByMember(fromMember)
-                    .stream()
-                    .map(PreferredInterests::getInterestsCategoryId)
-                    .toList();
-
-            matchedMemberRepository.deletePreviousMatchedMember(fromMember.getId());
-            matchedMemberRepository.saveMatchedMembersWithPreferences(fromMember.getId(), preferredCountryCodes, categoryIds);
-        }
-
         SliceDto<MatchedMember> sliceDto = matchedMemberQueryRepository.findAllByFromMemberId(fromMember.getId(), nextId, pageSize);
         List<MemberSimpleProfile> results = createSimpleProfiles(sliceDto.content());
         return new MatchedMemberProfilesResponse(sliceDto.nextId(), results);
+    }
+
+    @Transactional
+    public void replaceWithNewMatchedMember(final String uuid) {
+        Member fromMember = memberRepository.getByUuid(uuid);
+        List<String> preferredCountryCodes = preferredCountryRepository.findAllByMember(fromMember)
+                .stream()
+                .map(PreferredCountry::getCode)
+                .toList();
+        List<Long> categoryIds = preferredInterestsRepository.findAllByMember(fromMember)
+                .stream()
+                .map(PreferredInterests::getInterestsCategoryId)
+                .toList();
+        matchedMemberRepository.deletePreviousMatchedMember(fromMember.getId());
+        matchedMemberRepository.saveMatchedMembersWithPreferences(fromMember.getId(), preferredCountryCodes, categoryIds);
     }
 
     private List<MemberSimpleProfile> createSimpleProfiles(final List<MatchedMember> matchedMembers) {
         List<Member> toMembers = matchedMembers.stream()
                 .map(MatchedMember::getToMember)
                 .toList();
+
         Map<Member, List<String>> map = preferredInterestsRepository.findAllByMemberIn(toMembers).stream()
                 .collect(groupingBy(PreferredInterests::getMember, mapping(PreferredInterests::getInterestsName, toList())));
-        return map.entrySet().stream()
-                .map(e -> MemberSimpleProfile.of(e.getKey(), e.getValue()))
+        return toMembers.stream()
+                .map(m -> MemberSimpleProfile.of(m, map.get(m)))
                 .toList();
     }
 

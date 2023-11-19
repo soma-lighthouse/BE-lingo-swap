@@ -9,6 +9,7 @@ import com.lighthouse.lingoswap.infra.service.S3Service;
 import com.lighthouse.lingoswap.interests.application.InterestsManager;
 import com.lighthouse.lingoswap.language.application.LanguageManager;
 import com.lighthouse.lingoswap.likemember.application.LikeMemberManager;
+import com.lighthouse.lingoswap.match.application.MatchManager;
 import com.lighthouse.lingoswap.member.application.MemberManager;
 import com.lighthouse.lingoswap.question.application.QuestionManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,9 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected LanguageManager languageManager;
+
+    @MockBean
+    protected MatchManager matchManager;
 
     @MockBean
     protected ImageManager imageManager;

@@ -38,7 +38,6 @@ public class LoggingFilter extends OncePerRequestFilter {
         LogDto logDto = LogDto.from(request);
         log.info("{}", logDto);
         filterChain.doFilter(request, response);
-        log.info("[END]");
     }
 
     private record LogDto(String method,

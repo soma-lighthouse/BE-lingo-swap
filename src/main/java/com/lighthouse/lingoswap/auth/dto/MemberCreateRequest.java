@@ -13,7 +13,7 @@ public record MemberCreateRequest(@NotBlank String profileImageUri,
                                   @NotNull @Email String email,
                                   @NotNull Gender gender,
                                   String description,
-                                  @NotBlank String region,
+                                  String region,
                                   @NotEmpty @Size(max = 5) List<@NotBlank String> preferredCountries,
                                   @NotEmpty List<@NotBlank String> preferredInterests) {
 
