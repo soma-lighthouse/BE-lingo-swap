@@ -16,9 +16,12 @@ public class MatchController {
 
     @GetMapping("/{uuid}/matches")
     public ResponseEntity<ResponseDto<MatchedMemberProfilesResponse>> get(@PathVariable final String uuid,
-                                                                          @RequestParam(required = false) final Long next,
+                                                                          @RequestParam(required = false) final Long nextId,
                                                                           @RequestParam(defaultValue = "10") final int pageSize) {
-        return ResponseEntity.ok(ResponseDto.success(matchManager.read(uuid, next, pageSize)));
+        if (nextId == null) {
+            matchManager.replaceWithNewMatchedMember(uuid);
+        }
+        return ResponseEntity.ok(ResponseDto.success(matchManager.read(uuid, nextId, pageSize)));
     }
 
 }
