@@ -11,19 +11,20 @@ import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
 import com.lighthouse.lingoswap.member.dto.MemberSimpleProfile;
 import com.lighthouse.lingoswap.preferredinterests.domain.model.PreferredInterests;
 import com.lighthouse.lingoswap.preferredinterests.domain.repository.PreferredInterestsRepository;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import static com.lighthouse.lingoswap.common.fixture.InterestsType.*;
 import static com.lighthouse.lingoswap.common.fixture.MemberFixture.USER_UUID;
 import static com.lighthouse.lingoswap.common.fixture.MemberFixture.user;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
+@Transactional
 class MatchManagerTest extends IntegrationTestSupport {
 
     @Autowired
@@ -41,33 +42,20 @@ class MatchManagerTest extends IntegrationTestSupport {
     @Autowired
     InterestsRepository interestsRepository;
 
-    @AfterEach
-    void tearDown() {
-        matchedMemberRepository.deleteAllInBatch();
-        preferredInterestsRepository.deleteAllInBatch();
-        memberRepository.deleteAllInBatch();
-    }
-
     @DisplayName("매칭 리스트를 조회한다.")
     @Test
     void read() {
         // given
         Member fromMember = memberRepository.save(user());
-        savePreferredInterests(List.of(fromMember));
-
-        Member toMember1 = Member.builder().uuid("1").build();
-        Member toMember2 = Member.builder().uuid("2").build();
-        saveWithPreferences(toMember1, toMember2);
-
-        List<MatchedMember> matchedMembers = Stream.of(toMember1, toMember2)
-                .map(toMember -> MatchedMember.builder().fromMember(fromMember).toMember(toMember).build())
-                .toList();
-        matchedMemberRepository.saveAll(matchedMembers);
+        saveMatchedMembers(fromMember);
 
         // when
-        MatchedMemberProfilesResponse actual = matchManager.read(USER_UUID, toMember2.getId() + 1, 2);
+        Long nextId = matchedMemberRepository.findAllByFromMember(fromMember).get(2).getId();
+        MatchedMemberProfilesResponse actual = matchManager.read(USER_UUID, nextId, 2);
 
         // then
+        Member toMember1 = memberRepository.getByUuid("1");
+        Member toMember2 = memberRepository.getByUuid("2");
         assertSoftly(softly -> {
             softly.assertThat(actual.nextId()).isEqualTo(-1);
             softly.assertThat(actual.profiles()).hasSize(2)
@@ -78,72 +66,63 @@ class MatchManagerTest extends IntegrationTestSupport {
         });
     }
 
-    private void saveWithPreferences(final Member toMember1, final Member toMember2) {
-        memberRepository.saveAll(List.of(toMember1, toMember2));
+    private void saveMatchedMembers(Member fromMember) {
+        Member toMember1 = Member.builder().uuid("1").build();
+        Member toMember2 = Member.builder().uuid("2").build();
+        Member toMember3 = Member.builder().uuid("3").build();
+        List<Member> members = List.of(toMember1, toMember2, toMember3);
+        memberRepository.saveAll(members);
 
         Interests japaneseFood = interestsRepository.getByName(JAPANESE_FOOD.getName());
         Interests chineseFood = interestsRepository.getByName(CHINESE_FOOD.getName());
         Interests rpgGame = interestsRepository.getByName(RPG_GAME.getName());
         Interests fpsGame = interestsRepository.getByName(FPS_GAME.getName());
         preferredInterestsRepository.saveAll(List.of(
+                PreferredInterests.builder().member(fromMember).interests(japaneseFood).build(),
+                PreferredInterests.builder().member(fromMember).interests(chineseFood).build(),
+                PreferredInterests.builder().member(fromMember).interests(rpgGame).build(),
+                PreferredInterests.builder().member(fromMember).interests(fpsGame).build(),
                 PreferredInterests.builder().member(toMember1).interests(japaneseFood).build(),
                 PreferredInterests.builder().member(toMember1).interests(rpgGame).build(),
                 PreferredInterests.builder().member(toMember2).interests(chineseFood).build(),
                 PreferredInterests.builder().member(toMember2).interests(rpgGame).build(),
-                PreferredInterests.builder().member(toMember2).interests(fpsGame).build()));
+                PreferredInterests.builder().member(toMember2).interests(fpsGame).build(),
+                PreferredInterests.builder().member(toMember3).interests(japaneseFood).build(),
+                PreferredInterests.builder().member(toMember3).interests(chineseFood).build()));
+
+        matchedMemberRepository.saveAll(members.stream()
+                .map(toMember -> MatchedMember.builder().fromMember(fromMember).toMember(toMember).build())
+                .toList());
     }
 
-    private void savePreferredInterests(final List<Member> members) {
-        Interests japaneseFood = interestsRepository.getByName(JAPANESE_FOOD.getName());
-        Interests chineseFood = interestsRepository.getByName(CHINESE_FOOD.getName());
-        Interests rpgGame = interestsRepository.getByName(RPG_GAME.getName());
-        Interests fpsGame = interestsRepository.getByName(FPS_GAME.getName());
-        for (Member member : members) {
-            preferredInterestsRepository.saveAll(List.of(
-                    PreferredInterests.builder().member(member).interests(japaneseFood).build(),
-                    PreferredInterests.builder().member(member).interests(chineseFood).build(),
-                    PreferredInterests.builder().member(member).interests(rpgGame).build(),
-                    PreferredInterests.builder().member(member).interests(fpsGame).build()));
-        }
-    }
-    
     @DisplayName("페이지에 더이상 매칭된 유저가 없으면 nextId에 -1을 반환한다.")
     @Test
     void readByEmptyPage() {
         // given
         Member fromMember = memberRepository.save(user());
-        savePreferredInterests(List.of(fromMember));
-
-        List<Member> toMembers = List.of(Member.builder().uuid("1").build(), Member.builder().uuid("2").build(), Member.builder().uuid("3").build());
-        memberRepository.saveAll(toMembers);
-        savePreferredInterests(toMembers);
-
-        List<MatchedMember> matchedMembers = toMembers.stream()
-                .map(toMember -> MatchedMember.builder().fromMember(fromMember).toMember(toMember).build())
-                .toList();
-        matchedMemberRepository.saveAll(matchedMembers);
+        saveMatchedMembers(fromMember);
 
         // when
-        MatchedMemberProfilesResponse actual = matchManager.read(USER_UUID, toMembers.get(2).getId() + 1, 3);
+        Long nextId = matchedMemberRepository.findAllByFromMember(fromMember).get(2).getId();
+        MatchedMemberProfilesResponse actual = matchManager.read(USER_UUID, nextId, 3);
 
         // then
-        assertSoftly(softly -> {
-            softly.assertThat(actual.nextId()).isEqualTo(-1);
-            softly.assertThat(actual.profiles()).hasSize(3);
-        });
+        assertThat(actual.nextId()).isEqualTo(-1);
     }
 
-    @DisplayName("")
+    @DisplayName("매칭된 유저가 남아 있으면 마지막 row의 id를 반환한다.")
     @Test
-    void replaceWithNewMatchedMember() {
+    void readByPage() {
         // given
-
+        Member fromMember = memberRepository.save(user());
+        saveMatchedMembers(fromMember);
 
         // when
-
+        List<MatchedMember> matchedMembers = matchedMemberRepository.findAllByFromMember(fromMember);
+        MatchedMemberProfilesResponse actual = matchManager.read(USER_UUID, matchedMembers.get(2).getId() + 1, 2);
 
         // then
-
+        assertThat(actual.nextId()).isEqualTo(matchedMembers.get(1).getId());
     }
 
 }

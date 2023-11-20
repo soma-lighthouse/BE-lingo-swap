@@ -1,6 +1,7 @@
 package com.lighthouse.lingoswap.match.domain.repository;
 
 import com.lighthouse.lingoswap.match.domain.model.MatchedMember;
+import com.lighthouse.lingoswap.member.domain.model.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -46,5 +47,7 @@ public interface MatchedMemberRepository extends JpaRepository<MatchedMember, Lo
             @Param("memberId") final Long memberId,
             @Param("preferredCountryCodes") final List<String> preferredCountryCodes,
             @Param("categoryIds") final List<Long> preferredInterests);
+
+    List<MatchedMember> findAllByFromMember(final Member fromMember);
 
 }
