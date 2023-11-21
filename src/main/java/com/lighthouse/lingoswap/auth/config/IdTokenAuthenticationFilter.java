@@ -26,7 +26,6 @@ public class IdTokenAuthenticationFilter extends OncePerRequestFilter {
     private final List<String> includedPatterns = List.of(
             "/api/v1/auth/login",
             "/api/v1/auth/signup",
-            "/api/v1/user/upload/**",
             "/api/v1/form/**");
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
