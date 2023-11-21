@@ -18,7 +18,11 @@ public interface PreferredCountryRepository extends JpaRepository<PreferredCount
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM PreferredCountry p WHERE p.country.country IN :countries")
-    void deleteAllByCountryIn(@Param("countries") final List<Country> countries);
+    @Query("DELETE FROM PreferredCountry p WHERE p.member.member = :member AND p.country.country IN :countries")
+    void deleteAllByCountryIn(@Param("member") final Member member, @Param("countries") final List<Country> countries);
+
+    @Modifying
+    @Query("DELETE FROM PreferredCountry p WHERE p.member.member = :member")
+    void deleteAllByMember(@Param("member") final Member member);
 
 }

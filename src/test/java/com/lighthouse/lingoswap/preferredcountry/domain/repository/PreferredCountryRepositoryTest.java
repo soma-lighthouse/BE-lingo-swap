@@ -72,7 +72,7 @@ class PreferredCountryRepositoryTest extends IntegrationTestSupport {
         preferredCountryRepository.saveAll(List.of(preferredKorea, preferredUs));
 
         // when
-        preferredCountryRepository.deleteAllByCountryIn(List.of(korea, us));
+        preferredCountryRepository.deleteAllByCountryIn(member, List.of(korea, us));
 
         // then
         List<PreferredCountry> actual = preferredCountryRepository.findAllByMember(member);
