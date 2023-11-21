@@ -243,7 +243,7 @@ class QuestionManagerTest extends IntegrationTestSupport {
         });
     }
 
-    @DisplayName("카테고리로 좋아요 수가 50 이상인 질문 리스트를 조회하면 최신순으로 출력한다.")
+    @DisplayName("카테고리로 좋아요 수가 5 이상인 질문 리스트를 조회하면 최신순으로 출력한다.")
     @Test
     void readRecommendation() {
         // given
@@ -251,19 +251,19 @@ class QuestionManagerTest extends IntegrationTestSupport {
         Category category = categoryRepository.getByName(CategoryType.FOOD.getName());
         Question question1 = Question.builder()
                 .member(member)
-                .like(49L)
+                .like(4L)
                 .category(category)
                 .contents("Hi")
                 .build();
         Question question2 = Question.builder()
                 .member(member)
-                .like(50L)
+                .like(5L)
                 .category(category)
                 .contents("Hello")
                 .build();
         Question question3 = Question.builder()
                 .member(member)
-                .like(51L)
+                .like(6L)
                 .category(category)
                 .contents("Good")
                 .build();
