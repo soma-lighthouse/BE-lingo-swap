@@ -17,20 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Component
 public class LoggingFilter extends OncePerRequestFilter {
-
-    /**
-     * servletPath:/api/v1/user/form/interests
-     * <p>
-     * After request [GET /api/v1/user/form/country, client=0:0:0:0:0:0:0:1, headers=[user-agent:"PostmanRuntime/7.35.0", accept:"*{@literal /}*", host:"localhost:8080", accept-encoding:"gzip, deflate, br", connection:"keep-alive"]]
-     * <p>
-     * pathInfo:null
-     * <p>
-     * headers:
-     * <p>
-     * user-agent: PostmanRuntime/7.35.0
-     * <p>
-     * host
-     */
+    
     @Override
     protected void doFilterInternal(@NotNull final HttpServletRequest request,
                                     @NotNull final HttpServletResponse response,

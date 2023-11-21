@@ -117,7 +117,7 @@ public class MemberManager {
         }
 
         if (!deletedCountryCodes.isEmpty()) {
-            preferredCountryRepository.deleteAllByCountryIn(countryRepository.findAllByCodeIn(deletedCountryCodes));
+            preferredCountryRepository.deleteAllByCountryIn(member, countryRepository.findAllByCodeIn(deletedCountryCodes));
         }
     }
 
