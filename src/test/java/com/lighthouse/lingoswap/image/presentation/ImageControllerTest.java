@@ -19,7 +19,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ImageControllerTest extends ControllerTestSupport {
 
     private static final String IMAGE_KEY = "/2c1a2c3d-4d8b-46f4-9011-189cd1fc8644/1.jpg";
-    private static final String PRE_SIGNED_URL = "https://abc/profiles/2c1a2c3d-4d8b-46f4-9011-189cd1fc8644/1.jpg";
+    private static final String PRE_SIGNED_URL = "https://abc.com/profiles/2c1a2c3d-4d8b-46f4-9011-189cd1fc8644/1.jpg";
+    private static final String END_POINT = "https://abc.com";
 
     @DisplayName("S3 pre-signed url을 발급하면 상태 코드 200을 반환한다.")
     @WithAuthorizedUser
@@ -27,12 +28,12 @@ class ImageControllerTest extends ControllerTestSupport {
     void getPreSignedUrl() throws Exception {
         // given
         MemberPreSignedUrlRequest request = MemberPreSignedUrlRequest.from(IMAGE_KEY);
-        MemberPreSignedUrlResponse response = MemberPreSignedUrlResponse.from(new URL(PRE_SIGNED_URL));
+        MemberPreSignedUrlResponse response = MemberPreSignedUrlResponse.of(new URL(PRE_SIGNED_URL), new URL(END_POINT));
         given(imageManager.createPreSignedUrl(request)).willReturn(response);
 
         // when & then
         mockMvc.perform(
-                        post("/api/v1/admin/upload/profile")
+                        post("/api/v1/user/upload/profile")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request))
                 ).andDo(print())

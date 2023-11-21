@@ -2,10 +2,7 @@ package com.lighthouse.lingoswap.member.presentation;
 
 import com.lighthouse.lingoswap.common.dto.ResponseDto;
 import com.lighthouse.lingoswap.member.application.MemberManager;
-import com.lighthouse.lingoswap.member.dto.MemberPreferenceResponse;
-import com.lighthouse.lingoswap.member.dto.MemberProfileResponse;
-import com.lighthouse.lingoswap.member.dto.MemberUpdatePreferenceRequest;
-import com.lighthouse.lingoswap.member.dto.MemberUpdateProfileRequest;
+import com.lighthouse.lingoswap.member.dto.*;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +29,13 @@ public class MemberController {
     public ResponseEntity<ResponseDto<Void>> patchProfile(@PathVariable final String uuid,
                                                           @Valid @RequestBody final MemberUpdateProfileRequest memberUpdateProfileRequest) {
         memberManager.updateProfile(uuid, memberUpdateProfileRequest);
+        return ResponseEntity.ok(ResponseDto.noData());
+    }
+
+    @PatchMapping("/{uuid}/profile/image")
+    public ResponseEntity<ResponseDto<Void>> patchProfileImage(@PathVariable final String uuid,
+                                                               @Valid @RequestBody final MemberUpdateProfileImageRequest memberUpdateProfileImageRequest) {
+        memberManager.updateProfileImage(uuid, memberUpdateProfileImageRequest);
         return ResponseEntity.ok(ResponseDto.noData());
     }
 

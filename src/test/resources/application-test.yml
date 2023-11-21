@@ -54,4 +54,4 @@ aws:
     profile:
       prefix: profiles
   distribution:
-    end-point: https://123.abcd.com/profiles
+    endpoint: https://123.abcd.com/profiles

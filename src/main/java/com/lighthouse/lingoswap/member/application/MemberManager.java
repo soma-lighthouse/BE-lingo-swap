@@ -93,6 +93,12 @@ public class MemberManager {
     }
 
     @Transactional
+    public void updateProfileImage(final String uuid, final MemberUpdateProfileImageRequest memberUpdateProfileRequest) {
+        Member member = memberRepository.getByUuid(uuid);
+        member.changeProfileImageUri(memberUpdateProfileRequest.profileImageUri());
+    }
+
+    @Transactional
     public void updatePreference(final String uuid, final MemberUpdatePreferenceRequest memberRequest) {
         Member member = memberRepository.getByUuid(uuid);
         updatePreferredCountries(member, memberRequest.preferredCountries());
