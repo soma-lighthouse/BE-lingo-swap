@@ -40,7 +40,7 @@ public class QuestionQueryRepository {
                 .selectFrom(question)
                 .where(
                         question.questionCategory.category.id.eq(categoryId),
-                        question.like.value.goe(50),
+                        question.like.value.goe(5),
                         questionIdLt(nextId)
                 )
                 .orderBy(question.id.desc())
