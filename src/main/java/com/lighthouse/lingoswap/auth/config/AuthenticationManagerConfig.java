@@ -11,10 +11,11 @@ import org.springframework.security.authentication.ProviderManager;
 public class AuthenticationManagerConfig {
 
     private final JwtAuthenticationProvider jwtAuthenticationProvider;
+    private final GoogleIdTokenAuthenticationProvider googleIdTokenAuthenticationProvider;
 
     @Bean
     AuthenticationManager authenticationManager() {
-        return new ProviderManager(jwtAuthenticationProvider);
+        return new ProviderManager(jwtAuthenticationProvider, googleIdTokenAuthenticationProvider);
     }
 
 }

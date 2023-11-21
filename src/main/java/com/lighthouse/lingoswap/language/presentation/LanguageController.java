@@ -14,7 +14,7 @@ public class LanguageController {
 
     private final LanguageManager languageManager;
 
-    @GetMapping("/api/v1/user/form/language")
+    @GetMapping("/api/v1/form/language")
     public ResponseEntity<ResponseDto<LanguageFormResponse>> getForm() {
         return ResponseEntity.ok(ResponseDto.success(languageManager.readForm()));
     }

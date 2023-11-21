@@ -32,7 +32,7 @@ class CountryControllerTest extends ControllerTestSupport {
 
         // when & then
         mockMvc.perform(
-                        get("/api/v1/user/form/country")
+                        get("/api/v1/form/country")
                 ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("20000"))

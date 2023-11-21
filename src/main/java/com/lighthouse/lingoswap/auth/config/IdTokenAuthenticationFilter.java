@@ -21,32 +21,28 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class IdTokenAuthenticationFilter extends OncePerRequestFilter {
 
-    private final List<String> excludedPatterns = List.of(
-            "/api/v1/auth/**",
+    private final List<String> includedPatterns = List.of(
+            "/api/v1/auth/login",
+            "/api/v1/auth/signup",
             "/api/v1/user/upload/**",
-            "/api/v1/admin/**",
-            "/api/v1/user/form/**",
-            "/actuator/**",
-            "/swagger-ui/**",
-            "/v3/api-docs/**",
-            "/.well-known/**");
+            "/api/v1/form/**");
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     private final AuthenticationManager authenticationManager;
     private final AuthenticationFailureHandler failureHandler;
-    private final BearerTokenResolver bearerTokenResolver;
+    private final GoogleIdTokenResolver idTokenResolver;
 
     @Override
     protected void doFilterInternal(@NotNull final HttpServletRequest request, @NotNull final HttpServletResponse response, @NotNull final FilterChain filterChain) throws IOException, ServletException {
         try {
-            String token = bearerTokenResolver.resolve(request);
+            String token = idTokenResolver.resolve(request);
             if (token == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
-            Authentication authRequest = new BearerTokenAuthenticationToken(token);
+            Authentication authRequest = new IdTokenAuthenticationToken(token);
             Authentication authResult = authenticationManager.authenticate(authRequest);
             successfulAuthentication(authResult);
         } catch (AuthenticationException ex) {
@@ -69,8 +65,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(@NotNull final HttpServletRequest request) {
-        return excludedPatterns.stream()
-                .anyMatch(p -> antPathMatcher.match(p, request.getServletPath()));
+        return includedPatterns.stream()
+                .noneMatch(p -> antPathMatcher.match(p, request.getServletPath()));
     }
 
 }

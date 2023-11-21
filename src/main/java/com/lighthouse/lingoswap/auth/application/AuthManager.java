@@ -32,7 +32,6 @@ public class AuthManager {
 
     private final AuthService authService;
     private final TokenPairService tokenPairService;
-    private final IdTokenService idTokenService;
     private final MemberRepository memberRepository;
     private final InterestsRepository interestsRepository;
     private final CountryRepository countryRepository;
@@ -42,38 +41,34 @@ public class AuthManager {
     private final UuidHolder uuidHolder;
 
     @Transactional
-    public LoginResponse login(final String idToken) {
-        String email = idTokenService.parseIdToken(idToken);
-        AuthDetails authDetails = authService.loadUserByUsername(email);
-        TokenPairInfoResponse tokenPairInfoResponse = tokenPairService.generateTokenPairDetailsByUsername(email);
+    public LoginResponse login(final String username) {
+        AuthDetails authDetails = authService.loadUserByUsername(username);
+        TokenPairInfoResponse tokenPairInfoResponse = tokenPairService.generateTokenPairDetailsByUsername(username);
         return LoginResponse.of(authDetails.getUuid(), authDetails.getUsername(), tokenPairInfoResponse);
     }
 
     @Transactional
-    public LoginResponse signup(final String idToken, final MemberCreateRequest memberCreateRequest) {
-        String email = idTokenService.parseIdToken(idToken);
-        String uuid = uuidHolder.randomUuid();
-
-        Member member = new Member(
-                memberCreateRequest.birthday(),
-                memberCreateRequest.name(),
-                memberCreateRequest.description().trim(),
-                memberCreateRequest.profileImageUri(),
-                memberCreateRequest.gender(),
-                email,
-                uuid,
-                Role.USER,
-                memberCreateRequest.region()
-        );
+    public LoginResponse signup(final MemberCreateRequest memberCreateRequest) {
+        Member member = Member.builder()
+                .birthday(memberCreateRequest.birthday())
+                .name(memberCreateRequest.name())
+                .description(memberCreateRequest.description().trim())
+                .profileImageUri(memberCreateRequest.profileImageUri())
+                .gender(memberCreateRequest.gender())
+                .username(memberCreateRequest.email())
+                .uuid(uuidHolder.randomUuid())
+                .role(Role.USER)
+                .region(memberCreateRequest.region())
+                .build();
         memberRepository.save(member);
         savePreferredCountries(member, memberCreateRequest.preferredCountries());
         savePreferredInterests(member, memberCreateRequest.preferredInterests());
 
         sendbirdService.createUser(member.getUuid(), member.getName(), member.getProfileImageUri());
 
-        TokenPairInfoResponse tokenPairInfoResponse = tokenPairService.generateTokenPairDetailsByUsername(email);
-        log.info("SignUp User: {}", member);
-        return LoginResponse.of(uuid, member.getUsername(), tokenPairInfoResponse);
+        TokenPairInfoResponse tokenPairInfoResponse = tokenPairService.generateTokenPairDetailsByUsername(member.getUsername());
+        log.info("SignUp User\n uuid:{} name:{} region:{}", member.getUuid(), member.getName(), member.getRegion());
+        return LoginResponse.of(member.getUuid(), member.getUsername(), tokenPairInfoResponse);
     }
 
     private void savePreferredCountries(final Member member, final List<String> codes) {

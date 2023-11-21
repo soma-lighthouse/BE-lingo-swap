@@ -6,6 +6,7 @@ import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.auth.dto.ReissueRequest;
 import com.lighthouse.lingoswap.auth.dto.TokenPairInfoResponse;
 import com.lighthouse.lingoswap.auth.exception.InvalidIdTokenException;
+import com.lighthouse.lingoswap.common.security.WithAuthorizedUser;
 import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,8 @@ import static com.lighthouse.lingoswap.common.fixture.CountryType.US;
 import static com.lighthouse.lingoswap.common.fixture.InterestsType.CHINESE_FOOD;
 import static com.lighthouse.lingoswap.common.fixture.InterestsType.KOREAN_FOOD;
 import static com.lighthouse.lingoswap.common.fixture.MemberFixture.*;
-import static com.lighthouse.lingoswap.common.fixture.TokenPairFixture.*;
+import static com.lighthouse.lingoswap.common.fixture.TokenPairFixture.ACCESS_TOKEN;
+import static com.lighthouse.lingoswap.common.fixture.TokenPairFixture.REFRESH_TOKEN;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -30,7 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class AuthControllerTest extends ControllerTestSupport {
 
-    @DisplayName("id token으로 로그인에 성공하면 상태 코드 200을 반환한다.")
+    @DisplayName("로그인에 성공하면 상태 코드 200을 반환한다.")
+    @WithAuthorizedUser
     @Test
     void login() throws Exception {
         // given
@@ -39,8 +42,7 @@ class AuthControllerTest extends ControllerTestSupport {
 
         // when & then
         mockMvc.perform(
-                        post("/api/v1/auth/login")
-                                .queryParam("id_token", ID_TOKEN))
+                        post("/api/v1/auth/login"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("20000"))
@@ -66,6 +68,7 @@ class AuthControllerTest extends ControllerTestSupport {
     }
 
     @DisplayName("잘못된 id token으로 로그인하면 상태 코드 403을 반환한다.")
+    @WithAuthorizedUser
     @Test
     void loginWithBadIdToken() throws Exception {
         // given
@@ -75,8 +78,7 @@ class AuthControllerTest extends ControllerTestSupport {
 
         // when & then
         mockMvc.perform(
-                        post("/api/v1/auth/login")
-                                .queryParam("id_token", ID_TOKEN))
+                        post("/api/v1/auth/login"))
                 .andDo(print())
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value("40300"))
@@ -85,6 +87,7 @@ class AuthControllerTest extends ControllerTestSupport {
     }
 
     @DisplayName("존재하지 않는 회원의 id token으로 로그인하면 상태 코드 404를 반환한다.")
+    @WithAuthorizedUser
     @Test
     void loginWithNotExistedMemberIdToken() throws Exception {
         // given
@@ -94,8 +97,7 @@ class AuthControllerTest extends ControllerTestSupport {
 
         // when & then
         mockMvc.perform(
-                        post("/api/v1/auth/login")
-                                .queryParam("id_token", ID_TOKEN))
+                        post("/api/v1/auth/login"))
                 .andDo(print())
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.code").value("40401"))
@@ -104,18 +106,18 @@ class AuthControllerTest extends ControllerTestSupport {
     }
 
     @DisplayName("회원 가입에 성공하면 상태 코드 200을 반환한다.")
+    @WithAuthorizedUser
     @Test
     void signup() throws Exception {
         // given
         LoginResponse response = buildLoginResponse();
-        given(authManager.signup(anyString(), any(MemberCreateRequest.class))).willReturn(response);
+        given(authManager.signup(any(MemberCreateRequest.class))).willReturn(response);
 
         MemberCreateRequest request = buildMemberCreateRequest();
 
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/signup")
-                                .queryParam("id_token", ID_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -140,6 +142,7 @@ class AuthControllerTest extends ControllerTestSupport {
     }
 
     @DisplayName("잘못된 id token으로 회원 가입하면 상태 코드 403을 반환한다.")
+    @WithAuthorizedUser
     @Test
     void signupWithBadIdToken() throws Exception {
         // given
@@ -147,12 +150,11 @@ class AuthControllerTest extends ControllerTestSupport {
 
         willThrow(InvalidIdTokenException.class)
                 .given(authManager)
-                .signup(ID_TOKEN, request);
+                .signup(request);
 
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/signup")
-                                .queryParam("id_token", ID_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())
@@ -163,6 +165,7 @@ class AuthControllerTest extends ControllerTestSupport {
     }
 
     @DisplayName("잘못된 형식으로 회원 가입하면 상태 코드 400을 반환한다.")
+    @WithAuthorizedUser
     @Test
     void signupWithBadRequest() throws Exception {
         // given
@@ -181,7 +184,6 @@ class AuthControllerTest extends ControllerTestSupport {
         // when & then
         mockMvc.perform(
                         post("/api/v1/auth/signup")
-                                .queryParam("id_token", ID_TOKEN)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(objectMapper.writeValueAsString(request)))
                 .andDo(print())

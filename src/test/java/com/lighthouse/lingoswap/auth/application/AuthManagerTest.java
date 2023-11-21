@@ -43,7 +43,7 @@ class AuthManagerTest extends IntegrationTestSupport {
                 .build();
 
         // when
-        LoginResponse response = authManager.signup(USER_ID_TOKEN, request);
+        LoginResponse response = authManager.signup(request);
         Member actual = memberRepository.getByUuid(response.uuid());
 
         // then
