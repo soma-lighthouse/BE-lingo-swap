@@ -32,7 +32,6 @@ class AuthManagerTest extends IntegrationTestSupport {
     void signup() {
         // given
         MemberCreateRequest request = MemberCreateRequest.builder()
-                .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .birthday(USER_BIRTHDAY)
                 .name(USER_NAME)
                 .gender(USER_GENDER)

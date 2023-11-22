@@ -53,7 +53,6 @@ public class AuthManager {
                 .birthday(memberCreateRequest.birthday())
                 .name(memberCreateRequest.name())
                 .description(memberCreateRequest.description().trim())
-                .profileImageUri(memberCreateRequest.profileImageUri())
                 .gender(memberCreateRequest.gender())
                 .username(memberCreateRequest.email())
                 .uuid(uuidHolder.randomUuid())

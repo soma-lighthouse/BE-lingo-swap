@@ -129,7 +129,6 @@ class AuthControllerTest extends ControllerTestSupport {
 
     private MemberCreateRequest buildMemberCreateRequest() {
         return MemberCreateRequest.builder()
-                .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .birthday(USER_BIRTHDAY)
                 .name(USER_NAME)
                 .email(USER_USERNAME)
@@ -170,7 +169,6 @@ class AuthControllerTest extends ControllerTestSupport {
     void signupWithBadRequest() throws Exception {
         // given
         MemberCreateRequest request = MemberCreateRequest.builder()
-                .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .birthday(USER_BIRTHDAY)
                 .name(null)
                 .email(USER_USERNAME)
