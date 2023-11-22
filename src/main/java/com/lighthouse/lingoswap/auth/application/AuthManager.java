@@ -89,4 +89,9 @@ public class AuthManager {
         return tokenPairService.reissue(refreshToken);
     }
 
+    @Transactional
+    public void delete(final String username) {
+        memberRepository.deleteByAuthDetailsUsername(username);
+    }
+
 }
