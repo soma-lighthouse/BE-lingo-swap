@@ -18,4 +18,13 @@ public class StubImageService implements ImageService {
         }
     }
 
+    @Override
+    public URL getEndpoint() {
+        try {
+            return new URL("https://cloudfront.amazonaws.com");
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

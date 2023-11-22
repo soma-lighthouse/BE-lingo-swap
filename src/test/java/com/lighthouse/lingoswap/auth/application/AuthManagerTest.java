@@ -5,6 +5,7 @@ import com.lighthouse.lingoswap.auth.dto.LoginResponse;
 import com.lighthouse.lingoswap.auth.dto.MemberCreateRequest;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
+import com.lighthouse.lingoswap.member.exception.MemberNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import static com.lighthouse.lingoswap.common.fixture.CountryType.US;
 import static com.lighthouse.lingoswap.common.fixture.InterestsType.*;
 import static com.lighthouse.lingoswap.common.fixture.MemberFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Transactional
 class AuthManagerTest extends IntegrationTestSupport {
@@ -32,7 +34,6 @@ class AuthManagerTest extends IntegrationTestSupport {
     void signup() {
         // given
         MemberCreateRequest request = MemberCreateRequest.builder()
-                .profileImageUri(USER_PROFILE_IMAGE_URI)
                 .birthday(USER_BIRTHDAY)
                 .name(USER_NAME)
                 .gender(USER_GENDER)
@@ -43,11 +44,25 @@ class AuthManagerTest extends IntegrationTestSupport {
                 .build();
 
         // when
-        LoginResponse response = authManager.signup(USER_ID_TOKEN, request);
+        LoginResponse response = authManager.signup(request);
         Member actual = memberRepository.getByUuid(response.uuid());
 
         // then
         assertThat(actual.getUuid()).isEqualTo(USER_UUID);
+    }
+
+    @DisplayName("유저의 아이디로 회원을 탈퇴할 수 있다.")
+    @Test
+    void delete() {
+        // given
+        memberRepository.save(user());
+
+        // when
+        authManager.delete(USER_USERNAME);
+
+        // then
+        assertThatThrownBy(() -> memberRepository.getByUsername(USER_USERNAME))
+                .isInstanceOf(MemberNotFoundException.class);
     }
 
 }

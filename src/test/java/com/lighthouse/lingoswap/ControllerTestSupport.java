@@ -5,7 +5,7 @@ import com.lighthouse.lingoswap.auth.application.AuthManager;
 import com.lighthouse.lingoswap.chat.service.SendbirdService;
 import com.lighthouse.lingoswap.country.application.CountryManager;
 import com.lighthouse.lingoswap.image.application.ImageManager;
-import com.lighthouse.lingoswap.infra.service.S3Service;
+import com.lighthouse.lingoswap.infra.service.AmazonImageService;
 import com.lighthouse.lingoswap.interests.application.InterestsManager;
 import com.lighthouse.lingoswap.language.application.LanguageManager;
 import com.lighthouse.lingoswap.likemember.application.LikeMemberManager;
@@ -36,7 +36,7 @@ public abstract class ControllerTestSupport {
     protected SendbirdService sendbirdService;
 
     @MockBean
-    protected S3Service s3Service;
+    protected AmazonImageService amazonImageService;
 
     @MockBean
     protected MemberManager memberManager;

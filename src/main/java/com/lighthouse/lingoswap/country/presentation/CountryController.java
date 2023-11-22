@@ -14,7 +14,7 @@ public class CountryController {
 
     private final CountryManager countryManager;
 
-    @GetMapping("/api/v1/user/form/country")
+    @GetMapping("/api/v1/form/country")
     public ResponseEntity<ResponseDto<CountryFormResponse>> getForm() {
         return ResponseEntity.ok(ResponseDto.success(countryManager.readForm()));
     }

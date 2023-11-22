@@ -2,6 +2,7 @@ package com.lighthouse.lingoswap.interests.presentation;
 
 import com.lighthouse.lingoswap.ControllerTestSupport;
 import com.lighthouse.lingoswap.common.dto.CodeNameDto;
+import com.lighthouse.lingoswap.common.security.WithAuthorizedUser;
 import com.lighthouse.lingoswap.interests.dto.InterestsFormResponse;
 import com.lighthouse.lingoswap.member.dto.CategoryInterestsMapDto;
 import org.junit.jupiter.api.DisplayName;
@@ -20,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class InterestsControllerTest extends ControllerTestSupport {
 
     @DisplayName("관심분야 폼을 조회하면 상태 코드 200을 반환한다.")
+    @WithAuthorizedUser
     @Test
     void getInterestsForm() throws Exception {
         // given
@@ -45,7 +47,7 @@ class InterestsControllerTest extends ControllerTestSupport {
 
         // when & then
         mockMvc.perform(
-                        get("/api/v1/user/form/interests")
+                        get("/api/v1/form/interests")
                 ).andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value("20000"))

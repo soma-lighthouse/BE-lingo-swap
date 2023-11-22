@@ -7,8 +7,7 @@ import lombok.Builder;
 import java.time.LocalDate;
 import java.util.List;
 
-public record MemberCreateRequest(@NotBlank String profileImageUri,
-                                  @NotNull LocalDate birthday,
+public record MemberCreateRequest(@NotNull LocalDate birthday,
                                   @NotBlank String name,
                                   @NotNull @Email String email,
                                   @NotNull Gender gender,
@@ -18,8 +17,7 @@ public record MemberCreateRequest(@NotBlank String profileImageUri,
                                   @NotEmpty List<@NotBlank String> preferredInterests) {
 
     @Builder
-    public static MemberCreateRequest of(final String profileImageUri,
-                                         final LocalDate birthday,
+    public static MemberCreateRequest of(final LocalDate birthday,
                                          final String name,
                                          final String email,
                                          final Gender gender,
@@ -28,7 +26,6 @@ public record MemberCreateRequest(@NotBlank String profileImageUri,
                                          final List<String> preferredCountries,
                                          final List<String> preferredInterests) {
         return new MemberCreateRequest(
-                profileImageUri,
                 birthday,
                 name,
                 email,

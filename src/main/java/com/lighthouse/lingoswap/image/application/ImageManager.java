@@ -16,7 +16,7 @@ public class ImageManager {
 
     public MemberPreSignedUrlResponse createPreSignedUrl(final MemberPreSignedUrlRequest memberPreSignedUrlRequest) {
         URL preSignedUrl = imageService.generatePresignedUrl(memberPreSignedUrlRequest.key());
-        return MemberPreSignedUrlResponse.from(preSignedUrl);
+        return MemberPreSignedUrlResponse.of(preSignedUrl, imageService.getEndpoint());
     }
 
 }

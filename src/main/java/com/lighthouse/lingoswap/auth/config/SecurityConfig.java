@@ -18,7 +18,8 @@ import org.springframework.security.web.session.DisableEncodeUrlFilter;
 public class SecurityConfig {
 
     private final AuthenticationManager authenticationManager;
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final BearerTokenAuthenticationFilter bearerTokenAuthenticationFilter;
+    private final IdTokenAuthenticationFilter idTokenAuthenticationFilter;
     private final LoggingFilter loggingFilter;
 
     @Bean
@@ -26,13 +27,13 @@ public class SecurityConfig {
         http
                 .authenticationManager(authenticationManager)
                 .addFilterBefore(loggingFilter, DisableEncodeUrlFilter.class)
-                .addFilterAt(jwtAuthenticationFilter, BasicAuthenticationFilter.class)
+                .addFilterAt(idTokenAuthenticationFilter, BasicAuthenticationFilter.class)
+                .addFilterAt(bearerTokenAuthenticationFilter, BasicAuthenticationFilter.class)
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers("/api/v1/admin/**").hasAuthority("ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/v1/auth/**", "/api/v1/user/upload/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/v1/user/form/**", "/actuator/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/.well-known/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/v1/auth/token").permitAll()
+                .requestMatchers(HttpMethod.GET, "/actuator/**", "/.well-known/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated()
                 .and()

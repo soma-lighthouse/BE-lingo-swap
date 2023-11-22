@@ -6,4 +6,6 @@ public interface ImageService {
 
     URL generatePresignedUrl(final String key);
 
+    URL getEndpoint();
+
 }
