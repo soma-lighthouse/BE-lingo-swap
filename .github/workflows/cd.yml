@@ -8,8 +8,8 @@ on:
       - completed
 
 env:
-  BUCKET_NAME: lingoswap-build
-  ARN: arn:aws:iam::455541718696:role/codedeploy
+  BUCKET_NAME: lingotalk-build
+  ARN: arn:aws:iam::455541718696:role/GithubActionsForCodeDeploy
   AWS_REGION: ap-northeast-2
 
 permissions:
