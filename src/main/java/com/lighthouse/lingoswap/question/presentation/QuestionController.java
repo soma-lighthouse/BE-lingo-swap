@@ -45,4 +45,18 @@ public class QuestionController {
         return ResponseEntity.ok(ResponseDto.success(questionManager.readByCreatedMember(uuid)));
     }
 
+    @PostMapping("/api/v1/question/{questionId}/like")
+    public ResponseEntity<ResponseDto<Void>> postLike(@PathVariable final Long questionId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        questionManager.addOneLike((String) auth.getPrincipal(), questionId);
+        return ResponseEntity.ok(ResponseDto.noData());
+    }
+
+    @DeleteMapping("/api/v1/question/{questionId}/like")
+    public ResponseEntity<ResponseDto<Void>> deleteLike(@PathVariable final Long questionId) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        questionManager.subtractOneLike((String) auth.getPrincipal(), questionId);
+        return ResponseEntity.ok(ResponseDto.noData());
+    }
+
 }

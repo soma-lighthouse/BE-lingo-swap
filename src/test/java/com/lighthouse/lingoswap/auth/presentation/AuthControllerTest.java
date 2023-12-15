@@ -25,6 +25,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -229,6 +231,23 @@ class AuthControllerTest extends ControllerTestSupport {
                 .andExpect(jsonPath("$.code").value("40300"))
                 .andExpect(jsonPath("$.message").isEmpty())
                 .andExpect(jsonPath("$.data.message").value("Unauthorized access."));
+    }
+
+    @DisplayName("회원을 삭제하면 상태 코드 200을 반환한다.")
+    @WithAuthorizedUser
+    @Test
+    void deleteAuth() throws Exception {
+        // given
+        doNothing().when(authManager).delete(anyString());
+
+        // when & then
+        mockMvc.perform(
+                        delete("/api/v1/auth"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.code").value("20000"))
+                .andExpect(jsonPath("$.message").value("Request sent successfully"))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 
 }

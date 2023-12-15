@@ -1,8 +1,7 @@
-package com.lighthouse.lingoswap.likemember.domian.model;
+package com.lighthouse.lingoswap.question.domain.model;
 
 import com.lighthouse.lingoswap.common.entity.BaseEntity;
 import com.lighthouse.lingoswap.member.domain.model.Member;
-import com.lighthouse.lingoswap.question.domain.model.Question;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;

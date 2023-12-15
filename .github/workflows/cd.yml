@@ -1,15 +1,15 @@
-name: cd-dev
+name: cd-main
 on:
   workflow_run:
     workflows: [ ci ]
     branches:
-      - develop
+      - main
     types:
       - completed
 
 env:
-  BUCKET_NAME: lingoswap-dev-build
-  ARN: arn:aws:iam::285279154236:role/s3-codedeploy
+  BUCKET_NAME: lingoswap-build
+  ARN: arn:aws:iam::455541718696:role/codedeploy
   AWS_REGION: ap-northeast-2
 
 permissions:
@@ -72,7 +72,6 @@ jobs:
           aws s3 cp ./build.zip s3://${{ env.BUCKET_NAME }}/
 
       - name: Code Deploy
-        run: aws deploy create-deployment --application-name lingoswap
-          --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name ec2-test
+        run: aws deploy create-deployment --application-name LingoTalk
+          --deployment-group-name prod
           --s3-location bucket=${{ env.BUCKET_NAME }},bundleType=zip,key=build.zip

@@ -24,7 +24,8 @@ import java.util.List;
 public class BearerTokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final List<String> excludedPatterns = List.of(
-            "/api/v1/auth/**",
+            "/api/v1/auth/login",
+            "/api/v1/auth/signup",
             "/api/v1/admin/**",
             "/api/v1/form/**",
             "/actuator/**",

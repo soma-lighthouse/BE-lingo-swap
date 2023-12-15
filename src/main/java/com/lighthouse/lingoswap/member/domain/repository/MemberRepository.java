@@ -22,6 +22,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
                 .orElseThrow(MemberNotFoundException::new);
     }
 
-    void deleteByAuthDetailsUsername(final String username);
+    void deleteByAuthDetailsUuid(final String uuid);
 
 }
