@@ -58,10 +58,10 @@ class AuthManagerTest extends IntegrationTestSupport {
         memberRepository.save(user());
 
         // when
-        authManager.delete(USER_USERNAME);
+        authManager.delete(USER_UUID);
 
         // then
-        assertThatThrownBy(() -> memberRepository.getByUsername(USER_USERNAME))
+        assertThatThrownBy(() -> memberRepository.getByUuid(USER_UUID))
                 .isInstanceOf(MemberNotFoundException.class);
     }
 

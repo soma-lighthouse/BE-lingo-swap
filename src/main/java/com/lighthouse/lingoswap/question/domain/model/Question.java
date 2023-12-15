@@ -67,11 +67,11 @@ public class Question extends BaseEntity {
     }
 
     public void addOneLike() {
-        like = like.addOneLike();
+        like.addOneLike();
     }
 
     public void subtractOneLike() {
-        like = like.subtractOneLike();
+        like.subtractOneLike();
     }
 
 }

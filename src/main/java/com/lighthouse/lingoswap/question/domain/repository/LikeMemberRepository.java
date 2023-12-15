@@ -1,7 +1,7 @@
-package com.lighthouse.lingoswap.likemember.domian.repository;
+package com.lighthouse.lingoswap.question.domain.repository;
 
-import com.lighthouse.lingoswap.likemember.domian.model.LikeMember;
 import com.lighthouse.lingoswap.member.domain.model.Member;
+import com.lighthouse.lingoswap.question.domain.model.LikeMember;
 import com.lighthouse.lingoswap.question.domain.model.Question;
 import com.lighthouse.lingoswap.question.exception.DuplicateLikeMemberException;
 import com.lighthouse.lingoswap.question.exception.LikeMemberNotFoundException;

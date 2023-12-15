@@ -4,26 +4,29 @@ import com.lighthouse.lingoswap.IntegrationTestSupport;
 import com.lighthouse.lingoswap.category.domain.model.Category;
 import com.lighthouse.lingoswap.category.domain.repository.CategoryRepository;
 import com.lighthouse.lingoswap.common.fixture.CategoryType;
-import com.lighthouse.lingoswap.likemember.domian.model.LikeMember;
-import com.lighthouse.lingoswap.likemember.domian.repository.LikeMemberRepository;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
+import com.lighthouse.lingoswap.question.domain.model.LikeMember;
 import com.lighthouse.lingoswap.question.domain.model.Question;
+import com.lighthouse.lingoswap.question.domain.repository.LikeMemberRepository;
 import com.lighthouse.lingoswap.question.domain.repository.QuestionRepository;
 import com.lighthouse.lingoswap.question.dto.MyQuestionsResponse;
 import com.lighthouse.lingoswap.question.dto.QuestionCreateRequest;
 import com.lighthouse.lingoswap.question.dto.QuestionListResponse;
 import com.lighthouse.lingoswap.question.dto.QuestionRecommendationListResponse;
+import com.lighthouse.lingoswap.question.exception.DuplicateLikeMemberException;
+import com.lighthouse.lingoswap.question.exception.LikeMemberNotFoundException;
+import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static com.lighthouse.lingoswap.common.fixture.MemberFixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @Transactional
@@ -390,6 +393,99 @@ class QuestionManagerTest extends IntegrationTestSupport {
                             tuple(question1.getId(), "Hi", 0L, category.getId())
                     );
         });
+    }
+
+    @DisplayName("질문에 좋아요를 누르면 목록에 추가되고 좋아요 수가 1 증가한다.")
+    @Test
+    void addOneLike() {
+        // given
+        Member member = memberRepository.save(user());
+        Category category = categoryRepository.getByName(CategoryType.FOOD.getName());
+        Question question = questionRepository.save(Question.builder()
+                .member(member)
+                .like(0L)
+                .category(category)
+                .contents("Hi")
+                .build());
+
+        // when
+        questionManager.addOneLike(USER_UUID, question.getId());
+
+        // then
+        Question actualQuestion = questionRepository.getByQuestionId(question.getId());
+        LikeMember actualLikeMember = likeMemberRepository.getByMemberAndQuestion(member, question);
+        assertThat(actualQuestion.getLike()).isEqualTo(1L);
+        assertThat(actualLikeMember.getMemberId()).isEqualTo(member.getId());
+        assertThat(actualLikeMember.getQuestionId()).isEqualTo(question.getId());
+    }
+
+    @DisplayName("질문에 이미 좋아요를 눌렀던 유저의 UUID로 목록에 추가하면 예외가 발생한다.")
+    @Test
+    void addOneLikeByDuplicateMember() {
+        // given
+        Member member = memberRepository.save(user());
+        Category category = categoryRepository.getByName(CategoryType.FOOD.getName());
+        Question question = questionRepository.save(Question.builder()
+                .member(member)
+                .like(0L)
+                .category(category)
+                .contents("Hi")
+                .build());
+        LikeMember likeMember = LikeMember.builder()
+                .member(member)
+                .question(question)
+                .build();
+        likeMemberRepository.save(likeMember);
+
+        // when & then
+        assertThatThrownBy(() -> questionManager.addOneLike(USER_UUID, question.getId()))
+                .isInstanceOf(DuplicateLikeMemberException.class);
+    }
+
+    @DisplayName("질문에 좋아요를 눌렀던 유저의 UUID로 목록에서 삭제되고 좋아요 수가 1 감소한다.")
+    @Test
+    void subtractOneLike() {
+        // given
+        Member member = memberRepository.save(user());
+        Category category = categoryRepository.getByName(CategoryType.FOOD.getName());
+        Question question = questionRepository.save(Question.builder()
+                .member(member)
+                .like(1L)
+                .category(category)
+                .contents("Hi")
+                .build());
+        LikeMember likeMember = LikeMember.builder()
+                .member(member)
+                .question(question)
+                .build();
+        likeMemberRepository.save(likeMember);
+
+        // when
+        questionManager.subtractOneLike(USER_UUID, question.getId());
+
+        // then
+        Question actual = questionRepository.getByQuestionId(question.getId());
+        assertThat(actual.getLike()).isZero();
+        assertThatThrownBy(() -> likeMemberRepository.getByMemberAndQuestion(member, question))
+                .isInstanceOf(LikeMemberNotFoundException.class);
+    }
+
+    @DisplayName("질문에 좋아요를 누른 적 없는 유저의 UUID로 목록에서 삭제하면 예외가 발생한다.")
+    @Test
+    void subtractOneLikeByNotLikedMember() {
+        // given
+        Member member = memberRepository.save(user());
+        Category category = categoryRepository.getByName(CategoryType.FOOD.getName());
+        Question question = questionRepository.save(Question.builder()
+                .member(member)
+                .like(0L)
+                .category(category)
+                .contents("Hi")
+                .build());
+
+        // when & then
+        assertThatThrownBy(() -> questionManager.subtractOneLike(USER_UUID, question.getId()))
+                .isInstanceOf(LikeMemberNotFoundException.class);
     }
 
 }

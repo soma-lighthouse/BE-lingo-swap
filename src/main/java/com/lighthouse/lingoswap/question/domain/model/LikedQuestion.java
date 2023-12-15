@@ -1,6 +1,5 @@
-package com.lighthouse.lingoswap.likemember.domian.model;
+package com.lighthouse.lingoswap.question.domain.model;
 
-import com.lighthouse.lingoswap.question.domain.model.Question;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;

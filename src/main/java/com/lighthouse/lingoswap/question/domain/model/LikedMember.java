@@ -1,4 +1,4 @@
-package com.lighthouse.lingoswap.likemember.domian.model;
+package com.lighthouse.lingoswap.question.domain.model;
 
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import jakarta.persistence.Embeddable;

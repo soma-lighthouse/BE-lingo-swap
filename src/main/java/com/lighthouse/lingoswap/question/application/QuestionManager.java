@@ -3,10 +3,11 @@ package com.lighthouse.lingoswap.question.application;
 import com.lighthouse.lingoswap.category.domain.model.Category;
 import com.lighthouse.lingoswap.category.domain.repository.CategoryRepository;
 import com.lighthouse.lingoswap.common.dto.SliceDto;
-import com.lighthouse.lingoswap.likemember.domian.repository.LikeMemberRepository;
 import com.lighthouse.lingoswap.member.domain.model.Member;
 import com.lighthouse.lingoswap.member.domain.repository.MemberRepository;
+import com.lighthouse.lingoswap.question.domain.model.LikeMember;
 import com.lighthouse.lingoswap.question.domain.model.Question;
+import com.lighthouse.lingoswap.question.domain.repository.LikeMemberRepository;
 import com.lighthouse.lingoswap.question.domain.repository.QuestionQueryRepository;
 import com.lighthouse.lingoswap.question.domain.repository.QuestionRepository;
 import com.lighthouse.lingoswap.question.dto.*;
@@ -61,6 +62,32 @@ public class QuestionManager {
     public MyQuestionsResponse readByCreatedMember(final String memberUuid) {
         Member member = memberRepository.getByUuid(memberUuid);
         return new MyQuestionsResponse(questionRepository.findByCreatedMember(member).stream().map(MyQuestionDetail::from).toList());
+    }
+
+    @Transactional
+    public void addOneLike(final String memberUuid, final Long questionId) {
+//        Question question = questionRepository.getByQuestionId(questionId);
+        Question question = questionRepository.findById(questionId).orElseThrow();
+        Member member = memberRepository.getByUuid(memberUuid);
+        likeMemberRepository.validateAlreadyLiked(member, question);
+        LikeMember likeMember = LikeMember.builder()
+                .member(member)
+                .question(question)
+                .build();
+        likeMemberRepository.save(likeMember);
+
+        question.addOneLike();
+    }
+
+    @Transactional
+    public void subtractOneLike(final String memberUuid, final Long questionId) {
+//        Question question = questionRepository.getByQuestionId(questionId);
+        Question question = questionRepository.findById(questionId).orElseThrow();
+        Member member = memberRepository.getByUuid(memberUuid);
+        LikeMember likeMember = likeMemberRepository.getByMemberAndQuestion(member, question);
+        likeMemberRepository.delete(likeMember);
+
+        question.subtractOneLike();
     }
 
 }

@@ -11,23 +11,23 @@ import lombok.NoArgsConstructor;
 class Like {
 
     @Column(name = "likes")
-    private Long value = 0L;
+    private long value;
 
-    Like(final Long value) {
+    Like(final long value) {
         this.value = value;
     }
 
-    Long getValue() {
+    long getValue() {
         return value;
     }
 
-    Like addOneLike() {
-        return new Like(value + 1);
+    void addOneLike() {
+        value++;
     }
 
-    Like subtractOneLike() {
+    void subtractOneLike() {
         validateRange();
-        return new Like(value - 1);
+        value--;
     }
 
     private void validateRange() {

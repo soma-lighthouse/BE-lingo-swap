@@ -90,8 +90,8 @@ public class AuthManager {
     }
 
     @Transactional
-    public void delete(final String username) {
-        memberRepository.deleteByAuthDetailsUsername(username);
+    public void delete(final String uuid) {
+        memberRepository.deleteByAuthDetailsUuid(uuid);
     }
 
 }

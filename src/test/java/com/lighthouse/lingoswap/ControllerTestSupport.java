@@ -8,7 +8,6 @@ import com.lighthouse.lingoswap.image.application.ImageManager;
 import com.lighthouse.lingoswap.infra.service.AmazonImageService;
 import com.lighthouse.lingoswap.interests.application.InterestsManager;
 import com.lighthouse.lingoswap.language.application.LanguageManager;
-import com.lighthouse.lingoswap.likemember.application.LikeMemberManager;
 import com.lighthouse.lingoswap.match.application.MatchManager;
 import com.lighthouse.lingoswap.member.application.MemberManager;
 import com.lighthouse.lingoswap.question.application.QuestionManager;
@@ -43,9 +42,6 @@ public abstract class ControllerTestSupport {
 
     @MockBean
     protected QuestionManager questionManager;
-
-    @MockBean
-    protected LikeMemberManager likeMemberManager;
 
     @MockBean
     protected CountryManager countryManager;
